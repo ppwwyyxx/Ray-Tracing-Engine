@@ -1,5 +1,5 @@
 // File: light.cc
-// Date: Sat Apr 06 14:22:18 2013 +0800
+// Date: Sun Apr 14 23:36:38 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "renderable/light.hh"
@@ -8,7 +8,7 @@ using namespace std;
 shared_ptr<Trace> Light::get_trace(const Ray& ray) const {
 	shared_ptr<Trace> ret(new LightTrace(*this, ray));		// share problem?
 	if (ret->intersect())
-		return move(ret);
+		return ret;
 	return nullptr;
 };
 

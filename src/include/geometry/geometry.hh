@@ -1,5 +1,5 @@
 // File: geometry.hh
-// Date: Sun Apr 07 16:17:28 2013 +0800
+// Date: Sun Apr 14 23:35:46 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -58,6 +58,9 @@ class Vector {
 
 		Vector cross(const Vector &v) const
 		{ return Vector(y * v.z - z * v.y, z * v.x - x * v.z, x * v.y - y * v.x); }
+
+		Vector& operator = (const Vector& v)
+		{ x = v.x, y = v.y, z = v.z; return *this; }
 
 		virtual void normalize() {
 			real_t m = 1 / mod();
@@ -131,6 +134,9 @@ class Vector {
 
 		real_t get_max()
 		{ return std::max(x, std::max(y, z)); }
+
+		real_t get_abs_max()
+		{ return std::max(fabs(x), std::max(fabs(y), fabs(z))); }
 
 		static Vector get_zero()
 		{ return Vector(0, 0, 0); }
@@ -220,4 +226,10 @@ std::ostream& operator << (std::ostream& os, const Vector2D<T>& v) {
 }
 
 typedef Vector Vec;
+typedef Vector2D<int> Coor;
+
+typedef Vector2D<real_t> Vec2D;
+
+typedef std::pair<Coor, Coor> Line2D;
+typedef std::vector<Coor> Polygon;
 

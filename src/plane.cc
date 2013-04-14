@@ -1,5 +1,5 @@
 // File: plane.cc
-// Date: Sun Apr 07 19:20:54 2013 +0800
+// Date: Sun Apr 14 23:36:30 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "renderable/plane.hh"
@@ -9,9 +9,9 @@ const InfPlane InfPlane::XYPLANE(Vec(1,0,0), Vec(0,1,0), Vec(1,1,0)),
 	  InfPlane::YZPLANE(Vec(0,1,1), Vec(0,1,0), Vec(0,0,1));
 
 shared_ptr<Trace> Plane::get_trace(const Ray& ray) const {
-	std::shared_ptr<Trace> ret(new PlaneTrace(*this, ray));
+	shared_ptr<Trace> ret(new PlaneTrace(*this, ray));
 	if (ret->intersect()) {
-		return move(ret);
+		return ret;
 	}
 	return nullptr;
 }
@@ -24,7 +24,7 @@ Vec Plane::surf_dir() const {
 		ret = Vec(0, plane.norm.z, -plane.norm.y);
 	m_assert(!(ret == Vec::get_zero()));
 	ret.normalize();
-	return std::move(ret);
+	return ret;
 }
 
 bool PlaneTrace::intersect() {
@@ -50,8 +50,8 @@ real_t PlaneTrace::intersection_dist() {
 Vec PlaneTrace::normal() {	// norm to the ray side
 	Vec ret = plane.plane.norm;
 	if (plane.plane.in_half_space(ray.orig))
-		return move(ret);
-	return move(-ret);
+		return ret;
+	return -ret;
 }
 
 shared_ptr<const Surface> PlaneTrace::transform_get_property() {

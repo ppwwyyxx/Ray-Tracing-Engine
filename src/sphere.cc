@@ -1,5 +1,5 @@
 // File: sphere.cc
-// Date: Sun Apr 07 19:19:37 2013 +0800
+// Date: Sun Apr 14 23:36:05 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "renderable/sphere.hh"
@@ -10,7 +10,7 @@ const PureSphere PureSphere::TestSphere(Vec(0, 0, 3), 3);
 shared_ptr<Trace> Sphere::get_trace(const Ray& ray) const {
 	shared_ptr<Trace> ret(new SphereTrace(*this, ray));
 	if (ret->intersect())
-		return  move(ret);
+		return  ret;
 	return nullptr;
 }
 
@@ -50,8 +50,8 @@ Vec SphereTrace::intersection_point() {
 Vec SphereTrace::normal() {
 	Vec ret = inter_point - sphere.sphere.center;
 	ret.normalize();
-	if (!inside) return move(ret);
-	else return move(-ret);
+	if (!inside) return ret;
+	else return -ret;
 }
 
 shared_ptr<const Surface> SphereTrace::transform_get_property() {

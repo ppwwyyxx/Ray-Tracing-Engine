@@ -1,5 +1,5 @@
 // File: space.cc
-// Date: Wed Apr 10 09:05:29 2013 +0800
+// Date: Sun Apr 14 23:36:14 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <limits>
@@ -91,7 +91,7 @@ Color Space::trace(const Ray& ray, real_t dist, int depth) {
 	}
 
 	ret.normalize();
-	return move(ret);
+	return ret;
 }
 
 shared_ptr<Trace> Space::find_first(const Ray& ray) const {
@@ -107,7 +107,7 @@ shared_ptr<Trace> Space::find_first(const Ray& ray) const {
 			}
 		}
 	}
-	return move(ret);
+	return ret;
 }
 
 bool Space::find_any(const Ray& ray, real_t dist) const {

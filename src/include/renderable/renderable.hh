@@ -1,5 +1,5 @@
 // File: renderable.hh
-// Date: Sun Apr 07 18:55:13 2013 +0800
+// Date: Sun Apr 14 23:37:02 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 
@@ -66,9 +66,8 @@ class Trace {
 
 		std::shared_ptr<const Surface> get_property() {
 			std::shared_ptr<const Surface> ret = obj->texture->get_property();
-			if (ret)
-				return std::move(ret);
-			return std::move(transform_get_property());		// is this working?
+			if (ret) return ret;
+			return transform_get_property();		// is this working?
 		}
 
 		virtual bool contain() const
