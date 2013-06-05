@@ -1,5 +1,5 @@
 // File: space.cc
-// Date: Mon May 20 00:43:42 2013 +0800
+// Date: Wed Jun 05 20:29:42 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <limits>
@@ -76,10 +76,7 @@ Color Space::trace(const Ray& ray, real_t dist, int depth) {
 	Color refl = trace(new_ray, dist, depth + 1);
 
 	// use (specular + FACTOR * diffuse) * refl
-	ret += refl * surf->specular * REFL_DECAY;
-	/*
-	 *ret += refl * surf->diffuse * REFL_DIFFUSE_FACTOR * REFL_DECAY;
-	 */
+	ret += refl * surf->diffuse * REFL_DECAY * REFL_DIFFUSE_FACTOR;
 
 
 	// transmission
@@ -90,6 +87,7 @@ Color Space::trace(const Ray& ray, real_t dist, int depth) {
 		new_ray.debug = ray.debug;
 		Color transm = trace(new_ray, dist, depth + 1);
 		ret += transm * surf->transparency;
+		ret *= TRANSM_BLEND_FACTOR;
 	}
 
 	ret.normalize();
