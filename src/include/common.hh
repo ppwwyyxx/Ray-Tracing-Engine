@@ -1,5 +1,5 @@
 // File: common.hh
-// Date: Wed Jun 05 20:21:31 2013 +0800
+// Date: Wed Jun 05 20:33:32 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -21,3 +21,4 @@ const real_t MAX_RECURSIVE_DEPTH = 10;
 const real_t REFL_DIFFUSE_FACTOR = 0.3;
 const real_t REFL_DECAY = 0.2;
 const real_t TRANSM_BLEND_FACTOR = 0.7;
+const real_t REFRACTIVE_INDEX = 1.3;
