@@ -1,5 +1,5 @@
 // File: space.cc
-// Date: Fri Jun 07 22:19:40 2013 +0800
+// Date: Sat Jun 08 01:57:48 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <limits>
@@ -56,7 +56,7 @@ Color Space::trace(const Ray& ray, real_t dist, int depth) {
 			continue;
 		}
 
-		real_t damping = pow(M_E, -dist_to_light * AIR_DENSITY);
+		real_t damping = pow(M_E, -dist_to_light * AIR_BEER_DENSITY);
 
 		// diffuse
 		if (lmn > 0)
@@ -70,22 +70,22 @@ Color Space::trace(const Ray& ray, real_t dist, int depth) {
 
 	// Beer-Lambert's Law
 	dist += inter_dist;
-	ret *= pow(M_E, -dist * AIR_DENSITY);
+	ret *= pow(M_E, -dist * AIR_BEER_DENSITY);
 
 	// reflected ray : go back a little, same density
 	Ray new_ray(inter_point - ray.dir * EPS, -norm.reflection(ray.dir), ray.density);
+
 	new_ray.debug = ray.debug;
+	real_t lmn = (new_ray.dir.dot(norm));
 	Color refl = trace(new_ray, dist, depth + 1);
 
-	// use (specular + FACTOR * diffuse) * refl
-	ret += refl * surf->diffuse * REFL_DECAY * REFL_DIFFUSE_FACTOR;
+	ret += refl * surf->diffuse * lmn * REFL_DECAY;
 
 
 	// transmission
-	// need get_tr_by_refrac
 	if (surf->transparency > 0) {
 		Vec tr_dir = norm.transmission(ray.dir, density / ray.density);
-		if (isnormal(tr_dir.x)) {
+		if (isnormal(tr_dir.x)) { // have transmission
 			// transmission ray : go forward a little
 			new_ray = Ray(inter_point + ray.dir * EPS, tr_dir, density);
 			new_ray.debug = ray.debug;

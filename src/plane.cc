@@ -1,5 +1,5 @@
 // File: plane.cc
-// Date: Fri Jun 07 21:54:48 2013 +0800
+// Date: Wed Apr 24 18:11:13 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "renderable/plane.hh"

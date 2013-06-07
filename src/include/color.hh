@@ -1,5 +1,5 @@
 // File: color.hh
-// Date: Tue Apr 09 10:46:16 2013 +0800
+// Date: Sat Jun 08 01:47:57 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -29,7 +29,7 @@ class Color: public Vector {
 		Color operator * (real_t p) const
 		{ return Color(x * p, y * p, z * p); }
 
-		Color operator * (const Color& c) const
+		Color operator * (const Vector& c) const
 		{ return Color(x * c.x, y * c.y, z * c.z); }
 
 		static const Color WHITE, BLACK, RED, BLUE;
