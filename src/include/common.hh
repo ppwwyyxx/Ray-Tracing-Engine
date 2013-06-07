@@ -1,5 +1,5 @@
 // File: common.hh
-// Date: Fri Jun 07 21:48:54 2013 +0800
+// Date: Fri Jun 07 21:54:25 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
