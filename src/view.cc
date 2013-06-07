@@ -1,5 +1,5 @@
 // File: view.cc
-// Date: Tue Apr 09 10:31:08 2013 +0800
+// Date: Fri Jun 07 22:16:18 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "view.hh"
@@ -29,7 +29,7 @@ Color View::render(int i, int j, bool debug) const {
 	// pre-caculate to accelerate this!
 	Vec corner = mid - dir_h * (geo.h / 2) - dir_w * (geo.w / 2);
 	Vec dest = corner + dir_h * i + dir_w * j;
-	Ray ray(view_point, dest - view_point, true);
+	Ray ray(view_point, dest - view_point, 1, true);
 	if (debug)
 		ray.debug = true;
 	return sp->trace(ray);

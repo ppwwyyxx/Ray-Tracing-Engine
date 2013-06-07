@@ -1,5 +1,5 @@
 // File: space.cc
-// Date: Fri Jun 07 21:54:57 2013 +0800
+// Date: Fri Jun 07 22:19:40 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <limits>
@@ -19,6 +19,7 @@ Color Space::trace(const Ray& ray, real_t dist, int depth) {
 	update_max(now_max_depth, depth);
 	if (depth > max_depth)
 		return Color::BLACK;
+
 	m_assert(fabs(ray.dir.sqr() - 1) < EPS);
 	// XXX delete later
 
@@ -83,12 +84,15 @@ Color Space::trace(const Ray& ray, real_t dist, int depth) {
 	// transmission
 	// need get_tr_by_refrac
 	if (surf->transparency > 0) {
-		// transmission ray : go forward a little
-		new_ray = Ray(inter_point + ray.dir * EPS, ray.dir);
-		new_ray.debug = ray.debug;
-		Color transm = trace(new_ray, dist, depth + 1);
-		ret += transm * surf->transparency;
-		ret *= TRANSM_BLEND_FACTOR;
+		Vec tr_dir = norm.transmission(ray.dir, density / ray.density);
+		if (isnormal(tr_dir.x)) {
+			// transmission ray : go forward a little
+			new_ray = Ray(inter_point + ray.dir * EPS, tr_dir, density);
+			new_ray.debug = ray.debug;
+			Color transm = trace(new_ray, dist, depth + 1);
+			ret += transm * surf->transparency;
+			ret *= TRANSM_BLEND_FACTOR;
+		}
 	}
 
 	ret.normalize();

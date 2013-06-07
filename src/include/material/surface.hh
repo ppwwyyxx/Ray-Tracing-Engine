@@ -1,9 +1,5 @@
 // File: surface.hh
-<<<<<<< HEAD
-// Date: Fri Jun 07 21:54:36 2013 +0800
-=======
-// Date: Fri Jun 07 21:54:36 2013 +0800
->>>>>>> 2465e2402a229ad6c68cf00dcfa3d7313007afd8
+// Date: Fri Jun 07 22:10:58 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once

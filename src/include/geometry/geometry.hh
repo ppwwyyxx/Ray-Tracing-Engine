@@ -1,5 +1,5 @@
 // File: geometry.hh
-// Date: Sun May 19 14:01:38 2013 +0800
+// Date: Fri Jun 07 22:13:19 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -149,6 +149,22 @@ class Vector {
 		Vector reflection(const Vector& v) const {
 			m_assert(fabs(v.sqr() - 1) < EPS && (sqr() - 1 < EPS));
 			return *this * 2 * dot(v) - v;
+		}
+
+		// i'm norm
+		Vector transmission(const Vector& v_in, real_t density) const {
+			Vector ret = Vector::infinity();
+
+			density = 1 / density;
+			real_t cos1 = -dot(v_in);
+			if (cos1 < EPS) return ret;
+			m_assert(cos1 >= 0);
+			real_t cos2 = 1 - ::sqr(density) * (1 - ::sqr(cos1));
+			if (cos2 < 0) return ret;
+			cos2 = sqrt(cos2);
+
+			ret = v_in * density + (*this) * (density * cos1 - cos2);
+			return ret.get_normalized();
 		}
 };
 
