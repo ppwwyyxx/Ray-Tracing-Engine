@@ -1,5 +1,5 @@
 // File: ray.hh
-// Date: Sun Apr 07 17:57:24 2013 +0800
+// Date: Fri Jun 07 21:52:38 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -14,10 +14,12 @@ class Ray {
 
 		Vec orig, dir;
 
+		real_t density;
+
 		Ray(){}
 
-		Ray(const Vec & m_orig, const Vec& m_dir, bool normalize = false):
-			orig(m_orig), dir(m_dir) {
+		Ray(const Vec & _orig, const Vec& _dir, real_t _density = 1, bool normalize = false):
+			orig(_orig), dir(_dir), density(_density) {
 			if (normalize)
 				dir.normalize();
 		}

@@ -1,5 +1,5 @@
 // File: sphere.cc
-// Date: Sun Apr 14 23:36:05 2013 +0800
+// Date: Fri Jun 07 21:49:08 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "renderable/sphere.hh"
@@ -63,4 +63,9 @@ shared_ptr<const Surface> SphereTrace::transform_get_property() {
 		   arg2 = acos(projyz.dot(sphere.north));
 
 	return sphere.texture->get_property(arg1 * sphere.sphere.r, arg2 * sphere.sphere.r);
+}
+
+real_t SphereTrace::get_forward_density() const {
+	if (inside) return AIR_REFRACTIVE_INDEX;
+	else return DEFAULT_REFRACTIVE_INDEX;
 }

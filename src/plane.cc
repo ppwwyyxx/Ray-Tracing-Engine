@@ -1,5 +1,5 @@
 // File: plane.cc
-// Date: Sun Apr 14 23:36:30 2013 +0800
+// Date: Fri Jun 07 21:50:16 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "renderable/plane.hh"
@@ -10,9 +10,7 @@ const InfPlane InfPlane::XYPLANE(Vec(1,0,0), Vec(0,1,0), Vec(1,1,0)),
 
 shared_ptr<Trace> Plane::get_trace(const Ray& ray) const {
 	shared_ptr<Trace> ret(new PlaneTrace(*this, ray));
-	if (ret->intersect()) {
-		return ret;
-	}
+	if (ret->intersect()) return ret;
 	return nullptr;
 }
 
@@ -29,9 +27,8 @@ Vec Plane::surf_dir() const {
 
 bool PlaneTrace::intersect() {
 	dist_to_plane = plane.plane.dist(ray.orig);
-	if (fabs(dist_to_plane) < EPS) { // source on the plane
+	if (fabs(dist_to_plane) < EPS) // source on the plane
 		return false;
-}
 	dir_dot_norm = plane.plane.norm.dot(ray.dir);
 	if (fabs(dir_dot_norm) < EPS)  // parallel to plane
 		return false;

@@ -1,5 +1,5 @@
 // File: cvrender.cc
-// Date: Wed Apr 10 13:11:57 2013 +0800
+// Date: Sun May 19 13:51:24 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <opencv2/opencv.hpp>
@@ -17,6 +17,7 @@ using namespace cv;
 #define KEY_S 115
 #define KEY_J 106
 #define KEY_K 107
+
 #define VIEWER_ANGLE 30
 #define ZOOMING 1.2
 

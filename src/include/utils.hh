@@ -1,10 +1,8 @@
 // File: utils.hh
-// Date: Wed Apr 10 03:53:13 2013 +0800
+// Date: Sun May 19 14:02:38 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
-
 #pragma once
-
 #include <cstdarg>
 #include <cstdlib>
 #include <string>
@@ -22,6 +20,40 @@ string TERM_COLOR(int k);
 #define COLOR_CYAN    "\x1b[36m"
 #define COLOR_RESET   "\x1b[0m"
 
+typedef double real_t;
+const real_t EPS = 1e-6;
+
+inline real_t sqr(real_t x) { return x * x; }
+
+#define BETW(a, b, c) ((a >= b) && (a <= c - 1))
+#define REP(x, y) for (int x = 0; x < (y); x ++)
+#define REPL(x, y, z) for (int x = y; x < (z); x ++)
+#define REPD(x, y, z) for (int x = y; x >= (z); x --)
+
+#define PR(a) std::cout << (a) << std::endl
+#define PPR(s, a) std::cout << s << " " << (a) << std::endl
+
+template <typename T>
+inline void free_2d(T** ptr, int w) {
+	if (ptr != nullptr)
+		for (int i = 0; i < w; i ++)
+			delete[] ptr[i];
+	delete[] ptr;
+}
+
+template<typename T>
+bool update_min(T &dest, const T &val) {
+	if (val < dest) { dest = val; return true; }
+	return false;
+}
+
+template<typename T>
+bool update_max(T &dest, const T &val) {
+	if (dest < val) { dest = val; return true; }
+	return false;
+}
+
+
 void c_printf(const char* col, const char* fmt, ...);
 
 void c_fprintf(const char* col, FILE* fp, const char* fmt, ...);
@@ -33,5 +65,9 @@ class HWTimer {
 
 		HWTimer();
 
-		double get_sec() const;
+		real_t sec() const;
+
+		real_t get_sec();
+
+		void reset();
 };

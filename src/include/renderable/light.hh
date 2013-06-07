@@ -1,5 +1,5 @@
 // File: light.hh
-// Date: Sat Apr 06 14:24:13 2013 +0800
+// Date: Fri Jun 07 21:50:30 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -42,7 +42,6 @@ class LightTrace : public Trace {
 		Vec normal();
 
 		bool intersect();
-
 
 };
 

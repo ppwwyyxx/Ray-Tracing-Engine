@@ -1,5 +1,5 @@
 // File: space.hh
-// Date: Sun Apr 07 16:55:08 2013 +0800
+// Date: Sun May 19 13:59:55 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -8,6 +8,8 @@
 #include <memory>
 
 #include "renderable/light.hh"
+#include "common.hh"
+
 class Space {
 	private:
 		std::vector<std::shared_ptr<Light>>  lights;

@@ -1,5 +1,5 @@
 // File: renderable.hh
-// Date: Sun Apr 14 23:37:02 2013 +0800
+// Date: Fri Jun 07 21:50:12 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 
@@ -63,6 +63,9 @@ class Trace {
 
 		virtual Vec normal() = 0;
 		// return Vec::zero if no normal exists
+
+		virtual real_t get_forward_density() const
+		{ return ray.density; }
 
 		std::shared_ptr<const Surface> get_property() {
 			std::shared_ptr<const Surface> ret = obj->texture->get_property();

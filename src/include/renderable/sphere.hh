@@ -1,5 +1,5 @@
 // File: sphere.hh
-// Date: Sun Apr 07 19:19:47 2013 +0800
+// Date: Fri Jun 07 21:49:09 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -54,6 +54,8 @@ class SphereTrace : public Trace {
 		Vec intersection_point();
 
 		Vec normal();
+
+		real_t get_forward_density() const;
 
 		bool contain() const
 		{ return inside; }

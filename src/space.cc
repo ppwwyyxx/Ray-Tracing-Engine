@@ -1,5 +1,5 @@
 // File: space.cc
-// Date: Sun Apr 14 23:36:14 2013 +0800
+// Date: Fri Jun 07 21:43:11 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <limits>
@@ -31,6 +31,7 @@ Color Space::trace(const Ray& ray, real_t dist, int depth) {
 	Vec norm = first_trace->normal(),
 		inter_point = first_trace->intersection_point();
 	auto surf = first_trace->get_property();
+	real_t density = first_trace->get_forward_density();
 	m_assert((fabs(norm.sqr() - 1) < EPS));
 
 	if (ray.debug)
@@ -70,24 +71,24 @@ Color Space::trace(const Ray& ray, real_t dist, int depth) {
 	dist += inter_dist;
 	ret *= pow(M_E, -dist * AIR_DENSITY);
 
-	// reflected ray : go back a little
-	Ray new_ray(inter_point - ray.dir * EPS, -norm.reflection(ray.dir));
+	// reflected ray : go back a little, same density
+	Ray new_ray(inter_point - ray.dir * EPS, -norm.reflection(ray.dir), ray.density);
 	new_ray.debug = ray.debug;
 	Color refl = trace(new_ray, dist, depth + 1);
 
 	// use (specular + FACTOR * diffuse) * refl
-	ret += refl * surf->specular * REFL_DECAY;
-	/*
-	 *ret += refl * surf->diffuse * REFL_DIFFUSE_FACTOR * REFL_DECAY;
-	 */
+	ret += refl * surf->diffuse * REFL_DECAY * REFL_DIFFUSE_FACTOR;
 
 
 	// transmission
+	// need get_tr_by_refrac
 	if (surf->transparency > 0) {
-		new_ray = Ray(inter_point + ray.dir * EPS, ray.dir);	// transmission dir
+		// transmission ray : go forward a little
+		new_ray = Ray(inter_point + ray.dir * EPS, ray.dir);
 		new_ray.debug = ray.debug;
 		Color transm = trace(new_ray, dist, depth + 1);
 		ret += transm * surf->transparency;
+		ret *= TRANSM_BLEND_FACTOR;
 	}
 
 	ret.normalize();
