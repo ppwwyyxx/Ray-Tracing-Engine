@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Mon Jun 10 01:10:56 2013 +0800
+// Date: Mon Jun 10 01:44:32 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "space.hh"
 #include "renderable/plane.hh"
@@ -116,10 +116,11 @@ int main(int argc, char* argv[]) {
 	int w, h;
 	w = h = 500;
 	Space s;
-	Light l(Vec(5, -2, 15), Color(0.9, 1, 1), 1);
-	Light lall(Vec(0, 0, 50), Color(1, 1, 1), 0.2);
+	Light l(Vec(5, -10, 15), Color(0.9, 1, 1), 1);
 	l.size = EPS;
-	s.add_light(l);s.add_light(lall);
+	s.add_light(l);
+	Light lall(Vec(0, 0, 50), Color(1, 1, 1), 0.3);
+	s.add_light(lall);
 
 	shared_ptr<Texture> t1(new GridTexture(GridTexture::BLACK_WHITE));
 	Plane plane1(InfPlane::XYPLANE, t1);

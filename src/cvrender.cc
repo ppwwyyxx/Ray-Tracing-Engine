@@ -1,5 +1,5 @@
 // File: cvrender.cc
-// Date: Mon Jun 10 01:09:50 2013 +0800
+// Date: Mon Jun 10 01:44:17 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <opencv2/opencv.hpp>
@@ -58,37 +58,47 @@ void CVViewer::view() {
 		}
 		printf("%lf seconds.\n", timer.get_sec());
 
-		int ret = r.finish();
-		switch (ret) {
-			case KEY_EXIT:
-			case KEY_ESC:
-				return;
-				break;
-			case KEY_LEFT:
-				v.rotate(VIEWER_ANGLE);
-				break;
-			case KEY_RIGHT:
-				v.rotate(-VIEWER_ANGLE);
-				break;
-			case KEY_UP:
-				v.twist(VIEWER_ANGLE);
-				break;
-			case KEY_DOWN:
-				v.twist(-VIEWER_ANGLE);
-				break;
-			case KEY_S:
-				r.save();
-				print_debug("saved\n");
-				break;
-			case KEY_J:
-				v.zoom(1 / ZOOMING);
-				break;
-			case KEY_K:
-				v.zoom(ZOOMING);
-				break;
-			default:
-				cout << ret << endl;
-				break;
+		bool rerender = false;
+		while (!rerender) {
+			int ret = r.finish();
+			switch (ret) {
+				case KEY_EXIT:
+				case KEY_ESC:
+					return;
+					break;
+				case KEY_LEFT:
+					v.rotate(VIEWER_ANGLE);
+					rerender = true;
+					break;
+				case KEY_RIGHT:
+					v.rotate(-VIEWER_ANGLE);
+					rerender = true;
+					break;
+				case KEY_UP:
+					v.twist(VIEWER_ANGLE);
+					rerender = true;
+					break;
+				case KEY_DOWN:
+					v.twist(-VIEWER_ANGLE);
+					rerender = true;
+					break;
+				case KEY_S:
+					r.save();
+					print_debug("saved\n");
+					break;
+				case KEY_J:
+					v.zoom(1 / ZOOMING);
+					rerender = true;
+					break;
+				case KEY_K:
+					v.zoom(ZOOMING);
+					rerender = true;
+					break;
+				default:
+					cout << ret << endl;
+					break;
+			}
+
 		}
 	}
 }
