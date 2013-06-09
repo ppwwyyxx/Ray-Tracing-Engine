@@ -1,8 +1,10 @@
 // File: cvrender.cc
-// Date: Sun May 19 13:51:24 2013 +0800
+// Date: Mon Jun 10 01:09:50 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <opencv2/opencv.hpp>
+#include <omp.h>
+
 #include "render/cvrender.hh"
 #include "viewer.hh"
 #include "utils.hh"
@@ -48,11 +50,12 @@ CVRender::CVRender(const Geometry &m_g):
 void CVViewer::view() {
 	while (true) {
 		HWTimer timer;
-		for (int i = 0; i < geo.h; i ++)
-			for (int j = 0; j < geo.w; j ++) {
-				Color col = v.render(i, j);
-				r.write(j, i, col);
-			}
+
+#pragma omp parallel for schedule(dynamic)
+		REP(i, geo.h) REP(j, geo.w) {
+			Color col = v.render(i, j);
+			r.write(j, i, col);
+		}
 		printf("%lf seconds.\n", timer.get_sec());
 
 		int ret = r.finish();

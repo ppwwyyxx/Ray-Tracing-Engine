@@ -1,5 +1,5 @@
 // File: sphere.cc
-// Date: Fri Jun 07 21:49:08 2013 +0800
+// Date: Mon Jun 10 00:36:54 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "renderable/sphere.hh"
@@ -20,6 +20,7 @@ bool SphereTrace::intersect() {		// XXX orig in the center ? center on the line?
 		return false;
 
 	proj = ray.project(sphere.sphere.center);
+	m_assert(isfinite(proj.x));
 	sqrdiff = sqr(sphere.sphere.r) - (proj - sphere.sphere.center).sqr();
 	if (!inside && (sqrdiff < 0))  // dist > r
 		return false;

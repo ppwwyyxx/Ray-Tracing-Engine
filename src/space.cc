@@ -1,5 +1,5 @@
 // File: space.cc
-// Date: Sat Jun 08 01:57:48 2013 +0800
+// Date: Mon Jun 10 01:10:01 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <limits>
@@ -101,15 +101,16 @@ Color Space::trace(const Ray& ray, real_t dist, int depth) {
 
 shared_ptr<Trace> Space::find_first(const Ray& ray) const {
 	real_t min = numeric_limits<real_t>::max();
-	shared_ptr<Trace> ret, tmp;
-	for (const auto& obj : objs) {
-		tmp = obj->get_trace(ray);
+	shared_ptr<Trace> ret;
+
+	int n = objs.size();
+	REP(k, n) {
+		auto &obj = objs[k];
+		auto tmp = obj->get_trace(ray);
 		if (tmp) {
 			real_t d = tmp->intersection_dist();
-			if (d < min) {
-				min = d;
+			if (update_min(min, d))
 				ret = tmp;
-			}
 		}
 	}
 	return ret;

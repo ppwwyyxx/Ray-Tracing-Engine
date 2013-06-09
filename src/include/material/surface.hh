@@ -1,5 +1,5 @@
 // File: surface.hh
-// Date: Fri Jun 07 22:10:58 2013 +0800
+// Date: Mon Jun 10 00:53:42 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -24,6 +24,6 @@ class Surface {
 			transparency(_transparency), shininess(_shininess), refractive(_refractive),
 			diffuse(_diffuse), ambient(_ambient), specular(_specular) {}
 
-		static const Surface WHITE_REFL, BLACK_REFL, BLUE_REFL;
+		static const Surface WHITE_REFL, BLACK_REFL, BLUE_REFL, RED;
 };
 

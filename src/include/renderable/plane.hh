@@ -1,5 +1,5 @@
 // File: plane.hh
-// Date: Sun Apr 07 19:21:15 2013 +0800
+// Date: Mon Jun 10 00:06:19 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -11,20 +11,24 @@
 class Plane : public RenderAble {
 	public:
 		bool infinity = true;
+		real_t radius = 0;
 		Vec surfdir = Vec::infinity();
-		Vec surfp = Vec::infinity();
+		Vec center = Vec::infinity();
 
 		const InfPlane& plane;
 
-		Plane(const InfPlane& m_plane):
-			plane(m_plane) {
+		Plane(const InfPlane& _plane):
+			plane(_plane) {
 			surfdir = surf_dir();
-			surfp = surf_point();
+			center = surf_point();
 		}
+		// can later set_texture
 
-		Plane(const InfPlane& m_plane, const std::shared_ptr<Texture>& m_texture):
-			Plane(m_plane)
-		{ texture = m_texture; }
+		Plane(const InfPlane& _plane, const std::shared_ptr<Texture>& _texture):
+			Plane(_plane)
+		{ texture = _texture; }
+
+		void set_finite(real_t radius, Vec center);
 
 		std::shared_ptr<Trace> get_trace(const Ray& ray) const;
 
@@ -47,8 +51,8 @@ class PlaneTrace : public Trace {
 		std::shared_ptr<const Surface> transform_get_property();
 
 	public:
-		PlaneTrace(const Plane& m_plane, const Ray& m_ray):
-			Trace(&m_plane, m_ray), plane(m_plane){};
+		PlaneTrace(const Plane& _plane, const Ray& _ray):
+			Trace(&_plane, _ray), plane(_plane){};
 
 		bool intersect();
 

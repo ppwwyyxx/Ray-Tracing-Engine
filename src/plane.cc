@@ -1,12 +1,13 @@
 // File: plane.cc
-// Date: Wed Apr 24 18:11:13 2013 +0800
+// Date: Mon Jun 10 00:06:18 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "renderable/plane.hh"
 using namespace std;
 
-const InfPlane InfPlane::XYPLANE(Vec(1,0,0), Vec(0,1,0), Vec(1,1,0)),
-	  InfPlane::YZPLANE(Vec(0,1,1), Vec(0,1,0), Vec(0,0,1));
+const InfPlane InfPlane::XYPLANE(Vec(0, 0, 1), 0),
+	  InfPlane::YZPLANE(Vec(1, 0, 0), 0),
+	  InfPlane::XZPLANE(Vec(0, 1, 0), 0);
 
 shared_ptr<Trace> Plane::get_trace(const Ray& ray) const {
 	shared_ptr<Trace> ret(new PlaneTrace(*this, ray));
@@ -25,6 +26,11 @@ Vec Plane::surf_dir() const {
 	return ret;
 }
 
+void Plane::set_finite(real_t _radius, Vec _center) {
+	radius = _radius;
+	center = _center;
+}
+
 bool PlaneTrace::intersect() {
 	dist_to_plane = plane.plane.dist(ray.orig);
 	if (fabs(dist_to_plane) < EPS) // source on the plane
@@ -34,7 +40,18 @@ bool PlaneTrace::intersect() {
 		return false;
 	if ((dist_to_plane > 0) ^ (dir_dot_norm < 0))  // ray leaves plane
 		return toward = false;
-	return true;
+
+	if (plane.radius < EPS) 		// infinite
+		return true;
+	else {
+		inter_dist = - dist_to_plane / dir_dot_norm;
+		Vec inter_point = ray.get_dist(inter_dist);
+		real_t dist = (inter_point - plane.center).mod();
+		if (dist >= plane.radius)
+			return false;
+		else
+			return true;
+	}
 }
 
 real_t PlaneTrace::intersection_dist() {
@@ -52,7 +69,7 @@ Vec PlaneTrace::normal() {	// norm to the ray side
 }
 
 shared_ptr<const Surface> PlaneTrace::transform_get_property() {
-	Vec diff = intersection_point() - plane.surfp;
+	Vec diff = intersection_point() - plane.center;
 	real_t x = diff.dot(plane.surfdir);
 	real_t y = diff.dot(plane.surfdir.cross(plane.plane.norm));
 	return plane.texture->get_property(x, y);

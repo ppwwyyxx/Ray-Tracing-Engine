@@ -1,5 +1,5 @@
 // File: sphere.hh
-// Date: Fri Jun 07 21:49:09 2013 +0800
+// Date: Mon Jun 10 00:49:59 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -11,7 +11,7 @@ class Sphere : public RenderAble {
 	public:
 		Vec north = Vec(0, 0, 1);
 
-		const PureSphere& sphere;
+		PureSphere sphere;
 
 		Sphere(const PureSphere& m_sphere):
 			sphere(m_sphere) {
