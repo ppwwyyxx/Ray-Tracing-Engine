@@ -1,5 +1,5 @@
 // File: cvrender.hh
-// Date: Wed Apr 10 13:11:07 2013 +0800
+// Date: Mon Jun 10 21:18:36 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 
@@ -14,7 +14,7 @@ class CVRender: public RenderBase {
 	public:
 		int finish();
 
-		void save();
+		void save(const char* fname = "output.png");
 
 		CVRender(const Geometry &m_g);
 

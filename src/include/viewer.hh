@@ -1,5 +1,5 @@
 // File: viewer.hh
-// Date: Tue Apr 09 10:18:58 2013 +0800
+// Date: Mon Jun 10 21:22:22 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -11,8 +11,8 @@ class Viewer {
 		View& v;
 		const Geometry& geo;
 	public:
-		Viewer(View& m_v):
-			v(m_v), geo(m_v.get_geo()){}
+		Viewer(View& _v):
+			v(_v), geo(_v.get_geo()){}
 
 		virtual ~Viewer(){}
 
@@ -22,15 +22,23 @@ class Viewer {
 
 		virtual void view() = 0;
 
+		virtual void render_all() = 0;
+
 };
 
 class CVViewer : public Viewer {
 	private:
 		CVRender r;
 	public:
-		CVViewer(View& m_v):
-			Viewer(m_v), r(v.get_geo()) { }
+		CVViewer(View& _v):
+			Viewer(_v), r(_v.get_geo()) { }
+
+		CVViewer(View& _v, const char* fname):CVViewer(_v) {
+			render_all();
+			r.save(fname);
+		}
 
 		void view();
 
+		void render_all();
 };

@@ -1,5 +1,5 @@
 // File: cvrender.cc
-// Date: Mon Jun 10 01:44:17 2013 +0800
+// Date: Mon Jun 10 21:20:56 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <opencv2/opencv.hpp>
@@ -30,9 +30,8 @@ int CVRender::finish() {
 	return k;
 }
 
-void CVRender::save() {
-	imwrite("output.png", img);
-}
+void CVRender::save(const char* fname)
+{ imwrite(fname, img); }
 
 void CVRender::_write(int x, int y, const Color& c) {
 	// bgr color space
@@ -47,16 +46,20 @@ CVRender::CVRender(const Geometry &m_g):
 		img.setTo(Scalar(0, 0, 0));
 }
 
-void CVViewer::view() {
-	while (true) {
-		HWTimer timer;
+void CVViewer::render_all() {
+	HWTimer timer;
 
 #pragma omp parallel for schedule(dynamic)
-		REP(i, geo.h) REP(j, geo.w) {
-			Color col = v.render(i, j);
-			r.write(j, i, col);
-		}
-		printf("%lf seconds.\n", timer.get_sec());
+	REP(i, geo.h) REP(j, geo.w) {
+		Color col = v.render(i, j);
+		r.write(j, i, col);
+	}
+	printf("%lf seconds.\n", timer.get_sec());
+}
+
+void CVViewer::view() {
+	while (true) {
+		render_all();
 
 		bool rerender = false;
 		while (!rerender) {
