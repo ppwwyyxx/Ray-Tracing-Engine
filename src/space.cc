@@ -1,5 +1,5 @@
 // File: space.cc
-// Date: Mon Jun 10 21:58:34 2013 +0800
+// Date: Mon Jun 10 23:28:23 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <limits>
@@ -57,6 +57,7 @@ Color Space::trace(const Ray& ray, real_t dist, int depth) {
 		}
 
 		real_t damping = pow(M_E, -dist_to_light * AIR_BEER_DENSITY);
+		damping = 1;
 
 		// diffuse
 		if (lmn > 0)
@@ -90,13 +91,8 @@ Color Space::trace(const Ray& ray, real_t dist, int depth) {
 			new_ray = Ray(inter_point + ray.dir * EPS, tr_dir, density);
 			new_ray.debug = ray.debug;
 			Color transm = trace(new_ray, dist, depth + 1);
-			if (transm.x > 0.2)
-				ret = transm;
-			/*
-			 *else
-			 *ret += transm * surf->transparency;
-			 *ret *= TRANSM_BLEND_FACTOR;
-			 */
+			ret += transm * surf->transparency;
+			ret *= TRANSM_BLEND_FACTOR;
 		}
 	}
 

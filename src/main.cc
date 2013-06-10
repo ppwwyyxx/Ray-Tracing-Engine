@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Mon Jun 10 22:49:44 2013 +0800
+// Date: Mon Jun 10 23:40:31 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "space.hh"
 #include "renderable/plane.hh"
@@ -11,7 +11,7 @@
 using namespace std;
 
 #define PLANE_SIZE 8
-#define N_PLANE 300
+#define N_PLANE 12
 
 struct Segment {
 	Ray ray;
@@ -24,7 +24,7 @@ struct Segment {
 };
 
 bool intersect(Vector& ret, const Segment& seg, const InfPlane& pl) {
-	real_t THRES = 0.5;
+	real_t THRES = 1;
 	shared_ptr<Trace> tr(new PlaneTrace(pl, seg.ray));
 	if (!tr->intersect())
 		return false;
@@ -66,10 +66,10 @@ void blxlrsmb() {
 	Light l(Vec(5, -2, 15), Color(0.9, 1, 1), 1);
 	l.size = EPS;
 	s.add_light(l);
-	s.add_light(Light(Vec(0, 0, 50), Color::WHITE, 0.5));
-	s.add_light(Light(Vec(50, 0, 50), Color::WHITE, 0.5));
-	s.add_light(Light(Vec(0, 50, 50), Color::WHITE, 0.5));
-	s.add_light(Light(Vec(50, -50, 50), Color::WHITE, 0.5));
+	s.add_light(Light(Vec(0, 0, 50), Color::WHITE, 1));
+	s.add_light(Light(Vec(50, 0, 50), Color::WHITE, 1));
+	s.add_light(Light(Vec(0, 50, 50), Color::WHITE, 1));
+	s.add_light(Light(Vec(0, 10, -50), Color::WHITE, 1));
 	shared_ptr<Texture> tred(new HomoTexture(Surface::RED));
 	shared_ptr<Texture> t1(new HomoTexture(HomoTexture::BLUE));
 	InfPlane ground(Vec(0, 0, 1), -10);
@@ -80,6 +80,10 @@ void blxlrsmb() {
 	Surface b_trans_surface(2, 50, Color::BLACK, Color::WHITE , Color::WHITE * DEFAULT_SPECULAR);
 	shared_ptr<Texture> t2(new GridTexture(1, w_trans_surface, b_trans_surface));
 
+
+	PureSphere labelx(Vec(8, 0, 0), 0.5);
+	PureSphere labely(Vec(0, 8, 0), 0.5);
+	PureSphere labelz(Vec(0, 0, 8), 0.5);
 
 
 	vector<Segment> segs;
@@ -99,6 +103,10 @@ void blxlrsmb() {
 	auto planes = gen_plane();
 	REP(k, N_PLANE) {
 		s.clean_obj();
+		s.add_obj(shared_ptr<RenderAble>(new Sphere(labelx, t1)));
+		s.add_obj(shared_ptr<RenderAble>(new Sphere(labely, tred)));
+		s.add_obj(shared_ptr<RenderAble>(new Sphere(labelz, tred)));
+
 		InfPlane& pl = planes[k];
 		Plane tmp_plane(pl, t2);
 		tmp_plane.set_finite(10, Vec(0, 0, 0));
@@ -123,21 +131,24 @@ void blxlrsmb() {
 }
 
 int main(int argc, char* argv[]) {
-	blxlrsmb();
-	return 0;
+	/*
+	 *blxlrsmb();
+	 *return 0;
+	 */
 
 	int w, h;
 	w = h = 500;
 	Space s;
-	Light l(Vec(5, -10, 15), Color(0.9, 1, 1), 1);
-	l.size = EPS;
-	s.add_light(l);
-	Light lall(Vec(0, 0, 50), Color(1, 1, 1), 0.3);
-	s.add_light(lall);
+	s.add_light(Light(Vec(5, -10, 15), Color(0.9, 1, 1), 1));
+	s.add_light(Light(Vec(0, 0, 50), Color::WHITE, 0.3));
+	s.add_light(Light(Vec(0, 0, -50), Color::WHITE, 0.3));
+
 
 	shared_ptr<Texture> t1(new GridTexture(GridTexture::BLACK_WHITE));
 	Plane plane1(InfPlane::XYPLANE, t1);
 	s.add_obj(shared_ptr<RenderAble>(new Plane(plane1)));
+	PureSphere labelx(Vec(8, 0, 0), 0.5);
+	s.add_obj(shared_ptr<RenderAble>(new Sphere(labelx, t1)));
 	/*
 	 *Plane plane2 = Plane::YZPLANE;
 	 *s.add_obj(shared_ptr<RenderAble>(new Plane(plane2)));

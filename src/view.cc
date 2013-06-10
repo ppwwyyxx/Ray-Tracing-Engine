@@ -1,5 +1,5 @@
 // File: view.cc
-// Date: Fri Jun 07 22:16:18 2013 +0800
+// Date: Mon Jun 10 23:50:13 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "view.hh"
@@ -12,9 +12,9 @@ View::View(const std::shared_ptr<Space> m_sp, const Vec& m_view_point,
 {
 	view_point = m_view_point, sp = m_sp, mid = m_mid, size = w;
 	Vec norm = (view_point - mid).get_normalized();
-	Vec tmp;		// random point outside the ray
-	if ((fabs(norm.x) > EPS) || (fabs(norm.y) > EPS))
-		tmp = Vec(norm.y, -norm.x, 0);
+	Vec tmp;
+	if ((fabs(norm.y) > EPS) || (fabs(norm.x) > EPS))
+		tmp = Vec(-norm.y, norm.x, 0);
 	else
 		tmp = Vec(-norm.z, 0, norm.x);
 	dir_w = tmp.get_normalized();
@@ -26,12 +26,11 @@ View::View(const std::shared_ptr<Space> m_sp, const Vec& m_view_point,
 }
 
 Color View::render(int i, int j, bool debug) const {
-	// pre-caculate to accelerate this!
+	// XXX pre-caculate to accelerate this!
 	Vec corner = mid - dir_h * (geo.h / 2) - dir_w * (geo.w / 2);
-	Vec dest = corner + dir_h * i + dir_w * j;
+	Vec dest = corner + dir_h * (geo.h - 1 - i) + dir_w * j;
 	Ray ray(view_point, dest - view_point, 1, true);
-	if (debug)
-		ray.debug = true;
+	if (debug) ray.debug = true;
 	return sp->trace(ray);
 }
 

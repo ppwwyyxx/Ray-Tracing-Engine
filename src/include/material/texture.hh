@@ -1,5 +1,5 @@
 // File: texture.hh
-// Date: Sun Apr 07 21:28:17 2013 +0800
+// Date: Mon Jun 10 23:30:49 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -49,10 +49,8 @@ class GridTexture : public Texture {
 			if (x < 0) a1 = !a1;
 			bool a2 = (((int)y / size) & 1) == 0;
 			if (y < 0) a2 = !a2;
-			if (a1 ^ a2)
-				return std::make_shared<const Surface>(pty1);
-			else
-				return std::make_shared<const Surface>(pty2);
+			if (a1 ^ a2) return std::make_shared<const Surface>(pty1);
+			else return std::make_shared<const Surface>(pty2);
 		}
 
 		static const GridTexture BLACK_WHITE;
