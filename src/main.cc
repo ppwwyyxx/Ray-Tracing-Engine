@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Tue Jun 11 01:00:16 2013 +0800
+// Date: Tue Jun 11 01:18:08 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "space.hh"
 #include "renderable/plane.hh"
@@ -11,8 +11,8 @@
 using namespace std;
 
 #define PLANE_SIZE 8
-#define N_PLANE 120
-#define PLANES_PER_FRAME 5
+#define N_PLANE 150
+#define PLANES_PER_FRAME 10
 
 struct Segment {
 	Ray ray;
@@ -81,8 +81,8 @@ void blxlrsmb() {
 
 	vector<Segment> segs;
 	Vec v1(7, 2, 6),
-		v2(-2, 2, -7),
-		v3(-7, -3, 3);
+		v2(-5, -2, -4),
+		v3(-7, 3, 3);
 	segs.push_back(Segment(v1, v2));
 	segs.push_back(Segment(v2, v3));
 	segs.push_back(Segment(v1, v3));
