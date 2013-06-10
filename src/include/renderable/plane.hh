@@ -1,5 +1,5 @@
 // File: plane.hh
-// Date: Mon Jun 10 00:06:19 2013 +0800
+// Date: Mon Jun 10 11:50:10 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -15,7 +15,7 @@ class Plane : public RenderAble {
 		Vec surfdir = Vec::infinity();
 		Vec center = Vec::infinity();
 
-		const InfPlane& plane;
+		const InfPlane plane;
 
 		Plane(const InfPlane& _plane):
 			plane(_plane) {

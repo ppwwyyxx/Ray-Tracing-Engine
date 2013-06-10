@@ -1,5 +1,5 @@
 // File: geometry.hh
-// Date: Mon Jun 10 00:10:55 2013 +0800
+// Date: Mon Jun 10 11:52:01 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -144,6 +144,9 @@ class Vector {
 
 		static Vector get_zero()
 		{ return Vector(0, 0, 0); }
+
+		inline bool isnoraml() const
+		{ return isfinite(x) && isfinite(y) && isfinite(z); }
 
 		// i'm norm
 		Vector reflection(const Vector& v) const {
