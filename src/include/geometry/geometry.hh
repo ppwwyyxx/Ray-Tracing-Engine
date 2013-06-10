@@ -1,5 +1,5 @@
 // File: geometry.hh
-// Date: Mon Jun 10 23:44:48 2013 +0800
+// Date: Mon Jun 10 23:51:16 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -69,17 +69,7 @@ class Vector {
 		virtual void normalize() {
 			real_t m = 1 / mod();
 			*this *= m;		// work?
-			/*
-			 *x *= m; y *= m; z *= m;
-			 */
 			m_assert(std::isnormal(m));
-			/*		// double ensure
-			 *m = mod();
-			 *if (fabs(m - 1) > EPS) {
-			 *    m = 1 / mod();
-			 *    x *= m, y *= m, z *= m;
-			 *}
-			 */
 		}
 
 		Vector get_normalized() const

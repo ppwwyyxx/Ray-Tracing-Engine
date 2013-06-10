@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Mon Jun 10 23:40:31 2013 +0800
+// Date: Tue Jun 11 01:00:16 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "space.hh"
 #include "renderable/plane.hh"
@@ -11,7 +11,8 @@
 using namespace std;
 
 #define PLANE_SIZE 8
-#define N_PLANE 12
+#define N_PLANE 120
+#define PLANES_PER_FRAME 5
 
 struct Segment {
 	Ray ray;
@@ -58,7 +59,6 @@ vector<InfPlane> gen_plane() {
 	return move(ret);
 }
 
-
 void blxlrsmb() {
 	int w, h;
 	w = h = 500;
@@ -68,73 +68,59 @@ void blxlrsmb() {
 	s.add_light(l);
 	s.add_light(Light(Vec(0, 0, 50), Color::WHITE, 1));
 	s.add_light(Light(Vec(50, 0, 50), Color::WHITE, 1));
-	s.add_light(Light(Vec(0, 50, 50), Color::WHITE, 1));
+	s.add_light(Light(Vec(-10, -20, 20), Color::WHITE, 1));
 	s.add_light(Light(Vec(0, 10, -50), Color::WHITE, 1));
 	shared_ptr<Texture> tred(new HomoTexture(Surface::RED));
 	shared_ptr<Texture> t1(new HomoTexture(HomoTexture::BLUE));
-	InfPlane ground(Vec(0, 0, 1), -10);
-	Plane groundp(ground, t1);
-	s.add_obj(shared_ptr<RenderAble>(new Plane(groundp)));
 
 	Surface w_trans_surface(2, 50, Color::WHITE, Color::WHITE, Color::WHITE * DEFAULT_SPECULAR);
 	Surface b_trans_surface(2, 50, Color::BLACK, Color::WHITE , Color::WHITE * DEFAULT_SPECULAR);
-	shared_ptr<Texture> t2(new GridTexture(1, w_trans_surface, b_trans_surface));
-
-
-	PureSphere labelx(Vec(8, 0, 0), 0.5);
-	PureSphere labely(Vec(0, 8, 0), 0.5);
-	PureSphere labelz(Vec(0, 0, 8), 0.5);
+	Surface grey(3, 50, Color(0.5, 0.5, 0.5), Color::WHITE, Color::WHITE * DEFAULT_SPECULAR);
+	shared_ptr<Texture> t2(new HomoTexture(grey));
 
 
 	vector<Segment> segs;
-	Vec v1(2, 5, 5),
-		v2(-5, -1, -1),
-		v3(7, -2, -3);
+	Vec v1(7, 2, 6),
+		v2(-2, 2, -7),
+		v3(-7, -3, 3);
 	segs.push_back(Segment(v1, v2));
 	segs.push_back(Segment(v2, v3));
 	segs.push_back(Segment(v1, v3));
 
-	/*
-	 *Vec v4(-1, -5, 4);
-	 *segs.push_back(Segment(v1, v4));
-	 *segs.push_back(Segment(v2, v4));
-	 *segs.push_back(Segment(v3, v4));
-	 */
+	Vec v4(5, -7, -5);
+	segs.push_back(Segment(v1, v4));
+	segs.push_back(Segment(v2, v4));
+	segs.push_back(Segment(v3, v4));
 	auto planes = gen_plane();
 	REP(k, N_PLANE) {
-		s.clean_obj();
-		s.add_obj(shared_ptr<RenderAble>(new Sphere(labelx, t1)));
-		s.add_obj(shared_ptr<RenderAble>(new Sphere(labely, tred)));
-		s.add_obj(shared_ptr<RenderAble>(new Sphere(labelz, tred)));
+		if ((k + 1) % PLANES_PER_FRAME == 0) {
+			View v(make_shared<Space>(s), Vec(0, -30, 20), Vec(0, 0, 5), 30, Geometry(w, h));
+			char fname[32];
+			sprintf(fname, "output/%03d.png", k / PLANES_PER_FRAME);
+			CVViewer viewer(v, fname);
+			s.clean_obj();
+		}
 
 		InfPlane& pl = planes[k];
 		Plane tmp_plane(pl, t2);
 		tmp_plane.set_finite(10, Vec(0, 0, 0));
-		s.add_obj(shared_ptr<RenderAble>(new Plane(tmp_plane)));
+		if (k % PLANES_PER_FRAME == 0)
+			s.add_obj((new Plane(tmp_plane)));
 
 
 		for (auto & seg : segs) {
 			Vec inter;
 			if (!intersect(inter, seg, pl)) continue;
-			cout << "plane norm: " << pl.norm << endl;
-			cout << "inter: " << inter << endl;
 			PureSphere sph(inter, 0.5);
-			s.add_obj(shared_ptr<RenderAble>(new Sphere(sph, tred)));
+			s.add_obj(new Sphere(sph, tred));
 		}
 
-
-		View v(make_shared<Space>(s), Vec(0, -30, 30), Vec(0, 0, 5), 30, Geometry(w, h));
-		char fname[32];
-		sprintf(fname, "output/%03d.png", k);
-		CVViewer viewer(v, fname);
 	}
 }
 
 int main(int argc, char* argv[]) {
-	/*
-	 *blxlrsmb();
-	 *return 0;
-	 */
+	blxlrsmb();
+	return 0;
 
 	int w, h;
 	w = h = 500;
@@ -146,16 +132,10 @@ int main(int argc, char* argv[]) {
 
 	shared_ptr<Texture> t1(new GridTexture(GridTexture::BLACK_WHITE));
 	Plane plane1(InfPlane::XYPLANE, t1);
-	s.add_obj(shared_ptr<RenderAble>(new Plane(plane1)));
-	PureSphere labelx(Vec(8, 0, 0), 0.5);
-	s.add_obj(shared_ptr<RenderAble>(new Sphere(labelx, t1)));
-	/*
-	 *Plane plane2 = Plane::YZPLANE;
-	 *s.add_obj(shared_ptr<RenderAble>(new Plane(plane2)));
-	 */
+	s.add_obj(new Plane(plane1));
 	t1 = shared_ptr<Texture>(new HomoTexture(HomoTexture::BLUE));
 	Sphere sphere(PureSphere::TestSphere, t1);
-	s.add_obj(shared_ptr<RenderAble>(new Sphere(sphere)));
+	s.add_obj(new Sphere(sphere));
 
 	View v(make_shared<Space>(s), Vec(0, -10, 5), Vec(0, 0, 5), 30, Geometry(w, h));
 	CVViewer viewer(v);
