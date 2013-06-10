@@ -1,5 +1,5 @@
 // File: space.hh
-// Date: Sun May 19 13:59:55 2013 +0800
+// Date: Mon Jun 10 21:33:34 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -29,6 +29,10 @@ class Space {
 
 		void add_obj(const std::shared_ptr<RenderAble>& objptr)
 		{ objs.push_back(objptr); }
+
+		// useful, keep lights
+		void clean_obj()
+		{ objs.clear(); }
 
 		void init();
 

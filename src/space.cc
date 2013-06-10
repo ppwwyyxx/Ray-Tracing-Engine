@@ -1,5 +1,5 @@
 // File: space.cc
-// Date: Mon Jun 10 01:38:37 2013 +0800
+// Date: Mon Jun 10 21:58:34 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <limits>
@@ -90,8 +90,13 @@ Color Space::trace(const Ray& ray, real_t dist, int depth) {
 			new_ray = Ray(inter_point + ray.dir * EPS, tr_dir, density);
 			new_ray.debug = ray.debug;
 			Color transm = trace(new_ray, dist, depth + 1);
-			ret += transm * surf->transparency;
-			ret *= TRANSM_BLEND_FACTOR;
+			if (transm.x > 0.2)
+				ret = transm;
+			/*
+			 *else
+			 *ret += transm * surf->transparency;
+			 *ret *= TRANSM_BLEND_FACTOR;
+			 */
 		}
 	}
 
