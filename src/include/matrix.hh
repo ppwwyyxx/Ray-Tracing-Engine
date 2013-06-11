@@ -1,8 +1,9 @@
 // File: matrix.hh
-// Date: Tue Apr 09 13:47:21 2013 +0800
+// Date: Tue Jun 11 23:51:44 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
+#include <cstring>
 #include "debugutils.hh"
 
 // basic 2-d array
@@ -26,8 +27,7 @@ class Matrix {
 
 			for (int i = 0; i < h; i++) {
 				val[i] = new T [w];
-				if (v)
-					memcpy(val[i], v[i], rowlen);
+				if (v) memcpy(val[i], v[i], rowlen);
 			}
 		}
 
@@ -37,9 +37,43 @@ class Matrix {
 			delete [] val;
 		}
 
-		Matrix(const Matrix&) = delete;
+		// something bad
+		Matrix(const Matrix& m) {
+			w = m.w, h = m.h;
+			val = new T* [h];
+			REP(i, h) {
+				val[i] = new T[w]();
+				memcpy(val[i], m.val[i], w * sizeof(T));
+			}
+		}
 
-		Matrix & operator = (const Matrix &) = delete;
+		Matrix & operator = (const Matrix & m) {
+			if (this != &m) {
+				w = m.w, h = m.h;
+				val = new T* [h];
+				REP(i, h) {
+					val[i] = new T[w]();
+					memcpy(val[i], m.val[i], w * sizeof(T));
+				}
+			}
+			return *this;
+		}
+
+		Matrix & operator = (Matrix && r) {
+			m_assert(this != &r);
+			free_2d<T>(val, h);
+			val = r.val;
+			w = r.w, h = r.h;
+			r.val = nullptr;
+			return *this;
+		}
+
+		Matrix(Matrix&& r) {
+			val = r.val;
+			w = r.w, h = r.h;
+			r.val = nullptr;
+		}
+		// something ugly
 
 		// get the ith row
 		T*& operator [] (int i) {
@@ -47,11 +81,10 @@ class Matrix {
 			return val[i];
 		}
 
-		/*
-		 *const T*& operator [] (int i) const {
-		 *    m_assert((0 <= i) && (i <= h));
-		 *    return val[i];
-		 *}
-		 */
+		const T*& operator [] (int i) const {
+			m_assert((0 <= i) && (i <= h));
+			return val[i];
+		}
+
 };
 

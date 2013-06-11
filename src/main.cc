@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Tue Jun 11 13:39:40 2013 +0800
+// Date: Wed Jun 12 01:44:24 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "space.hh"
 #include "renderable/plane.hh"
@@ -11,9 +11,11 @@
 using namespace std;
 
 #define PLANE_SIZE 8
-#define N_PLANE 800
-#define PLANES_PER_FRAME 40
-#define N_VIEW 8
+#define THRES 0.5
+#define N_PLANE 12000
+#define PLANES_PER_FRAME 1000
+#define N_PIC 120
+#define N_VIEW 1
 #define THETA_ROTATE 10
 
 struct Segment {
@@ -27,7 +29,6 @@ struct Segment {
 };
 
 bool intersect(Vector& ret, const Segment& seg, const InfPlane& pl) {
-	real_t THRES = 1;
 	shared_ptr<Trace> tr(new PlaneTrace(pl, seg.ray));
 	if (!tr->intersect())
 		return false;
@@ -50,7 +51,7 @@ bool intersect(Vector& ret, const Segment& seg, const InfPlane& pl) {
 
 vector<InfPlane> gen_plane() {
 	vector<InfPlane> ret;
-	real_t t = M_PI / N_PLANE;
+	real_t t = 2 * M_PI / N_PLANE;
 	Vec norm(0, 1, 0);
 	REP(_t, N_PLANE) {
 		InfPlane pl(norm, 0);
@@ -60,6 +61,35 @@ vector<InfPlane> gen_plane() {
 	}
 	return move(ret);
 }
+
+/*
+ *void print(const vector<pair<int, int>>& coors) {
+ *    int n = coors.size();
+ *    vector<int> ret[n];
+ *    REP(kk, n) {
+ *        Matrix<int> mat = mats[kk];
+ *        int l = (kk - 1) % n, r = (kk + 1) % n;
+ *        REP(i, 16) REP(j, 16) {
+ *            if (mat[i][j] == 1) {
+ *                ret[kk].push_back(16 * (15 - i) + j);
+ *                ret[l].push_back(16 * (15 - i) + j);
+ *                ret[r].push_back(16 * (15 - i) + j);
+ *            }
+ *        }
+ *        cout << "[";
+ *        for (auto itr = out.begin(); itr != out.end(); itr ++)
+ *            cout << ((itr == out.begin()) ? "" : ", ") << *itr;
+ *        cout << "]";
+ *        cout << endl;
+ *    }
+ *    REP(kk, n) {
+ *        cout << "[";
+ *        for (auto itr = ret[kk].begin(); itr != ret[kk].end(); itr ++)
+ *            cout << ((itr == ret[kk].begin()) ? "" : ", ") << *itr;
+ *        cout << "]" << endl;
+ *    }
+ *}
+ */
 
 void blxlrsmb() {
 	int w, h;
@@ -88,28 +118,48 @@ void blxlrsmb() {
 	Vec v1(7, 2, 6),
 		v2(-5, -2, -4),
 		v3(-7, 3, 3);
-	segs.push_back(Segment(v1, v2));
+	/*
+	 *segs.push_back(Segment(v1, v2));
+	 */
 	segs.push_back(Segment(v2, v3));
 	segs.push_back(Segment(v1, v3));
 
-	Vec v4(5, -7, -5);
-	segs.push_back(Segment(v1, v4));
-	segs.push_back(Segment(v2, v4));
-	segs.push_back(Segment(v3, v4));
+	/*
+	 *Vec v4(5, -7, -5);
+	 *segs.push_back(Segment(v1, v4));
+	 *segs.push_back(Segment(v2, v4));
+	 *segs.push_back(Segment(v3, v4));
+	 */
 	auto planes = gen_plane();
 
 	real_t delta_theta = M_PI / 180 * THETA_ROTATE;
 	real_t theta = 0;
 	vector<PureSphere> points;
+	vector<pair<int, int>> coors[N_PIC];
 	REP(t, N_VIEW) {
 		REP(k, N_PLANE) {
 			if ((k + 1) % PLANES_PER_FRAME == 0) {
-				for (auto & sph : points)
-					s.add_obj(new Sphere(sph, tred));
+				for (auto & sph : points) s.add_obj(new Sphere(sph, tred));
+
+				for (auto & sph: points) {
+					Vec center = sph.center;
+					Ray z_axis(Vec(0, 0, 0), Vec(0, 0, 1));
+					real_t x = fabs(z_axis.distance(center));
+					if ((center.x > 0) ^ (planes[k].norm.y < 0))
+						x = -x;
+
+					real_t y = 8 - center.z;
+					int xx = round(x + 8), yy = round(y);
+					if (BETW(xx, 0, 16) && BETW(yy, 0, 16)) {
+						coors[k / PLANES_PER_FRAME].push_back({xx, yy});
+					}
+				}
+
 				View v(make_shared<Space>(s), Vec(20 * sin(theta), -20 * cos(theta), 30), Vec(0, 0, 5), 30, Geometry(w, h));
 				char fname[32];
 				sprintf(fname, "output/%02d-%03d.png", t, k / PLANES_PER_FRAME);
 				CVViewer viewer(v, fname);
+
 				s.clean_obj();
 				s.add_obj(new Sphere(xlabel));
 				points.clear();
@@ -125,6 +175,7 @@ void blxlrsmb() {
 			for (auto & seg : segs) {
 				Vec inter;
 				if (!intersect(inter, seg, pl)) continue;
+				inter = inter + planes[k].norm;
 				PureSphere sph(inter, 0.5);
 				bool have = false;
 				for (auto& t_sph: points)
@@ -137,10 +188,120 @@ void blxlrsmb() {
 		}
 		theta += delta_theta;
 	}
+
+	vector<pair<int, int>> newcoor[N_PIC];
+	REP(k, N_PIC) {
+		int l = (k - 1) % N_PIC, r = (k + 1) % N_PIC;
+		for (auto & pair : coors[k]) {
+			newcoor[l].push_back(pair);
+			newcoor[k].push_back(pair);
+			newcoor[r].push_back(pair);
+		}
+	}
+	REP(k, N_PIC) {
+		Matrix<int> mat(16, 16);
+		for (auto & pair : newcoor[k])
+			mat[pair.first][pair.second] = 1;
+		REP(xx, 16) REP(yy, 16)
+			cout << mat[xx][yy] << (yy == 15 ? "\n" : " ");
+		cout << endl;
+	}
+}
+
+real_t get_dist(const Segment& seg, Vec point) {
+	Vec projected = seg.ray.project(point);
+	if (seg.ray.contains(projected) && (projected - seg.ray.orig).mod() < seg.len)
+		return seg.ray.distance(point);
+	return min((seg.ray.orig - point).mod(),
+			(seg.ray.orig + seg.ray.dir.get_normalized() * seg.len - point).mod());
+}
+
+bool will_intersect(const Segment& seg, Vec point) {
+	real_t end_t = 2 * M_PI / N_PIC,
+		   start_t = 0;
+	int cnt = 0;
+	while (end_t - start_t > EPS / 100) {
+		cnt ++;
+		real_t m1 = start_t + (end_t - start_t) / 3,
+			   m2 = start_t + (end_t - start_t) * 2 / 3;
+		Vec p1 = Vec(point.x * cos(m1) - point.y * sin(m1), point.x * sin(m1) + point.y * cos(m1), point.z);
+		Vec p2 = Vec(point.x * cos(m2) - point.y * sin(m2), point.x * sin(m2) + point.y * cos(m2), point.z);
+		real_t d1 = get_dist(seg, p1),
+			   d2 = get_dist(seg, p2);
+		if (d1 < THRES || d2 < THRES)
+			return true;
+		if (d1 < d2)
+			end_t = m2;
+		else
+			start_t = m1;
+	}
+	return false;
+}
+
+bool judge(const InfPlane& pl, int xx, int yy, const vector<Segment>& segs) {
+	Vec norm = pl.norm,
+		x_axis = norm.cross(Vec(0, 0, 1));
+	real_t realz = yy - 7.5;
+	Vec realxy = x_axis * (xx - 7.5); // + norm * 1.6;
+	realxy.z = realz;
+	for (auto& seg : segs) {
+		if (will_intersect(seg, realxy))
+			return true;
+	}
+	return false;
+
+}
+
+void blxl() {
+	real_t theta = 0;
+	real_t delta = 2 * M_PI / N_PIC;
+	Vec norm(0, 1, 0);
+	vector<Segment> segs;
+	Vec v1(7, 2, 6),
+		v2(-5, -2, -4),
+		v3(-7, 3, 3);
+	segs.push_back(Segment(v1, v2));
+	segs.push_back(Segment(v2, v3));
+	segs.push_back(Segment(v3, v1));
+
+/*
+ *    Vec v4(5, -7, -5);
+ *    segs.push_back(Segment(v1, v4));
+ *    segs.push_back(Segment(v2, v4));
+ *    segs.push_back(Segment(v3, v4));
+ *
+ */
+
+	REP(k, N_PIC) {
+		Vec new_norm(norm.x * cos(k * delta) - norm.y * sin(k * delta), norm.x * sin(k * delta) + norm.y * cos(k * delta), 0);
+		new_norm.normalize();
+		Vec x_axis = new_norm.cross(Vec(0, 0, 1));
+		InfPlane pl(new_norm, 1.6); // 1.6
+
+
+		Matrix<int> mat(16, 16);
+		REP(xx, 16)	 REP(yy, 16) {
+			if (judge(pl, xx, yy, segs))
+				mat[xx][yy] = 1;
+		}
+
+		vector<int> out;
+		REP(xx, 16) REP(yy, 16) {
+			if (mat[xx][yy] == 1)
+				out.push_back(16 * (15 - xx) + yy);
+//			cout << mat[xx][yy] << (yy == 15 ? "\n" : " ");
+		}
+
+		cout << "[";
+		for (auto itr = out.begin(); itr != out.end(); itr ++)
+			cout << ((itr == out.begin()) ? "" : ", ") << *itr;
+		cout << "]";
+		cout << endl;
+	}
 }
 
 int main(int argc, char* argv[]) {
-	blxlrsmb();
+	blxl();
 	return 0;
 
 	int w, h;
