@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Tue Jun 11 01:18:08 2013 +0800
+// Date: Tue Jun 11 10:50:12 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "space.hh"
 #include "renderable/plane.hh"
@@ -13,6 +13,8 @@ using namespace std;
 #define PLANE_SIZE 8
 #define N_PLANE 150
 #define PLANES_PER_FRAME 10
+#define N_VIEW 8
+#define THETA_ROTATE 10
 
 struct Segment {
 	Ray ray;
@@ -78,6 +80,9 @@ void blxlrsmb() {
 	Surface grey(3, 50, Color(0.5, 0.5, 0.5), Color::WHITE, Color::WHITE * DEFAULT_SPECULAR);
 	shared_ptr<Texture> t2(new HomoTexture(grey));
 
+	PureSphere xlp(Vec(8, 0, 0), 0.5);
+	Sphere xlabel(xlp, t1);
+
 
 	vector<Segment> segs;
 	Vec v1(7, 2, 6),
@@ -92,29 +97,35 @@ void blxlrsmb() {
 	segs.push_back(Segment(v2, v4));
 	segs.push_back(Segment(v3, v4));
 	auto planes = gen_plane();
-	REP(k, N_PLANE) {
-		if ((k + 1) % PLANES_PER_FRAME == 0) {
-			View v(make_shared<Space>(s), Vec(0, -30, 20), Vec(0, 0, 5), 30, Geometry(w, h));
-			char fname[32];
-			sprintf(fname, "output/%03d.png", k / PLANES_PER_FRAME);
-			CVViewer viewer(v, fname);
-			s.clean_obj();
+
+	real_t delta_theta = M_PI / 180 * THETA_ROTATE;
+	real_t theta = 0;
+	REP(t, N_VIEW) {
+		REP(k, N_PLANE) {
+			if ((k + 1) % PLANES_PER_FRAME == 0) {
+				View v(make_shared<Space>(s), Vec(20 * sin(theta), -20 * cos(theta), 30), Vec(0, 0, 5), 30, Geometry(w, h));
+				char fname[32];
+				sprintf(fname, "output/%02d-%03d.png", t, k / PLANES_PER_FRAME);
+				CVViewer viewer(v, fname);
+				s.clean_obj();
+				s.add_obj(new Sphere(xlabel));
+			}
+
+			InfPlane& pl = planes[k];
+			Plane tmp_plane(pl, t2);
+			tmp_plane.set_finite(10, Vec(0, 0, 0));
+			if (k % PLANES_PER_FRAME == 0)
+				s.add_obj((new Plane(tmp_plane)));
+
+
+			for (auto & seg : segs) {
+				Vec inter;
+				if (!intersect(inter, seg, pl)) continue;
+				PureSphere sph(inter, 0.5);
+				s.add_obj(new Sphere(sph, tred));
+			}
 		}
-
-		InfPlane& pl = planes[k];
-		Plane tmp_plane(pl, t2);
-		tmp_plane.set_finite(10, Vec(0, 0, 0));
-		if (k % PLANES_PER_FRAME == 0)
-			s.add_obj((new Plane(tmp_plane)));
-
-
-		for (auto & seg : segs) {
-			Vec inter;
-			if (!intersect(inter, seg, pl)) continue;
-			PureSphere sph(inter, 0.5);
-			s.add_obj(new Sphere(sph, tred));
-		}
-
+		theta += delta_theta;
 	}
 }
 
