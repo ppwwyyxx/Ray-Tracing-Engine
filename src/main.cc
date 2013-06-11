@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Tue Jun 11 10:50:12 2013 +0800
+// Date: Tue Jun 11 13:39:40 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "space.hh"
 #include "renderable/plane.hh"
@@ -11,8 +11,8 @@
 using namespace std;
 
 #define PLANE_SIZE 8
-#define N_PLANE 150
-#define PLANES_PER_FRAME 10
+#define N_PLANE 800
+#define PLANES_PER_FRAME 40
 #define N_VIEW 8
 #define THETA_ROTATE 10
 
@@ -70,14 +70,14 @@ void blxlrsmb() {
 	s.add_light(l);
 	s.add_light(Light(Vec(0, 0, 50), Color::WHITE, 1));
 	s.add_light(Light(Vec(50, 0, 50), Color::WHITE, 1));
-	s.add_light(Light(Vec(-10, -20, 20), Color::WHITE, 1));
+	s.add_light(Light(Vec(-10, -20, 0), Color::WHITE, 1));
 	s.add_light(Light(Vec(0, 10, -50), Color::WHITE, 1));
 	shared_ptr<Texture> tred(new HomoTexture(Surface::RED));
 	shared_ptr<Texture> t1(new HomoTexture(HomoTexture::BLUE));
 
 	Surface w_trans_surface(2, 50, Color::WHITE, Color::WHITE, Color::WHITE * DEFAULT_SPECULAR);
 	Surface b_trans_surface(2, 50, Color::BLACK, Color::WHITE , Color::WHITE * DEFAULT_SPECULAR);
-	Surface grey(3, 50, Color(0.5, 0.5, 0.5), Color::WHITE, Color::WHITE * DEFAULT_SPECULAR);
+	Surface grey(0, 50, Color(0.5, 0.5, 0.5), Color::WHITE, Color::WHITE * DEFAULT_SPECULAR);
 	shared_ptr<Texture> t2(new HomoTexture(grey));
 
 	PureSphere xlp(Vec(8, 0, 0), 0.5);
@@ -100,15 +100,19 @@ void blxlrsmb() {
 
 	real_t delta_theta = M_PI / 180 * THETA_ROTATE;
 	real_t theta = 0;
+	vector<PureSphere> points;
 	REP(t, N_VIEW) {
 		REP(k, N_PLANE) {
 			if ((k + 1) % PLANES_PER_FRAME == 0) {
+				for (auto & sph : points)
+					s.add_obj(new Sphere(sph, tred));
 				View v(make_shared<Space>(s), Vec(20 * sin(theta), -20 * cos(theta), 30), Vec(0, 0, 5), 30, Geometry(w, h));
 				char fname[32];
 				sprintf(fname, "output/%02d-%03d.png", t, k / PLANES_PER_FRAME);
 				CVViewer viewer(v, fname);
 				s.clean_obj();
 				s.add_obj(new Sphere(xlabel));
+				points.clear();
 			}
 
 			InfPlane& pl = planes[k];
@@ -122,7 +126,13 @@ void blxlrsmb() {
 				Vec inter;
 				if (!intersect(inter, seg, pl)) continue;
 				PureSphere sph(inter, 0.5);
-				s.add_obj(new Sphere(sph, tred));
+				bool have = false;
+				for (auto& t_sph: points)
+					if (t_sph.center == sph.center) {
+						have = true;
+						break;
+					}
+				if (!have) points.push_back(sph);
 			}
 		}
 		theta += delta_theta;
