@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Wed Jun 12 15:13:06 2013 +0800
+// Date: Wed Jun 12 21:28:18 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "space.hh"
 #include "renderable/plane.hh"
@@ -352,8 +352,10 @@ void blxl() {
 }
 
 int main(int argc, char* argv[]) {
-	blxl();
-	return 0;
+	/*
+	 *blxl();
+	 *return 0;
+	 */
 
 	int w, h;
 	w = h = 500;
