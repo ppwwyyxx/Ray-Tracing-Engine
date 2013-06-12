@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Wed Jun 12 01:44:24 2013 +0800
+// Date: Wed Jun 12 15:13:06 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "space.hh"
 #include "renderable/plane.hh"
@@ -230,9 +230,7 @@ bool will_intersect(const Segment& seg, Vec point) {
 			   d2 = get_dist(seg, p2);
 		if (d1 < THRES || d2 < THRES)
 			return true;
-		if (d1 < d2)
-			end_t = m2;
-		else
+		if (d1 < d2) end_t = m2; else
 			start_t = m1;
 	}
 	return false;
@@ -241,8 +239,8 @@ bool will_intersect(const Segment& seg, Vec point) {
 bool judge(const InfPlane& pl, int xx, int yy, const vector<Segment>& segs) {
 	Vec norm = pl.norm,
 		x_axis = norm.cross(Vec(0, 0, 1));
-	real_t realz = yy - 7.5;
-	Vec realxy = x_axis * (xx - 7.5); // + norm * 1.6;
+	real_t realz = 7.5 - xx;
+	Vec realxy = x_axis * (yy - 7.5) + norm * 1.6;
 	realxy.z = realz;
 	for (auto& seg : segs) {
 		if (will_intersect(seg, realxy))
@@ -253,13 +251,42 @@ bool judge(const InfPlane& pl, int xx, int yy, const vector<Segment>& segs) {
 }
 
 void blxl() {
+	int w, h;
+	w = h = 500;
+	Space s;
+	Space s2;
+	Light l(Vec(5, -2, 15), Color(0.9, 1, 1), 1);
+	l.size = EPS;
+	s.add_light(l);
+	s.add_light(Light(Vec(0, 0, 50), Color::WHITE, 1));
+	s.add_light(Light(Vec(50, 0, 50), Color::WHITE, 1));
+	s.add_light(Light(Vec(-10, -20, 0), Color::WHITE, 1));
+	s.add_light(Light(Vec(0, 10, -50), Color::WHITE, 1));
+	s2.add_light(l);
+	s2.add_light(Light(Vec(0, 0, 50), Color::WHITE, 1));
+	s2.add_light(Light(Vec(50, 0, 50), Color::WHITE, 1));
+	s2.add_light(Light(Vec(-10, -20, 0), Color::WHITE, 1));
+	s2.add_light(Light(Vec(0, 10, -50), Color::WHITE, 1));
+	shared_ptr<Texture> tred(new HomoTexture(Surface::RED));
+	shared_ptr<Texture> t1(new HomoTexture(HomoTexture::BLUE));
+
+	Surface w_trans_surface(2, 50, Color::WHITE, Color::WHITE, Color::WHITE * DEFAULT_SPECULAR);
+	Surface b_trans_surface(2, 50, Color::BLACK, Color::WHITE , Color::WHITE * DEFAULT_SPECULAR);
+	Surface grey(0, 50, Color(0.5, 0.5, 0.5), Color::WHITE, Color::WHITE * DEFAULT_SPECULAR);
+	shared_ptr<Texture> t2(new HomoTexture(grey));
+
+	PureSphere xlp(Vec(8, 0, 0), 0.5);
+	Sphere xlabel(xlp, t1);
+
+
+
 	real_t theta = 0;
 	real_t delta = 2 * M_PI / N_PIC;
 	Vec norm(0, 1, 0);
 	vector<Segment> segs;
-	Vec v1(7, 2, 6),
-		v2(-5, -2, -4),
-		v3(-7, 3, 3);
+	Vec v1(7, 7, 6),
+		v2(7, -7, 6),
+		v3(-7, 7, -6);
 	segs.push_back(Segment(v1, v2));
 	segs.push_back(Segment(v2, v3));
 	segs.push_back(Segment(v3, v1));
@@ -273,23 +300,38 @@ void blxl() {
  */
 
 	REP(k, N_PIC) {
+		s.clean_obj();
+
 		Vec new_norm(norm.x * cos(k * delta) - norm.y * sin(k * delta), norm.x * sin(k * delta) + norm.y * cos(k * delta), 0);
 		new_norm.normalize();
-		Vec x_axis = new_norm.cross(Vec(0, 0, 1));
+		Vec x_axis = -new_norm.cross(Vec(0, 0, 1));
 		InfPlane pl(new_norm, 1.6); // 1.6
 
 
 		Matrix<int> mat(16, 16);
 		REP(xx, 16)	 REP(yy, 16) {
-			if (judge(pl, xx, yy, segs))
+			if (judge(pl, xx, yy, segs)) {
+				Vec norm = pl.norm,
+					x_axis = norm.cross(Vec(0, 0, 1));
+				real_t realz = 7.5 - xx;
+				Vec realxy = x_axis * (yy - 7.5) + norm * 1.6;
+				realxy.z = realz;
+
+				PureSphere tmp_sph(realxy, 0.1);
+				s.add_obj(new Sphere(tmp_sph, tred));
+				s2.add_obj(new Sphere(tmp_sph, tred));
+
 				mat[xx][yy] = 1;
+			}
 		}
 
 		vector<int> out;
 		REP(xx, 16) REP(yy, 16) {
 			if (mat[xx][yy] == 1)
 				out.push_back(16 * (15 - xx) + yy);
-//			cout << mat[xx][yy] << (yy == 15 ? "\n" : " ");
+			/*
+			 *cout << mat[xx][yy] << (yy == 15 ? "\n" : " ");
+			 */
 		}
 
 		cout << "[";
@@ -297,7 +339,16 @@ void blxl() {
 			cout << ((itr == out.begin()) ? "" : ", ") << *itr;
 		cout << "]";
 		cout << endl;
+		View v(make_shared<Space>(s), Vec(0, -20, 30), Vec(0, 0, 5), 30, Geometry(w, h));
+		char fname[32];
+		sprintf(fname, "output/%03d.png", k);
+		CVViewer viewer(v, fname);
+
 	}
+		View v(make_shared<Space>(s2), Vec(0, -20, 30), Vec(0, 0, 5), 30, Geometry(w, h));
+		char fname[32];
+		sprintf(fname, "all.png", 1);
+		CVViewer viewer(v, fname);
 }
 
 int main(int argc, char* argv[]) {
