@@ -1,5 +1,5 @@
 // File: texture.cc
-// Date: Mon Jun 10 00:52:28 2013 +0800
+// Date: Sat Apr 06 13:32:25 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "material/texture.hh"

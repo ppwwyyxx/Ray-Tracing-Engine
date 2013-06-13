@@ -1,5 +1,5 @@
 // File: cvrender.cc
-// Date: Thu Jun 13 13:24:00 2013 +0800
+// Date: Thu Jun 13 14:50:17 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <opencv2/opencv.hpp>
@@ -54,9 +54,7 @@ void CVViewer::render_all() {
 		Color col = v.render(i, j);
 		r.write(j, i, col);
 	}
-	/*
-	 *printf("%lf seconds.\n", timer.get_sec());
-	 */
+	print_debug("%lf seconds.\n", timer.get_sec());
 }
 
 void CVViewer::view() {
