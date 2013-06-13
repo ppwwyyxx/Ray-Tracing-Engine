@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Wed Jun 12 21:28:18 2013 +0800
+// Date: Thu Jun 13 12:30:37 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "space.hh"
 #include "renderable/plane.hh"
@@ -61,35 +61,6 @@ vector<InfPlane> gen_plane() {
 	}
 	return move(ret);
 }
-
-/*
- *void print(const vector<pair<int, int>>& coors) {
- *    int n = coors.size();
- *    vector<int> ret[n];
- *    REP(kk, n) {
- *        Matrix<int> mat = mats[kk];
- *        int l = (kk - 1) % n, r = (kk + 1) % n;
- *        REP(i, 16) REP(j, 16) {
- *            if (mat[i][j] == 1) {
- *                ret[kk].push_back(16 * (15 - i) + j);
- *                ret[l].push_back(16 * (15 - i) + j);
- *                ret[r].push_back(16 * (15 - i) + j);
- *            }
- *        }
- *        cout << "[";
- *        for (auto itr = out.begin(); itr != out.end(); itr ++)
- *            cout << ((itr == out.begin()) ? "" : ", ") << *itr;
- *        cout << "]";
- *        cout << endl;
- *    }
- *    REP(kk, n) {
- *        cout << "[";
- *        for (auto itr = ret[kk].begin(); itr != ret[kk].end(); itr ++)
- *            cout << ((itr == ret[kk].begin()) ? "" : ", ") << *itr;
- *        cout << "]" << endl;
- *    }
- *}
- */
 
 void blxlrsmb() {
 	int w, h;

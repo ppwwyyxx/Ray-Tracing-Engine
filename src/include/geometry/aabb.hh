@@ -1,5 +1,5 @@
 // File: aabb.hh
-// Date: Fri Apr 05 17:13:44 2013 +0800
+// Date: Thu Jun 13 12:59:05 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -47,6 +47,8 @@ class AABB {
 		{ return (max - p).positive() && (p - min).positive(); }
 
 		// paper
+		// An efficient and robust ray-box intersection algorithm
+		// Williams, etc. SIGGRAPH 2005
 		bool intersect(const Ray& ray, real_t &mind, real_t &maxd) {
 			if (empty())
 				return false;
