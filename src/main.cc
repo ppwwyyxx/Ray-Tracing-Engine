@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Thu Jun 13 13:24:12 2013 +0800
+// Date: Thu Jun 13 21:27:45 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "space.hh"
 #include "renderable/plane.hh"
@@ -56,7 +56,7 @@ vector<InfPlane> gen_plane() {
 	REP(_t, N_PLANE) {
 		InfPlane pl(norm, 0);
 		ret.push_back(pl);
-		Vec new_norm(norm.x * cos(t) - norm.y * sin(t), norm.x * sin(t) + norm.y * cos(t));
+		Vec new_norm(norm.x * cos(t) - norm.y * sin(t), norm.x * sin(t) + norm.y * cos(t), 0);
 		norm = new_norm;
 	}
 	return move(ret);

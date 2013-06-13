@@ -1,5 +1,5 @@
 // File: geometry.hh
-// Date: Thu Jun 13 13:22:54 2013 +0800
+// Date: Thu Jun 13 21:27:34 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -7,6 +7,7 @@
 #include <vector>
 #include <cmath>
 #include <limits>
+using std::numeric_limits;
 
 #include "common.hh"
 
@@ -31,8 +32,10 @@ class Vector {
 	public:
 		real_t x = 0, y = 0, z = 0;
 
-		explicit Vector(real_t m_x = 0, real_t m_y = 0, real_t m_z = 0):
-			x(m_x), y(m_y), z(m_z) {}
+		Vector(){}
+
+		explicit Vector(real_t _x, real_t _y, real_t _z):
+			x(_x), y(_y), z(_z) {}
 
 		Vector(const Vector &p0, const Vector &p1):
 			x(p1.x - p0.x), y(p1.y -p0.y), z(p1.z - p0.z) {}
@@ -119,10 +122,10 @@ class Vector {
 		{ return os << vec.x << " " << vec.y << " " << vec.z;}
 
 		static Vector max()
-		{ return Vector(std::numeric_limits<real_t>::max(), std::numeric_limits<real_t>::max()); }
+		{ return Vector(numeric_limits<real_t>::max(), numeric_limits<real_t>::max(), numeric_limits<real_t>::max()); }
 
 		static Vector infinity()
-		{ return Vector(std::numeric_limits<real_t>::infinity(), std::numeric_limits<real_t>::infinity()); }
+		{ return Vector(numeric_limits<real_t>::infinity(), numeric_limits<real_t>::infinity(), numeric_limits<real_t>::infinity()); }
 
 		real_t get_max()
 		{ return std::max(x, std::max(y, z)); }
@@ -228,6 +231,9 @@ class Vector2D {
 
 		void update_max(const Vector2D<T> &v)
 		{ ::update_max(x, v.x); ::update_max(y, v.y);}
+
+		static Vector2D infinity()
+		{ return Vector2D(numeric_limits<real_t>::infinity(), numeric_limits<real_t>::infinity()); }
 };
 
 template<typename T>
