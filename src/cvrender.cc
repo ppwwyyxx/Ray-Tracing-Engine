@@ -1,5 +1,5 @@
 // File: cvrender.cc
-// Date: Tue Jun 11 20:38:51 2013 +0800
+// Date: Thu Jun 13 13:24:00 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <opencv2/opencv.hpp>
@@ -7,7 +7,7 @@
 
 #include "render/cvrender.hh"
 #include "viewer.hh"
-#include "utils.hh"
+#include "lib/utils.hh"
 using namespace cv;
 
 #define KEY_UP 65362

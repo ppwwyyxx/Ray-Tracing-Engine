@@ -1,5 +1,5 @@
 // File: common.hh
-// Date: Mon Jun 10 01:33:15 2013 +0800
+// Date: Thu Jun 13 13:22:01 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -10,8 +10,8 @@
 #include <utility>
 #include <limits>
 
-#include "debugutils.hh"
-#include "utils.hh"
+#include "lib/debugutils.hh"
+#include "lib/utils.hh"
 
 const real_t DEFAULT_TRACING_WEIGHT_THRESHOLD = EPS;
 const real_t AMBIENT_FACTOR = 0.17;

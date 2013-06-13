@@ -1,5 +1,5 @@
 // File: geometry.hh
-// Date: Mon Jun 10 23:51:16 2013 +0800
+// Date: Thu Jun 13 13:22:54 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -8,9 +8,7 @@
 #include <cmath>
 #include <limits>
 
-#include "utils.hh"
 #include "common.hh"
-#include "debugutils.hh"
 
 class Geometry {
 	public:

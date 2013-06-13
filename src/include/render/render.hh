@@ -1,5 +1,5 @@
 // File: render.hh
-// Date: Wed Apr 10 13:09:59 2013 +0800
+// Date: Thu Jun 13 13:23:41 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 
@@ -8,7 +8,7 @@
 #include "common.hh"
 #include "matrix.hh"
 #include "color.hh"
-#include "image.hh"
+#include "lib/imagereader.hh"
 
 class RenderBase {
 	public:

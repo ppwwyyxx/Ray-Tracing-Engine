@@ -1,10 +1,10 @@
 // File: matrix.hh
-// Date: Tue Jun 11 23:51:44 2013 +0800
+// Date: Thu Jun 13 13:23:04 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
 #include <cstring>
-#include "debugutils.hh"
+#include "lib/debugutils.hh"
 
 // basic 2-d array
 template <typename T>
