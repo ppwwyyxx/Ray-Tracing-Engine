@@ -1,17 +1,19 @@
 // File: texture.hh
-// Date: Wed Jun 12 21:28:03 2013 +0800
+// Date: Thu Jun 13 17:16:21 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
 
 #include <memory>
 #include "material/surface.hh"
+using std::shared_ptr;
+using std::make_shared;
 
 class Texture {
 	public:
-		virtual std::shared_ptr<Surface> get_property(real_t x, real_t y) const = 0;
+		virtual shared_ptr<Surface> get_property(real_t x, real_t y) const = 0;
 
-		virtual std::shared_ptr<Surface> get_property()
+		virtual shared_ptr<Surface> get_property()
 			// without coordinate, always call this before get_property(x, y)
 		{ return nullptr; }
 
@@ -26,13 +28,13 @@ class HomoTexture :public Texture {
 		HomoTexture(const Surface& m_pty):
 			pty(m_pty){}
 
-		std::shared_ptr<Surface> get_property(real_t x, real_t y) const {
+		shared_ptr<Surface> get_property(real_t x, real_t y) const {
 			print_debug("%lf, %lf\n", x, y);
 			error_exit("should not be here");
 		}
 
-		std::shared_ptr<Surface> get_property()
-		{ return std::make_shared<Surface>(pty); }
+		shared_ptr<Surface> get_property()
+		{ return make_shared<Surface>(pty); }
 
 		static const HomoTexture BLUE;
 };
@@ -45,13 +47,13 @@ class GridTexture : public Texture {
 		GridTexture(int m_size, const Surface& m_pty1, const Surface& m_pty2):
 			size(m_size), pty1(m_pty1), pty2(m_pty2){}
 
-		std::shared_ptr<Surface> get_property(real_t x, real_t y) const {
+		shared_ptr<Surface> get_property(real_t x, real_t y) const {
 			bool a1 = (((int)x / size) & 1) == 0;
 			if (x < 0) a1 = !a1;
 			bool a2 = (((int)y / size) & 1) == 0;
 			if (y < 0) a2 = !a2;
-			if (a1 ^ a2) return std::make_shared<Surface>(pty1);
-			else return std::make_shared<Surface>(pty2);
+			if (a1 ^ a2) return make_shared<Surface>(pty1);
+			else return make_shared<Surface>(pty2);
 		}
 
 		static const GridTexture BLACK_WHITE;

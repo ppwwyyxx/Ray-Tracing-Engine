@@ -1,5 +1,5 @@
 // File: renderable.hh
-// Date: Fri Jun 07 21:50:12 2013 +0800
+// Date: Thu Jun 13 17:16:10 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 
@@ -8,6 +8,8 @@
 #include <memory>
 #include "geometry/ray.hh"
 #include "material/texture.hh"
+using std::shared_ptr;
+using std::make_shared;
 
 class Trace;
 class RenderAble;
@@ -19,12 +21,12 @@ class RenderAble {
 		virtual ~RenderAble(){}
 
 		bool infinity = false;
-		std::shared_ptr<Texture> texture;
+		shared_ptr<Texture> texture;
 
-		void set_texture(const std::shared_ptr<Texture>& m_texture)
+		void set_texture(const shared_ptr<Texture>& m_texture)
 		{ texture = m_texture; }		// XXX is this ok?
 
-		virtual std::shared_ptr<Trace> get_trace(const Ray& ray) const = 0;
+		virtual shared_ptr<Trace> get_trace(const Ray& ray) const = 0;
 		// judge visibility and return ptr if visible
 };
 
@@ -36,7 +38,7 @@ class Trace {
 		bool toward = true;
 		real_t inter_dist = std::numeric_limits<real_t>::infinity();
 
-		virtual	std::shared_ptr<const Surface> transform_get_property() = 0;
+		virtual	shared_ptr<const Surface> transform_get_property() = 0;
 
 
 	public:
@@ -67,8 +69,8 @@ class Trace {
 		virtual real_t get_forward_density() const
 		{ return ray.density; }
 
-		std::shared_ptr<const Surface> get_property() {
-			std::shared_ptr<const Surface> ret = obj->texture->get_property();
+		shared_ptr<const Surface> get_property() {
+			shared_ptr<const Surface> ret = obj->texture->get_property();
 			if (ret) return ret;
 			return transform_get_property();		// is this working?
 		}
