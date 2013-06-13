@@ -1,5 +1,5 @@
 // File: renderable.hh
-// Date: Thu Jun 13 17:16:10 2013 +0800
+// Date: Thu Jun 13 22:03:03 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 
@@ -38,7 +38,7 @@ class Trace {
 		bool toward = true;
 		real_t inter_dist = std::numeric_limits<real_t>::infinity();
 
-		virtual	shared_ptr<const Surface> transform_get_property() = 0;
+		virtual	shared_ptr<Surface> transform_get_property() = 0;
 
 
 	public:
@@ -69,8 +69,8 @@ class Trace {
 		virtual real_t get_forward_density() const
 		{ return ray.density; }
 
-		shared_ptr<const Surface> get_property() {
-			shared_ptr<const Surface> ret = obj->texture->get_property();
+		shared_ptr<Surface> get_property() {
+			shared_ptr<Surface> ret = obj->texture->get_property();
 			if (ret) return ret;
 			return transform_get_property();		// is this working?
 		}

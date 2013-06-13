@@ -1,5 +1,5 @@
 // File: geometry.hh
-// Date: Thu Jun 13 21:27:34 2013 +0800
+// Date: Thu Jun 13 21:29:33 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -232,8 +232,8 @@ class Vector2D {
 		void update_max(const Vector2D<T> &v)
 		{ ::update_max(x, v.x); ::update_max(y, v.y);}
 
-		static Vector2D infinity()
-		{ return Vector2D(numeric_limits<real_t>::infinity(), numeric_limits<real_t>::infinity()); }
+		static Vector2D<T> infinity()
+		{ return Vector2D<T>(numeric_limits<T>::infinity(), numeric_limits<T>::infinity()); }
 };
 
 template<typename T>

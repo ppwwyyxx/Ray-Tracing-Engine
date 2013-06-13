@@ -1,5 +1,5 @@
 // File: light.hh
-// Date: Fri Jun 07 21:50:30 2013 +0800
+// Date: Thu Jun 13 22:08:46 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -30,7 +30,7 @@ class Light : public RenderAble {
 class LightTrace : public Trace {
 	private:
 		const Light& light;
-		std::shared_ptr<const Surface> transform_get_property();
+		std::shared_ptr<Surface> transform_get_property();
 	public:
 		LightTrace(const Light& m_light, const Ray& m_ray):
 			Trace(&m_light, m_ray), light(m_light){

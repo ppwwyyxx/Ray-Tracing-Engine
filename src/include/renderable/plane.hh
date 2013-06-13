@@ -1,5 +1,5 @@
 // File: plane.hh
-// Date: Mon Jun 10 23:51:17 2013 +0800
+// Date: Thu Jun 13 22:03:32 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -7,6 +7,7 @@
 #include <limits>
 #include "renderable/renderable.hh"
 #include "geometry/infplane.hh"
+using std::shared_ptr;
 
 class Plane : public RenderAble {
 	public:
@@ -24,13 +25,13 @@ class Plane : public RenderAble {
 		}
 		// can later set_texture
 
-		Plane(const InfPlane& _plane, const std::shared_ptr<Texture>& _texture):
+		Plane(const InfPlane& _plane, const shared_ptr<Texture>& _texture):
 			Plane(_plane)
 		{ texture = _texture; }
 
 		void set_finite(real_t radius, Vec center);
 
-		std::shared_ptr<Trace> get_trace(const Ray& ray) const;
+		shared_ptr<Trace> get_trace(const Ray& ray) const;
 
 	protected:
 
@@ -48,7 +49,7 @@ class PlaneTrace : public Trace {
 		const Plane& plane;
 		real_t dist_to_plane = std::numeric_limits<real_t>::infinity();
 		real_t dir_dot_norm = std::numeric_limits<real_t>::infinity();
-		std::shared_ptr<const Surface> transform_get_property();
+		shared_ptr<Surface> transform_get_property();
 
 	public:
 		PlaneTrace(const Plane& _plane, const Ray& _ray):
