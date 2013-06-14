@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Fri Jun 14 20:38:05 2013 +0800
+// Date: Fri Jun 14 23:40:02 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "space.hh"
 #include "renderable/plane.hh"
@@ -12,13 +12,15 @@
 
 using namespace std;
 
-void test_obj() {
-	ObjReader o;
-	vector<Vertex> a; vector<Face> b;
-	o.read_in("../res/humanoid_tri.obj", a, b);
-
-	exit(0);
-}
+/*
+ *void test_obj() {
+ *    ObjReader o;
+ *    vector<Vertex> a; vector<shared_ptr<Face>> b;
+ *    o.read_in("../res/humanoid_tri.obj", a, b);
+ *
+ *    exit(0);
+ *}
+ */
 
 int main(int argc, char* argv[]) {
 	/*
@@ -49,6 +51,7 @@ int main(int argc, char* argv[]) {
 	 */
 	Mesh mesh("../res/humanoid_tri.obj");
 	mesh.set_texture(tred);
+	mesh.finish_add();
 	s.add_obj(new Mesh(mesh));
 	face.set_texture(tred);
 	/*

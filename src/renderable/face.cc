@@ -1,5 +1,5 @@
 // File: face.cc
-// Date: Fri Jun 14 22:22:09 2013 +0800
+// Date: Fri Jun 14 23:58:12 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "renderable/mesh.hh"
@@ -47,6 +47,7 @@ AABB Face::get_aabb() const {
 	ret.update(tri.v);
 	ret.update(tri.get(0));
 	ret.update(tri.get(1));
+	return ret;
 }
 
 shared_ptr<Surface> FaceTrace::transform_get_property() const {

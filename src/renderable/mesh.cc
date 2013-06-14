@@ -1,14 +1,15 @@
 // File: mesh.cc
-// Date: Fri Jun 14 22:24:58 2013 +0800
+// Date: Fri Jun 14 23:41:43 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "renderable/mesh.hh"
 #include "lib/objreader.hh"
+#include "lib/kdtree.hh"
 using namespace std;
 
 Mesh::Mesh(std::string fname, const shared_ptr<Texture>& _texture) {
 	texture = _texture;
-	ObjReader::read_in(fname, vtxs, faces);
+	ObjReader::read_in(fname, this);
 }
 
 shared_ptr<Trace> Mesh::get_trace(const Ray& ray) const {
@@ -21,7 +22,7 @@ AABB Mesh::get_aabb() const
 { return AABB(bound_min, bound_max); }
 
 void Mesh::finish_add() {
-
+	KDTree tree(faces_p, get_aabb());
 }
 
 shared_ptr<Surface> MeshTrace::transform_get_property() const {
@@ -32,7 +33,7 @@ shared_ptr<Surface> MeshTrace::transform_get_property() const {
 bool MeshTrace::intersect() {
 	real_t min = numeric_limits<real_t>::infinity();
 	for (auto & face : mesh.faces) {
-		shared_ptr<Trace> tmp = face.get_trace(ray);
+		shared_ptr<Trace> tmp = face->get_trace(ray);
 		if (tmp && update_min(min, tmp->intersection_dist()))
 			nearest_trace = tmp;
 	}

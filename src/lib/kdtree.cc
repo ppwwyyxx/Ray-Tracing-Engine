@@ -1,9 +1,10 @@
 // File: kdtree.cc
-// Date: Fri Jun 14 23:16:10 2013 +0800
+// Date: Sat Jun 15 00:01:14 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <algorithm>
 #include "lib/kdtree.hh"
+#include "lib/debugutils.hh"
 using namespace std;
 
 class KDTree::Node {
@@ -46,26 +47,33 @@ AAPlane KDTree::cut(const vector<RenderWrapper>& objs, const AABB& box, int dept
 	nth_element(min_list.begin(), min_list.begin() + min_list.size() / 2, min_list.end());
 	// partial sort
 	ret.pos = min_list[min_list.size() / 2] + 2 * EPS;		// SEE what happen
+
 	return ret;
 }
 
-
 KDTree::Node* KDTree::build(const vector<RenderWrapper>& objs,
 		const AABB& box, int depth) {
+	print_debug("entering\n");
+	if (objs.size() == 0) return nullptr;
 
-	AAPlane pl = cut(objs, box, depth);
 	Node* ret = new Node(box);
-
 	for (auto & obj : objs)
 		ret->add_obj(obj.obj);
 
+	if (depth > KDTREE_MAX_DEPTH) return ret;
+
+	AAPlane pl = cut(objs, box, depth);
 	pair<AABB, AABB> par;
 	try {
 		par = box.cut(pl);
 	} catch (...) {
+		/*
+		 *m_assert(false);
+		 */
 		return ret;		// pl is outside box, cannot go further
 	}
 
+	cout << par.first << ", " << par.second << endl;
 	vector<RenderWrapper> objl, objr;
 	for (auto & obj : objs) {
 		if (par.first.intersect(obj.box)) objl.push_back(obj);
@@ -74,6 +82,7 @@ KDTree::Node* KDTree::build(const vector<RenderWrapper>& objs,
 	Node *lch = build(objl, par.first, depth + 1),
 		 *rch = build(objr, par.second, depth + 1);
 	ret->child[0] = lch, ret->child[1] = rch;
+	print_debug("depth: %d, lsize: %d, rsize: %d\n", depth, objl.size(), objr.size());
 	return ret;
 }
 

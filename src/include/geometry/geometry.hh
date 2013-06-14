@@ -1,5 +1,5 @@
 // File: geometry.hh
-// Date: Fri Jun 14 23:12:23 2013 +0800
+// Date: Sat Jun 15 00:05:46 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -42,11 +42,8 @@ class Vector {
 		Vector(const Vector &p0, const Vector &p1):
 			x(p1.x - p0.x), y(p1.y -p0.y), z(p1.z - p0.z) {}
 
-		real_t min_comp_abs() const {
-			real_t a = fabs(x), b = fabs(y), c = fabs(z);
-			::update_min(a, b), ::update_min(a, c);
-			return a;
-		}
+		inline Vector abs() const
+		{ return Vector(fabs(x), fabs(y), fabs(z)); }
 
 		real_t sqr() const
 		{ return x * x + y * y + z * z; }
@@ -156,7 +153,7 @@ class Vector {
 		{ return std::max(x, std::max(y, z)); }
 
 		inline real_t get_abs_max()
-		{ return std::max(fabs(x), std::max(fabs(y), fabs(z))); }
+		{ return abs().get_max(); }
 
 		inline bool is_zero(real_t threshold = EPS) const
 		{ return fabs(x) < threshold && fabs(y) < threshold && fabs(z) < threshold; }

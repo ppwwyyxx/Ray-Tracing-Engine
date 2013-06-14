@@ -1,5 +1,5 @@
 // File: mesh.hh
-// Date: Fri Jun 14 22:24:34 2013 +0800
+// Date: Fri Jun 14 23:33:18 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -13,8 +13,9 @@ class Mesh: public RenderAble {
 		bool smooth = true;
 		bool mapped = false;
 
-		vector<Face> faces;
+		vector<shared_ptr<Face>> faces;
 		vector<Vertex> vtxs;
+		vector<shared_ptr<RenderAble>> faces_p;
 
 		Vec bound_min = Vec::max(), bound_max = -Vec::max();
 
@@ -40,7 +41,9 @@ class Mesh: public RenderAble {
 
 		void add_face(int a, int b, int c) {
 			m_assert(INRANGE(max(a, max(b, c))));
-			faces.push_back(Face(vtxs, a, b, c));
+			Face f(vtxs, a, b, c);
+			faces.push_back(shared_ptr<Face>(new Face(f)));
+			faces_p.push_back(shared_ptr<RenderAble>(new Face(f)));
 		}
 
 		void finish_add();

@@ -1,5 +1,5 @@
 // File: objreader.cc
-// Date: Fri Jun 14 23:51:09 2013 +0800
+// Date: Fri Jun 14 23:44:27 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <cstring>
@@ -7,7 +7,7 @@
 using namespace std;
 
 const int LINE_MAX_LEN = 1000;
-void ObjReader::read_in(string fname, vector<Vertex>& vtxs, vector<Face>& faces) {
+void ObjReader::read_in(string fname, Mesh* mesh) {
 	ifstream fin(fname);
 	static char input[LINE_MAX_LEN];
 	int nvtx = 0, nnorm = 0;
@@ -20,11 +20,11 @@ void ObjReader::read_in(string fname, vector<Vertex>& vtxs, vector<Face>& faces)
 				if (input[1] == ' ') {	// v x y z
 					real_t x, y, z;
 					sscanf(input + 2, "%lf %lf %lf", &x, &y, &z);
-					vtxs.push_back(Vertex(Vec(x, y, z), nvtx++));
+					mesh->add_vertex(Vec(x, y, z));
 				} else if (input[1] == 'n') {  // vn x y z
 					real_t x, y, z;
 					sscanf(input + 3, "%lf %lf %lf", &x, &y, &z);
-					vtxs[nnorm++].norm = Vec(x, y, z);
+					mesh->set_norm(nnorm++, Vec(x, y, z));
 				} else {
 					cout << input << endl;
 					error_exit("unrecognized format");
@@ -36,7 +36,7 @@ void ObjReader::read_in(string fname, vector<Vertex>& vtxs, vector<Face>& faces)
 				int x, y, z;
 				sscanf(input + 2, "%d %d %d", &x, &y, &z);
 				if (x != y && y != z && x != z)
-					faces.push_back(Face(vtxs, x - 1, y - 1, z - 1));
+					mesh->add_face(x - 1, y - 1, z - 1);
 				break;
 			}
 			case 'g':
@@ -48,7 +48,7 @@ void ObjReader::read_in(string fname, vector<Vertex>& vtxs, vector<Face>& faces)
 		}
 	}
 	fin.close();
-	cout << "nvtx: " << vtxs.size() << ", nface: " << faces.size() << endl;
+	cout << "nvtx: " << mesh->vtxs.size() << ", nface: " << mesh->faces.size() << endl;
 }
 
 

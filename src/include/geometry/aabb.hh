@@ -1,9 +1,10 @@
 // File: aabb.hh
-// Date: Fri Jun 14 23:12:56 2013 +0800
+// Date: Sat Jun 15 00:06:19 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
 #include <utility>
+#include <iostream>
 #include <limits>
 
 #include "geometry/ray.hh"
@@ -30,11 +31,14 @@ class AABB {
 		bool empty() const { return (min.x >= max.x || min.y >= max.y || min.z >= max.z); }
 		bool contain(const Vec& p) const { return p < max && min < p; }
 		// override >
+		//
+		friend std::ostream& operator << (std::ostream & os, const AABB& b)
+		{ return os << "min: " << b.min << " , max:" << b.max; }
 
 		bool intersect(const AABB& b) const {
 			Vec mid2 = (min + max),
 				bmid2 = (b.min + b.max);
-			if ((mid2 - bmid2) < (max - min + b.max - b.min)) return true;
+			if ((mid2 - bmid2).abs() < (max - min + b.max - b.min)) return true;
 			return false;
 		}
 
@@ -45,19 +49,13 @@ class AABB {
 		}
 
 		void update(const AABB& b) {
-			if (empty()) *this = b;
-			else {
-				min.update_min(b.min);
-				max.update_max(b.max);
-			}
+			min.update_min(b.min);
+			max.update_max(b.max);
 		}
 
 		void update(const Vec& v) {
-			if (empty()) set(v, v);
-			else {
-				min.update_min(v);
-				max.update_max(v);
-			}
+			min.update_min(v);
+			max.update_max(v);
 		}
 
 		std::pair<AABB, AABB> cut(const AAPlane& pl) const {
