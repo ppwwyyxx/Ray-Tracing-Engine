@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Fri Jun 14 11:23:34 2013 +0800
+// Date: Fri Jun 14 12:39:55 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "space.hh"
 #include "renderable/plane.hh"
@@ -334,9 +334,7 @@ int main(int argc, char* argv[]) {
 	Space s;
 	s.add_light(Light(Vec(5, -10, 15), Color(0.9, 1, 1), 1.5));
 	s.add_light(Light(Vec(0, 0, 50), Color::WHITE, 0.6));
-	/*
-	 *s.add_light(Light(Vec(0, 0, -50), Color::WHITE, 0.6));
-	 */
+	s.add_light(Light(Vec(0, 0, -50), Color::WHITE, 0.6));
 
 
 	shared_ptr<Texture> t1(new GridTexture(GridTexture::BLACK_WHITE));
@@ -345,8 +343,17 @@ int main(int argc, char* argv[]) {
 	Plane plane1(InfPlane::XYPLANE, t1);
 	Face face({Vertex(Vec(5, 0, 0), 0), Vertex(Vec(5, 0, 2), 1), Vertex(Vec(4, 0, 0), 2)},
 			0, 1, 2);
+	Mesh mesh;
+	mesh.add_vertex(Vec(5, 0, 0));
+	mesh.add_vertex(Vec(5, 0, 2));
+	mesh.add_vertex(Vec(4, 0, 0));
+	mesh.add_face(0, 1, 2);
+	mesh.set_texture(tred);
+	s.add_obj(new Mesh(mesh));
 	face.set_texture(tred);
-	s.add_obj(new Face(face));
+	/*
+	 *s.add_obj(new Face(face));
+	 */
 	s.add_obj(new Plane(plane1));
 	Sphere sphere(PureSphere::TestSphere, t2);
 	s.add_obj(new Sphere(sphere));
