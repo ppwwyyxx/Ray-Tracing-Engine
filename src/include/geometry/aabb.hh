@@ -1,5 +1,5 @@
 // File: aabb.hh
-// Date: Fri Jun 14 21:33:30 2013 +0800
+// Date: Fri Jun 14 22:02:50 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -19,6 +19,8 @@ class AABB {
 	public:
 		Vec min = Vec::max(),
 			max = -Vec::max();
+
+		AABB(){}
 
 		AABB(const Vec& v1, const Vec& v2):
 			min(Vec(std::min(v1.x, v2.x), std::min(v1.y, v2.y), std::min(v1.z, v2.z))),
@@ -47,7 +49,8 @@ class AABB {
 
 		std::pair<AABB, AABB> cut(const AAPlane& pl) const {
 			AABB l = *this, r = *this;
-			m_assert(BETW(pl.pos, min[pl.axis], max[pl.axis]));
+			if (!BETW(pl.pos, min[pl.axis], max[pl.axis]))
+				throw "Outside";
 			l.max[pl.axis] = pl.pos;
 			r.min[pl.axis] = pl.pos;
 			return std::make_pair(l, r);

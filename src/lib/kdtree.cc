@@ -1,5 +1,5 @@
 // File: kdtree.cc
-// Date: Fri Jun 14 20:21:29 2013 +0800
+// Date: Fri Jun 14 22:00:02 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "lib/kdtree.hh"
@@ -21,9 +21,26 @@ class KDTree::Node {
 
 };
 
+AAPlane KDTree::cut(const vector<shared_ptr<RenderAble>>& objs, const AABB& box, int depth) const {
+	AAPlane ret;
+	ret.axis = static_cast<AXIS>(depth % 3);
+
+	vector<real_t> min_list;
+
+
+	return ret;
+}
+
 
 KDTree::Node* KDTree::build(const vector<shared_ptr<RenderAble>>& objs,
 		const AABB& box, int depth) {
+	AAPlane pl = cut(objs, box, depth);
+	pair<AABB, AABB> par;
+	try {
+		par = box.cut(pl);
+	} catch (...) {
+
+	}
 
 
 }

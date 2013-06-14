@@ -1,5 +1,5 @@
 // File: light.hh
-// Date: Fri Jun 14 10:58:39 2013 +0800
+// Date: Fri Jun 14 22:05:14 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -9,7 +9,7 @@
 #include "geometry/ray.hh"
 #include "color.hh"
 
-class Light : public RenderAble {
+class Light {
 
 	public:
 		Light(const Vec& m_src, const Color& col, real_t intense):
@@ -19,30 +19,4 @@ class Light : public RenderAble {
 		Color color;
 		real_t intensity;
 		real_t size = EPS;
-
-		std::shared_ptr<Trace> get_trace(const Ray& ray) const;
-
-	protected:
-		friend class LightTrace;
-
 };
-
-class LightTrace : public Trace {
-	private:
-		const Light& light;
-		std::shared_ptr<Surface> transform_get_property() const;
-	public:
-		LightTrace(const Light& m_light, const Ray& m_ray):
-			Trace(&m_light, m_ray), light(m_light){
-			toward = (ray.dir.dot(light.src - ray.orig) > 0);
-		};
-
-		real_t intersection_dist();
-
-		Vec normal();
-
-		bool intersect();
-
-};
-
-

@@ -1,5 +1,5 @@
 // File: renderable.hh
-// Date: Fri Jun 14 10:59:40 2013 +0800
+// Date: Fri Jun 14 22:05:15 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 
@@ -7,6 +7,7 @@
 
 #include <memory>
 #include "geometry/ray.hh"
+#include "geometry/aabb.hh"
 #include "material/texture.hh"
 using std::shared_ptr;
 using std::make_shared;
@@ -28,6 +29,10 @@ class RenderAble {
 
 		virtual shared_ptr<Trace> get_trace(const Ray& ray) const = 0;
 		// judge visibility and return ptr if visible
+
+		/*
+		 *virtual AABB get_aabb() const = 0;
+		 */
 };
 
 // a combination of renderable object and a ray, to integrate some calculations
