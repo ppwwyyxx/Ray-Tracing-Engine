@@ -1,5 +1,5 @@
 // File: mesh.cc
-// Date: Fri Jun 14 19:45:46 2013 +0800
+// Date: Fri Jun 14 22:24:58 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "renderable/mesh.hh"
@@ -16,6 +16,9 @@ shared_ptr<Trace> Mesh::get_trace(const Ray& ray) const {
 	if (ret->intersect()) return ret;
 	return nullptr;
 }
+
+AABB Mesh::get_aabb() const
+{ return AABB(bound_min, bound_max); }
 
 void Mesh::finish_add() {
 

@@ -1,5 +1,5 @@
 // File: sphere.cc
-// Date: Fri Jun 14 10:58:00 2013 +0800
+// Date: Fri Jun 14 22:23:01 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "renderable/sphere.hh"
@@ -12,6 +12,13 @@ shared_ptr<Trace> Sphere::get_trace(const Ray& ray) const {
 	if (ret->intersect())
 		return  ret;
 	return nullptr;
+}
+
+AABB Sphere::get_aabb() const {
+	Vec diff = Vec(sphere.r, sphere.r, sphere.r),
+		min = sphere.center - diff,
+		max = sphere.center + diff;
+	return AABB(min, max);
 }
 
 

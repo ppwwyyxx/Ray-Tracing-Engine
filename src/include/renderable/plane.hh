@@ -1,5 +1,5 @@
 // File: plane.hh
-// Date: Fri Jun 14 10:58:34 2013 +0800
+// Date: Fri Jun 14 22:12:45 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -11,7 +11,7 @@ using std::shared_ptr;
 
 class Plane : public RenderAble {
 	public:
-		bool infinity = true;
+		bool infinity = true;		// default is an infinity plane
 		real_t radius = 0;
 		Vec surfdir = Vec::infinity();
 		Vec center = Vec::infinity();
@@ -32,6 +32,8 @@ class Plane : public RenderAble {
 		void set_finite(real_t radius, Vec center);
 
 		shared_ptr<Trace> get_trace(const Ray& ray) const;
+
+		AABB get_aabb() const;
 
 	protected:
 

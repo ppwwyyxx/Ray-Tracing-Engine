@@ -1,5 +1,5 @@
 // File: aabb.hh
-// Date: Fri Jun 14 22:02:50 2013 +0800
+// Date: Fri Jun 14 22:19:18 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -22,14 +22,20 @@ class AABB {
 
 		AABB(){}
 
-		AABB(const Vec& v1, const Vec& v2):
-			min(Vec(std::min(v1.x, v2.x), std::min(v1.y, v2.y), std::min(v1.z, v2.z))),
-			max(Vec(std::max(v1.x, v2.x), std::max(v1.y, v2.y), std::max(v1.z, v2.z))) {}
+		AABB(const Vec& _min, const Vec& _max):
+			min(_min), max(_max) {}
 
 		void set(const Vec& vmin, const Vec& vmax) { min = vmin, max = vmax; }
 		Vec size() const { return max - min; }
-		bool empty() const { return (min.x > max.x || min.y > max.y || min.z > max.z); }
+		bool empty() const { return (min.x >= max.x || min.y >= max.y || min.z >= max.z); }
 		bool contain(const Vec& p) const { return (max - p).is_positive() && (p - min).is_positive(); }
+		// override >
+
+		static AABB get_inf() {
+			AABB ret;
+			swap(ret.min, ret.max);
+			return ret;
+		}
 
 		void update(const AABB& b) {
 			if (empty()) *this = b;

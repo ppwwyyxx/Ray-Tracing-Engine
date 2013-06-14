@@ -1,5 +1,5 @@
 // File: face.hh
-// Date: Fri Jun 14 23:47:54 2013 +0800
+// Date: Fri Jun 14 22:22:09 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -22,6 +22,12 @@ class Triangle {
 		Triangle(const Vec& a, const Vec& b, const Vec& c):
 			v(a), e1(b - a), e2(c - a),norm(e1.cross(e2))
 		{}
+
+		Vec get(int i) const {
+			if (!i) return v + e1;
+			else return v + e2;
+		}
+
 
 		tuple<real_t, real_t, real_t> get_intersect(const Ray& ray) const;
 };
@@ -55,6 +61,8 @@ class Face : public RenderAble {
 		{ adj_faces.push_back(f); }
 
 		shared_ptr<Trace> get_trace(const Ray& ray) const;
+
+		AABB get_aabb() const;
 
 	protected:
 		friend class FaceTrace;

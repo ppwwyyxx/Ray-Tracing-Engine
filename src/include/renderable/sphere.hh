@@ -1,5 +1,5 @@
 // File: sphere.hh
-// Date: Fri Jun 14 10:58:26 2013 +0800
+// Date: Fri Jun 14 22:06:23 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -23,6 +23,8 @@ class Sphere : public RenderAble {
 		{ texture = m_texture;	}
 
 		std::shared_ptr<Trace> get_trace(const Ray& ray) const;
+
+		AABB get_aabb() const;
 
 	protected:
 		friend class SphereTrace;

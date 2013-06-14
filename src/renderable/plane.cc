@@ -1,5 +1,5 @@
 // File: plane.cc
-// Date: Fri Jun 14 20:32:27 2013 +0800
+// Date: Fri Jun 14 22:16:44 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "renderable/plane.hh"
@@ -15,6 +15,9 @@ shared_ptr<Trace> Plane::get_trace(const Ray& ray) const {
 	return nullptr;
 }
 
+AABB Plane::get_aabb() const
+{ return AABB::get_inf(); }
+
 Vec Plane::surf_dir() const {
 	Vec ret(plane.norm.y, -plane.norm.x, 0);
 	// possibily get a (0,0,0) !
@@ -27,6 +30,7 @@ Vec Plane::surf_dir() const {
 }
 
 void Plane::set_finite(real_t _radius, Vec _center) {
+	infinity = false;
 	radius = _radius;
 	center = _center;
 }

@@ -1,5 +1,5 @@
 // File: face.cc
-// Date: Fri Jun 14 19:47:44 2013 +0800
+// Date: Fri Jun 14 22:22:09 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "renderable/mesh.hh"
@@ -40,6 +40,13 @@ shared_ptr<Trace> Face::get_trace(const Ray& ray) const {
 	shared_ptr<Trace> ret(new FaceTrace(*this, ray));
 	if (ret->intersect()) return ret;
 	return nullptr;
+}
+
+AABB Face::get_aabb() const {
+	AABB ret;
+	ret.update(tri.v);
+	ret.update(tri.get(0));
+	ret.update(tri.get(1));
 }
 
 shared_ptr<Surface> FaceTrace::transform_get_property() const {
