@@ -1,5 +1,5 @@
 // File: aabb.hh
-// Date: Fri Jun 14 22:19:18 2013 +0800
+// Date: Fri Jun 14 23:12:56 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -28,8 +28,15 @@ class AABB {
 		void set(const Vec& vmin, const Vec& vmax) { min = vmin, max = vmax; }
 		Vec size() const { return max - min; }
 		bool empty() const { return (min.x >= max.x || min.y >= max.y || min.z >= max.z); }
-		bool contain(const Vec& p) const { return (max - p).is_positive() && (p - min).is_positive(); }
+		bool contain(const Vec& p) const { return p < max && min < p; }
 		// override >
+
+		bool intersect(const AABB& b) const {
+			Vec mid2 = (min + max),
+				bmid2 = (b.min + b.max);
+			if ((mid2 - bmid2) < (max - min + b.max - b.min)) return true;
+			return false;
+		}
 
 		static AABB get_inf() {
 			AABB ret;

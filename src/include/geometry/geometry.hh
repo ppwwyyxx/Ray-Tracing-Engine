@@ -1,5 +1,5 @@
 // File: geometry.hh
-// Date: Fri Jun 14 21:54:19 2013 +0800
+// Date: Fri Jun 14 23:12:23 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -105,6 +105,9 @@ class Vector {
 
 		bool operator == (const Vector &v) const
 		{ return fabs(x - v.x) < EPS && fabs(y - v.y) < EPS && fabs(z - v.z) < EPS; }
+
+		bool operator < (const Vector &v) const
+		{ return x < v.x && y < v.y && z < v.z; }
 
 		bool operator != (const Vector &v) const
 		{ return fabs(x - v.x) >= EPS || fabs(y - v.y) >= EPS || fabs(z - v.z) >= EPS; }

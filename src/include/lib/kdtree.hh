@@ -1,5 +1,5 @@
 // File: kdtree.hh
-// Date: Fri Jun 14 21:48:09 2013 +0800
+// Date: Fri Jun 14 22:48:55 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -11,11 +11,22 @@ class KDTree {
 	public:
 		class Node;
 
+		class RenderWrapper {
+			public:
+				shared_ptr<RenderAble> obj;
+				AABB box;
+				RenderWrapper(const shared_ptr<RenderAble>& _obj, const AABB& _box):
+					obj(_obj), box(_box){}
+		};
+
 		int depth = 0;
 		Node* root;
 
-		Node* build(const vector<shared_ptr<RenderAble>>& objs, const AABB& box, int depth);
+		KDTree(const vector<shared_ptr<RenderAble>>& objs, const AABB& space);
 
-		AAPlane cut(const vector<shared_ptr<RenderAble>>& objs, const AABB& box, int depth) const;
+	private:
+		Node* build(const vector<RenderWrapper>& objs, const AABB& box, int depth);
+
+		AAPlane cut(const vector<RenderWrapper>& objs, const AABB& box, int depth) const;
 
 };
