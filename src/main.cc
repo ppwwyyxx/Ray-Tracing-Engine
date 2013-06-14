@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Fri Jun 14 12:39:55 2013 +0800
+// Date: Fri Jun 14 13:09:57 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "space.hh"
 #include "renderable/plane.hh"
@@ -8,6 +8,7 @@
 #include "viewer.hh"
 #include "lib/imagereader.hh"
 #include "renderable/mesh.hh"
+#include "lib/objreader.hh"
 
 using namespace std;
 
@@ -323,7 +324,16 @@ void blxl() {
 		CVViewer viewer(v, fname);
 }
 
+void test_obj() {
+	ObjReader o;
+	vector<Vertex> a; vector<Face> b;
+	o.read_in("../res/humanoid_tri.obj", a, b);
+
+	exit(0);
+}
+
 int main(int argc, char* argv[]) {
+	test_obj();
 	/*
 	 *blxl();
 	 *return 0;

@@ -1,5 +1,5 @@
 % File: diary.tex
-% Date: Sat Jun 08 01:35:47 2013 +0800
+% Date: Fri Jun 14 12:45:40 2013 +0800
 % Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 \section{过程记录}
 \begin{enumerate}
@@ -61,11 +61,16 @@
 \item 加入了透射功能,依照预定义的介质密度及折射定律计算出射光方向.
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{res/transmission.png}
+  \includegraphics[scale=0.4]{res/transmission.png}
   \caption{\label{fig:transmission}}
 \end{figure}
 
-
+\item 实现了三角面片的渲染,在求交时计算齐次重心坐标,为网格中的法向插值做准备.
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.4]{res/face.png}
+  \caption{\label{fig:face}}
+\end{figure}
 
 
 \end{enumerate}
