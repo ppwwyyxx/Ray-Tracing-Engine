@@ -1,7 +1,6 @@
 // File: kdtree.cc
-// Date: Sat Jun 15 00:01:14 2013 +0800
+// Date: Sat Jun 15 01:14:13 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
-
 #include <algorithm>
 #include "lib/kdtree.hh"
 #include "lib/debugutils.hh"
@@ -11,6 +10,7 @@ class KDTree::Node {
 	public:
 		AABB box;
 		Node* child[2];
+		AAPlane pl;
 
 		Node(const AABB& _box, Node* p1 = nullptr, Node* p2 = nullptr) :
 			box(_box), child{p1, p2} { }
@@ -24,6 +24,53 @@ class KDTree::Node {
 		void add_obj(shared_ptr<RenderAble> obj)
 		{ objs.push_back(obj); }
 
+		shared_ptr<Trace> get_trace(const Ray& ray, real_t inter_dist) const {
+			// call when know to intersect
+			if (leaf()) {
+				real_t min = numeric_limits<real_t>::max();
+				shared_ptr<Trace> ret;
+
+				for (auto & obj : objs) {
+					auto tmp = obj->get_trace(ray);
+					if (tmp) {
+						real_t d = tmp->intersection_dist();
+						if (update_min(min, d))
+							ret = tmp;
+					}
+				}
+				return ret;
+			}
+
+			real_t mind = -1, maxd, mind2 = -1;
+			real_t pivot = ray.get_dist(inter_dist)[pl.axis];
+			int first_met = (int)(pivot >= pl.pos);
+
+			if (child[first_met] != nullptr)
+				child[first_met]->box.intersect(ray, mind, maxd);
+			if (child[1 - first_met] != nullptr)
+				child[1 - first_met]->box.intersect(ray, mind2, maxd);
+			if (mind == -1 && mind2 == -1) {
+				m_assert(false);
+				return nullptr;					// not intersect with both box
+			}
+			m_assert(mind2 == -1 || mind < mind2);
+
+			auto ret = child[first_met]->get_trace(ray, mind);
+			if (ret != nullptr) {
+				Vec inter_point = ret->intersection_point();
+				if (child[first_met]->box.contain(inter_point)) return ret;
+				// interpoint must in the box
+			}
+			if (mind2 != -1) {			// have intersection with second
+				ret = child[1 - first_met]->get_trace(ray, mind2);
+				if (ret != nullptr) {
+					Vec inter_point = ret->intersection_point();
+					if (child[1 - first_met]->box.contain(inter_point)) return ret;
+				}
+			}
+			return nullptr;
+		}
+
 
 	private:
 		vector<shared_ptr<RenderAble>> objs;
@@ -35,6 +82,12 @@ KDTree::KDTree(const vector<shared_ptr<RenderAble>>& objs, const AABB& space) {
 	for (auto & obj : objs)
 		objlist.push_back(RenderWrapper(obj, obj->get_aabb()));
 	root = build(objlist, space, 0);
+}
+
+shared_ptr<Trace> KDTree::get_trace(const Ray& ray) const {
+	real_t mind, maxd;
+	if (!root->box.intersect(ray, mind, maxd)) return nullptr;
+	return root->get_trace(ray, mind);
 }
 
 AAPlane KDTree::cut(const vector<RenderWrapper>& objs, const AABB& box, int depth) const {
@@ -51,9 +104,7 @@ AAPlane KDTree::cut(const vector<RenderWrapper>& objs, const AABB& box, int dept
 	return ret;
 }
 
-KDTree::Node* KDTree::build(const vector<RenderWrapper>& objs,
-		const AABB& box, int depth) {
-	print_debug("entering\n");
+KDTree::Node* KDTree::build(const vector<RenderWrapper>& objs, const AABB& box, int depth) {
 	if (objs.size() == 0) return nullptr;
 
 	Node* ret = new Node(box);
@@ -67,13 +118,10 @@ KDTree::Node* KDTree::build(const vector<RenderWrapper>& objs,
 	try {
 		par = box.cut(pl);
 	} catch (...) {
-		/*
-		 *m_assert(false);
-		 */
 		return ret;		// pl is outside box, cannot go further
 	}
+	ret->pl = pl;
 
-	cout << par.first << ", " << par.second << endl;
 	vector<RenderWrapper> objl, objr;
 	for (auto & obj : objs) {
 		if (par.first.intersect(obj.box)) objl.push_back(obj);
