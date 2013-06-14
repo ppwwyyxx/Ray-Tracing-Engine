@@ -1,5 +1,5 @@
 // File: geometry.hh
-// Date: Fri Jun 14 10:49:51 2013 +0800
+// Date: Fri Jun 14 23:38:09 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -68,7 +68,7 @@ class Vector {
 		{ x = v.x, y = v.y, z = v.z; return *this; }
 
 		virtual void normalize() {
-			real_t m = 1 / mod();
+			real_t m = 1.0 / mod();
 			*this *= m;		// work?
 			m_assert(std::isfinite(m));
 		}

@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Fri Jun 14 13:09:57 2013 +0800
+// Date: Fri Jun 14 23:54:39 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "space.hh"
 #include "renderable/plane.hh"
@@ -333,7 +333,6 @@ void test_obj() {
 }
 
 int main(int argc, char* argv[]) {
-	test_obj();
 	/*
 	 *blxl();
 	 *return 0;
@@ -353,11 +352,14 @@ int main(int argc, char* argv[]) {
 	Plane plane1(InfPlane::XYPLANE, t1);
 	Face face({Vertex(Vec(5, 0, 0), 0), Vertex(Vec(5, 0, 2), 1), Vertex(Vec(4, 0, 0), 2)},
 			0, 1, 2);
-	Mesh mesh;
-	mesh.add_vertex(Vec(5, 0, 0));
-	mesh.add_vertex(Vec(5, 0, 2));
-	mesh.add_vertex(Vec(4, 0, 0));
-	mesh.add_face(0, 1, 2);
+	/*
+	 *Mesh mesh;
+	 *mesh.add_vertex(Vec(5, 0, 0));
+	 *mesh.add_vertex(Vec(5, 0, 2));
+	 *mesh.add_vertex(Vec(4, 0, 0));
+	 *mesh.add_face(0, 1, 2);
+	 */
+	Mesh mesh("../res/humanoid_tri.obj");
 	mesh.set_texture(tred);
 	s.add_obj(new Mesh(mesh));
 	face.set_texture(tred);
@@ -366,7 +368,9 @@ int main(int argc, char* argv[]) {
 	 */
 	s.add_obj(new Plane(plane1));
 	Sphere sphere(PureSphere::TestSphere, t2);
-	s.add_obj(new Sphere(sphere));
+	/*
+	 *s.add_obj(new Sphere(sphere));
+	 */
 
 	View v(make_shared<Space>(s), Vec(0, -10, 5), Vec(0, 0, 5), 30, Geometry(w, h));
 	CVViewer viewer(v);

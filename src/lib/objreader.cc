@@ -1,5 +1,5 @@
 // File: objreader.cc
-// Date: Fri Jun 14 13:25:49 2013 +0800
+// Date: Fri Jun 14 23:51:09 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <cstring>
@@ -7,7 +7,7 @@
 using namespace std;
 
 const int LINE_MAX_LEN = 1000;
-void ObjReader::read_in(string fname, vector<Vertex>& vtxs, vector<Face>& faces) const {
+void ObjReader::read_in(string fname, vector<Vertex>& vtxs, vector<Face>& faces) {
 	ifstream fin(fname);
 	static char input[LINE_MAX_LEN];
 	int nvtx = 0, nnorm = 0;
@@ -35,7 +35,8 @@ void ObjReader::read_in(string fname, vector<Vertex>& vtxs, vector<Face>& faces)
 			{				// XXX some model is 'f 1 2 3 4 5 6'
 				int x, y, z;
 				sscanf(input + 2, "%d %d %d", &x, &y, &z);
-				faces.push_back(Face(vtxs, x - 1, y - 1, z - 1));
+				if (x != y && y != z && x != z)
+					faces.push_back(Face(vtxs, x - 1, y - 1, z - 1));
 				break;
 			}
 			case 'g':
@@ -46,6 +47,8 @@ void ObjReader::read_in(string fname, vector<Vertex>& vtxs, vector<Face>& faces)
 				break;
 		}
 	}
+	fin.close();
+	cout << "nvtx: " << vtxs.size() << ", nface: " << faces.size() << endl;
 }
 
 

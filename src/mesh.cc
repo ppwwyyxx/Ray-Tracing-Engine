@@ -1,9 +1,14 @@
 // File: mesh.cc
-// Date: Fri Jun 14 12:41:29 2013 +0800
+// Date: Fri Jun 14 23:32:18 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "renderable/mesh.hh"
+#include "lib/objreader.hh"
 using namespace std;
+
+Mesh::Mesh(string fname) {
+	ObjReader::read_in(fname, vtxs, faces);
+}
 
 shared_ptr<Trace> Mesh::get_trace(const Ray& ray) const {
 	shared_ptr<Trace> ret(new MeshTrace(*this, ray));

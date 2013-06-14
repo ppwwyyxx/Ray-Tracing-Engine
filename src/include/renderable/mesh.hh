@@ -1,8 +1,9 @@
 // File: mesh.hh
-// Date: Fri Jun 14 12:41:30 2013 +0800
+// Date: Fri Jun 14 23:31:01 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
+#include <string>
 #include "renderable/face.hh"
 
 #define INRANGE(x) (x) < (int)vtxs.size()
@@ -14,6 +15,10 @@ class Mesh: public RenderAble {
 
 		vector<Face> faces;
 		vector<Vertex> vtxs;
+
+		Mesh() {}
+
+		Mesh(std::string fname);
 
 		void add_vertex(const Vec& p) {
 			int id = vtxs.size();

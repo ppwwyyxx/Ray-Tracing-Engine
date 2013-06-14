@@ -1,14 +1,20 @@
 // File: face.cc
-// Date: Fri Jun 14 12:22:06 2013 +0800
+// Date: Fri Jun 14 23:47:56 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "renderable/mesh.hh"
+#include "lib/debugutils.hh"
 using namespace std;
 
 tuple<real_t, real_t, real_t> Triangle::get_intersect(const Ray& ray) const {
 	// Ray-triangle intersection - Brian Curless
 	// tuple.get(0)  == -1 means no intersect
 	// Return distance and barycentric coordinates
+	/*
+	 *print_debug("norm: %lf, %lf, %lf", norm.x, norm.y, norm.z);
+	 *cout << v << " " << e1 << " "    << e2 << endl;
+	 *cout << endl;
+	 */
 	if (fabs(ray.dir.dot(norm.get_normalized())) < EPS)		// parallel
 		return make_tuple(-1, 0, 0);
 
