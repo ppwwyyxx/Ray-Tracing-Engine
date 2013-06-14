@@ -1,31 +1,33 @@
 // File: aabb.hh
-// Date: Thu Jun 13 12:59:05 2013 +0800
+// Date: Fri Jun 14 20:43:05 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
-
-
+#include <utility>
 #include <limits>
 
 #include "geometry/ray.hh"
 
+class AAPlane {
+	public:
+		AXIS axis;
+		real_t pos;
+};
+
 // axis-aligned bounding box
 class AABB {
 	public:
-		AABB(){}
+		Vec min = Vec::max(),
+			max = -Vec::max();
 
 		AABB(const Vec& v1, const Vec& v2):
-			min(Vec(min(v1.x, v2.x), min(v1.y, v2.y), min(v1.z, v2.z))),
-			max(Vec(max(v1.x, v2.x), max(v1.y, v2.y), max(v1.z, v2.z))) {}
+			min(Vec(std::min(v1.x, v2.x), std::min(v1.y, v2.y), std::min(v1.z, v2.z))),
+			max(Vec(std::max(v1.x, v2.x), std::max(v1.y, v2.y), std::max(v1.z, v2.z))) {}
 
-		void set(const Vec& vmin, const Vec& vmax)
-		{ min = vmin, max = vmax; }
-
-		Vec size() const
-		{ return max - min; }
-
-		bool empty()
-		{ return (min.x > max.x || min.y > max.y || min.z > max.z); }
+		void set(const Vec& vmin, const Vec& vmax) { min = vmin, max = vmax; }
+		Vec size() const { return max - min; }
+		bool empty() const { return (min.x > max.x || min.y > max.y || min.z > max.z); }
+		bool contain(const Vec& p) const { return (max - p).is_positive() && (p - min).is_positive(); }
 
 		void update(const AABB& b) {
 			if (empty()) *this = b;
@@ -43,16 +45,20 @@ class AABB {
 			}
 		}
 
-		bool contain(const Vec& p) const
-		{ return (max - p).positive() && (p - min).positive(); }
+		std::pair<AABB, AABB> cut(const AAPlane& pl) const {
+			AABB l = *this, r = *this;
+			m_assert(BETW(pl.pos, min[pl.axis], max[pl.axis]));
+			l.max[pl.axis] = pl.pos;
+			r.min[pl.axis] = pl.pos;
+			return std::make_pair(l, r);
+		}
 
-		// paper
 		// An efficient and robust ray-box intersection algorithm
 		// Williams, etc. SIGGRAPH 2005
 		bool intersect(const Ray& ray, real_t &mind, real_t &maxd) {
 			if (empty())
 				return false;
-			Vec inv(1 / ray.dir.x, 1 / ray.dir.y, 1 / ray.dir.z);
+			Vec inv(1.0 / ray.dir.x, 1.0 / ray.dir.y, 1.0 / ray.dir.z);
 			real_t t_min = std::numeric_limits<real_t>::max();
 			real_t t_max = -t_min;
 
@@ -76,8 +82,5 @@ class AABB {
 			return true;
 		}
 
-	private:
-		Vec min = Vec::max(),
-			max = -Vec::max();
 };
 

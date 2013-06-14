@@ -1,5 +1,5 @@
 // File: face.cc
-// Date: Fri Jun 14 23:47:56 2013 +0800
+// Date: Fri Jun 14 19:47:44 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "renderable/mesh.hh"
@@ -22,14 +22,14 @@ tuple<real_t, real_t, real_t> Triangle::get_intersect(const Ray& ray) const {
 
 	Vec line(ray.orig, v),
 		line_r(ray.dir.cross(line));
+	real_t dist = line.dot(norm) * inv;
+	if (dist < -EPS) return make_tuple(-1, 0, 0);
+
 	real_t gx = -line_r.dot(e2) * inv;
 	if (gx < -EPS || gx > 1 + EPS) return make_tuple(-1, 0, 0);
 	real_t gy = line_r.dot(e1) * inv;
 	if (gy < -EPS || gx + gy > 1 + EPS) return make_tuple(-1, 0, 0);
 	// now definitely inside triangle
-
-	real_t dist = line.dot(norm) * inv;
-	if (dist < -EPS) return make_tuple(-1, 0, 0);
 
 	m_assert((ray.get_dist(dist) - (v * (1 - gx - gy) + (v + e1) * gx +
 			(v + e2) * gy)).sqr() < EPS);	 // check coordinates

@@ -1,5 +1,5 @@
 // File: mesh.hh
-// Date: Fri Jun 14 23:31:01 2013 +0800
+// Date: Fri Jun 14 19:38:53 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -18,7 +18,7 @@ class Mesh: public RenderAble {
 
 		Mesh() {}
 
-		Mesh(std::string fname);
+		Mesh(std::string fname, const shared_ptr<Texture>& _texture = nullptr);
 
 		void add_vertex(const Vec& p) {
 			int id = vtxs.size();

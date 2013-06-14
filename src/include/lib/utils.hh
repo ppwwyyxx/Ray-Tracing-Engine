@@ -1,5 +1,5 @@
 // File: utils.hh
-// Date: Sun May 19 14:02:38 2013 +0800
+// Date: Fri Jun 14 20:38:56 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -25,7 +25,8 @@ const real_t EPS = 1e-6;
 
 inline real_t sqr(real_t x) { return x * x; }
 
-#define BETW(a, b, c) ((a >= b) && (a <= c - 1))
+#define BETWI(a, b, c) ((a >= b) && (a <= c - 1))
+#define BETW(a, b, c) ((a >= b && a <= c))
 #define REP(x, y) for (int x = 0; x < (y); x ++)
 #define REPL(x, y, z) for (int x = y; x < (z); x ++)
 #define REPD(x, y, z) for (int x = y; x >= (z); x --)

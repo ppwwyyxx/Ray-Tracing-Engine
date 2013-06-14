@@ -1,5 +1,5 @@
 // File: light.cc
-// Date: Fri Jun 14 10:57:17 2013 +0800
+// Date: Fri Jun 14 20:32:35 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "renderable/light.hh"
@@ -21,7 +21,7 @@ real_t LightTrace::intersection_dist() {
 }
 
 Vec LightTrace::normal()
-{ return Vector::get_zero(); }
+{ return Vector::zero(); }
 
 shared_ptr<Surface> LightTrace::transform_get_property() const {
 	return shared_ptr<Surface>(new Surface(0, 0,

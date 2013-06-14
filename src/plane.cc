@@ -1,5 +1,5 @@
 // File: plane.cc
-// Date: Fri Jun 14 10:59:40 2013 +0800
+// Date: Fri Jun 14 20:32:27 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "renderable/plane.hh"
@@ -19,9 +19,9 @@ Vec Plane::surf_dir() const {
 	Vec ret(plane.norm.y, -plane.norm.x, 0);
 	// possibily get a (0,0,0) !
 	// but cannot be all zero
-	if (ret == Vec::get_zero())
+	if (ret == Vec::zero())
 		ret = Vec(0, plane.norm.z, -plane.norm.y);
-	m_assert(!(ret == Vec::get_zero()));
+	m_assert(!(ret == Vec::zero()));
 	ret.normalize();
 	return ret;
 }

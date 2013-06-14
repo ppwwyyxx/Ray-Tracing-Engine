@@ -1,5 +1,5 @@
 // File: geometry.hh
-// Date: Fri Jun 14 23:38:09 2013 +0800
+// Date: Fri Jun 14 20:35:10 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -10,6 +10,8 @@
 using std::numeric_limits;
 
 #include "common.hh"
+
+enum AXIS { AXIS_X = 0, AXIS_Y, AXIS_Z};
 
 class Geometry {
 	public:
@@ -39,12 +41,6 @@ class Vector {
 
 		Vector(const Vector &p0, const Vector &p1):
 			x(p1.x - p0.x), y(p1.y -p0.y), z(p1.z - p0.z) {}
-
-		real_t index(int c) const
-		{ return c == 0 ? x : c == 1 ? y : z; }
-
-		real_t& index(int c)
-		{ return c == 0 ? x : c == 1 ? y : z; }
 
 		real_t min_comp_abs() const {
 			real_t a = fabs(x), b = fabs(y), c = fabs(z);
@@ -76,18 +72,13 @@ class Vector {
 		Vector get_normalized() const
 		{ Vector ret(*this); ret.normalize(); return ret; }
 
-		bool is_zero(real_t threshold = EPS) const
-		{ return fabs(x) < threshold && fabs(y) < threshold && fabs(z) < threshold; }
-
-		bool is_positive(real_t threshold = EPS) const
-		{ return x > threshold && y > threshold && z > threshold; }
-
 		void update_min(const Vector &v)
 		{ ::update_min(x, v.x); ::update_min(y, v.y); ::update_min(z, v.z); }
 
 		void update_max(const Vector &v)
 		{ ::update_max(x, v.x); ::update_max(y, v.y); ::update_max(z, v.z); }
 
+		// operator
 		Vector operator + (const Vector &v) const
 		{ return Vector(x + v.x, y + v.y, z + v.z); }
 
@@ -118,27 +109,14 @@ class Vector {
 		bool operator != (const Vector &v) const
 		{ return fabs(x - v.x) >= EPS || fabs(y - v.y) >= EPS || fabs(z - v.z) >= EPS; }
 
-		friend std::ostream & operator << (std::ostream &os, const Vector& vec)
-		{ return os << vec.x << " " << vec.y << " " << vec.z;}
+		const real_t& operator [](int c) const
+		{ return c == 0 ? x : c == 1 ? y : z; }
 
-		static Vector max()
-		{ return Vector(numeric_limits<real_t>::max(), numeric_limits<real_t>::max(), numeric_limits<real_t>::max()); }
+		real_t& operator [](int c)
+		{ return c == 0 ? x : c == 1 ? y : z; }
 
-		static Vector infinity()
-		{ return Vector(numeric_limits<real_t>::infinity(), numeric_limits<real_t>::infinity(), numeric_limits<real_t>::infinity()); }
-
-		real_t get_max()
-		{ return std::max(x, std::max(y, z)); }
-
-		real_t get_abs_max()
-		{ return std::max(fabs(x), std::max(fabs(y), fabs(z))); }
-
-		static Vector get_zero()
-		{ return Vector(0, 0, 0); }
-
-		inline bool isfinite() const
-		{ return std::isfinite(x) && std::isfinite(y) && std::isfinite(z); }
-
+		// geometry
+		//
 		// i'm norm
 		Vector reflection(const Vector& v) const {
 			m_assert(fabs(v.sqr() - 1) < EPS && (fabs(sqr() - 1) < EPS));
@@ -160,6 +138,34 @@ class Vector {
 			ret = v_in * density + (*this) * (density * cos1 - cos2);
 			return ret.get_normalized();
 		}
+
+		// utility
+		static Vector max()
+		{ return Vector(numeric_limits<real_t>::max(), numeric_limits<real_t>::max(), numeric_limits<real_t>::max()); }
+
+		static Vector infinity()
+		{ return Vector(numeric_limits<real_t>::infinity(), numeric_limits<real_t>::infinity(), numeric_limits<real_t>::infinity()); }
+
+		static Vector zero()
+		{ return Vector(0, 0, 0); }
+
+		inline real_t get_max()
+		{ return std::max(x, std::max(y, z)); }
+
+		inline real_t get_abs_max()
+		{ return std::max(fabs(x), std::max(fabs(y), fabs(z))); }
+
+		inline bool is_zero(real_t threshold = EPS) const
+		{ return fabs(x) < threshold && fabs(y) < threshold && fabs(z) < threshold; }
+
+		inline bool is_positive(real_t threshold = EPS) const
+		{ return x > threshold && y > threshold && z > threshold; }
+
+		inline bool isfinite() const
+		{ return std::isfinite(x) && std::isfinite(y) && std::isfinite(z); }
+
+		friend std::ostream & operator << (std::ostream &os, const Vector& vec)
+		{ return os << vec.x << " " << vec.y << " " << vec.z;}
 };
 
 

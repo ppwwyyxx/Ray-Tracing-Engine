@@ -1,12 +1,13 @@
 // File: mesh.cc
-// Date: Fri Jun 14 23:32:18 2013 +0800
+// Date: Fri Jun 14 19:45:46 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "renderable/mesh.hh"
 #include "lib/objreader.hh"
 using namespace std;
 
-Mesh::Mesh(string fname) {
+Mesh::Mesh(std::string fname, const shared_ptr<Texture>& _texture) {
+	texture = _texture;
 	ObjReader::read_in(fname, vtxs, faces);
 }
 
@@ -22,6 +23,7 @@ void Mesh::finish_add() {
 
 shared_ptr<Surface> MeshTrace::transform_get_property() const {
 	m_assert(mesh.mapped);
+	return nullptr;
 }
 
 bool MeshTrace::intersect() {
