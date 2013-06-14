@@ -1,5 +1,5 @@
 // File: plane.cc
-// Date: Thu Jun 13 22:04:11 2013 +0800
+// Date: Fri Jun 14 10:59:40 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "renderable/plane.hh"
@@ -55,8 +55,7 @@ bool PlaneTrace::intersect() {
 }
 
 real_t PlaneTrace::intersection_dist() {
-	if (isfinite(inter_dist))
-		return inter_dist;
+	if (isfinite(inter_dist)) return inter_dist;
 	inter_dist = -dist_to_plane / dir_dot_norm;
 	return inter_dist;
 }
@@ -68,7 +67,7 @@ Vec PlaneTrace::normal() {	// norm to the ray side
 	return -ret;
 }
 
-shared_ptr<Surface> PlaneTrace::transform_get_property() {
+shared_ptr<Surface> PlaneTrace::transform_get_property() const {
 	Vec diff = intersection_point() - plane.center;
 	real_t x = diff.dot(plane.surfdir);
 	real_t y = diff.dot(plane.surfdir.cross(plane.plane.norm));

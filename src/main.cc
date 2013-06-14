@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Thu Jun 13 22:20:52 2013 +0800
+// Date: Fri Jun 14 11:23:34 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "space.hh"
 #include "renderable/plane.hh"
@@ -7,6 +7,7 @@
 #include "view.hh"
 #include "viewer.hh"
 #include "lib/imagereader.hh"
+#include "renderable/mesh.hh"
 
 using namespace std;
 
@@ -331,16 +332,23 @@ int main(int argc, char* argv[]) {
 	int w, h;
 	w = h = 500;
 	Space s;
-	s.add_light(Light(Vec(5, -10, 15), Color(0.9, 1, 1), 1));
-	s.add_light(Light(Vec(0, 0, 50), Color::WHITE, 0.3));
-	s.add_light(Light(Vec(0, 0, -50), Color::WHITE, 0.3));
+	s.add_light(Light(Vec(5, -10, 15), Color(0.9, 1, 1), 1.5));
+	s.add_light(Light(Vec(0, 0, 50), Color::WHITE, 0.6));
+	/*
+	 *s.add_light(Light(Vec(0, 0, -50), Color::WHITE, 0.6));
+	 */
 
 
 	shared_ptr<Texture> t1(new GridTexture(GridTexture::BLACK_WHITE));
+	shared_ptr<Texture> t2(new HomoTexture(HomoTexture::BLUE));
+	shared_ptr<Texture> tred(new HomoTexture(Surface::RED));
 	Plane plane1(InfPlane::XYPLANE, t1);
+	Face face({Vertex(Vec(5, 0, 0), 0), Vertex(Vec(5, 0, 2), 1), Vertex(Vec(4, 0, 0), 2)},
+			0, 1, 2);
+	face.set_texture(tred);
+	s.add_obj(new Face(face));
 	s.add_obj(new Plane(plane1));
-	t1 = shared_ptr<Texture>(new HomoTexture(HomoTexture::BLUE));
-	Sphere sphere(PureSphere::TestSphere, t1);
+	Sphere sphere(PureSphere::TestSphere, t2);
 	s.add_obj(new Sphere(sphere));
 
 	View v(make_shared<Space>(s), Vec(0, -10, 5), Vec(0, 0, 5), 30, Geometry(w, h));

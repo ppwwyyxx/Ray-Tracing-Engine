@@ -1,5 +1,5 @@
 # $File: Makefile
-# $Date: Thu Jun 13 22:18:17 2013 +0800
+# $Date: Fri Jun 14 11:08:56 2013 +0800
 
 OBJ_DIR = obj
 TARGET = main
@@ -7,7 +7,7 @@ TARGET = main
 INCLUDE_DIR = -Iinclude
 DEFINES = -DDEBUG
 
-OPTFLAGS = -Wall -Wextra -O3
+OPTFLAGS = -Wall -Wextra -O1 -g
 #OPTFLAGS = -O3
 
 LIBS = opencv
@@ -38,7 +38,7 @@ $(OBJ_DIR)/%.o: %.cc
 $(OBJ_DIR)/%.d: %.cc  Makefile
 	@mkdir -p $(dir $@)
 	@echo "[dep] $< ..."
-	@$(CC) $(INCLUDE_DIR) $(DEFINES) -MM -MT "$(OBJ_DIR)/$(<:.cc=.o) $(OBJ_DIR)/$(<:.cc=.d)" "$<"  > "$@"
+	@$(CC) $(CXXFLAGS) $(INCLUDE_DIR) $(DEFINES) -MM -MT "$(OBJ_DIR)/$(<:.cc=.o) $(OBJ_DIR)/$(<:.cc=.d)" "$<"  > "$@"
 
 
 $(TARGET): $(OBJS)

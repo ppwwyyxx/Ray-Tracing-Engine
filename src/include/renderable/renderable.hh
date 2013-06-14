@@ -1,5 +1,5 @@
 // File: renderable.hh
-// Date: Thu Jun 13 22:03:03 2013 +0800
+// Date: Fri Jun 14 10:59:40 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 
@@ -23,8 +23,8 @@ class RenderAble {
 		bool infinity = false;
 		shared_ptr<Texture> texture;
 
-		void set_texture(const shared_ptr<Texture>& m_texture)
-		{ texture = m_texture; }		// XXX is this ok?
+		void set_texture(const shared_ptr<Texture>& _texture)
+		{ texture = _texture; }		// XXX is this ok?
 
 		virtual shared_ptr<Trace> get_trace(const Ray& ray) const = 0;
 		// judge visibility and return ptr if visible
@@ -38,8 +38,7 @@ class Trace {
 		bool toward = true;
 		real_t inter_dist = std::numeric_limits<real_t>::infinity();
 
-		virtual	shared_ptr<Surface> transform_get_property() = 0;
-
+		virtual	shared_ptr<Surface> transform_get_property() const = 0;
 
 	public:
 		Trace(const RenderAble* m_obj, const Ray& m_ray):
@@ -54,8 +53,8 @@ class Trace {
 		const RenderAble* get_obj()
 		{ return obj; }
 
-		virtual inline Vec intersection_point() {
-			m_assert(inter_dist > 0);
+		virtual inline Vec intersection_point() const {
+			m_assert(isfinite(inter_dist) && inter_dist > 0);
 			return ray.get_dist(inter_dist);
 		}
 
@@ -65,11 +64,12 @@ class Trace {
 
 		virtual Vec normal() = 0;
 		// return Vec::zero if no normal exists
+		// return a `normalized` normal vector
 
 		virtual real_t get_forward_density() const
 		{ return ray.density; }
 
-		shared_ptr<Surface> get_property() {
+		virtual shared_ptr<Surface> get_property() const {
 			shared_ptr<Surface> ret = obj->texture->get_property();
 			if (ret) return ret;
 			return transform_get_property();		// is this working?

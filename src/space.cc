@@ -1,5 +1,5 @@
 // File: space.cc
-// Date: Thu Jun 13 14:54:54 2013 +0800
+// Date: Fri Jun 14 11:11:35 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <limits>
@@ -24,15 +24,15 @@ Color Space::trace(const Ray& ray, real_t dist, int depth) {
 	// XXX delete later
 
 	auto first_trace = find_first(ray);
-	if (!first_trace)
-	{ return Color::BLACK; }
-	// reach the first object
+	if (!first_trace) { return Color::BLACK; }
 
+	// reach the first object
 	real_t inter_dist = first_trace->intersection_dist();
 	Vec norm = first_trace->normal(),
 		inter_point = first_trace->intersection_point();
 	auto surf = first_trace->get_property();
 	real_t density = first_trace->get_forward_density();
+
 	m_assert((fabs(norm.sqr() - 1) < EPS));
 
 	if (ray.debug)
@@ -57,7 +57,6 @@ Color Space::trace(const Ray& ray, real_t dist, int depth) {
 		}
 
 		real_t damping = pow(M_E, -dist_to_light * AIR_BEER_DENSITY);
-		damping = 1;
 
 		// diffuse
 		if (lmn > 0)
@@ -74,6 +73,7 @@ Color Space::trace(const Ray& ray, real_t dist, int depth) {
 	ret *= pow(M_E, -dist * AIR_BEER_DENSITY);
 
 	// reflected ray : go back a little, same density
+	m_assert(fabs(ray.dir.sqr() - 1) < EPS);
 	Ray new_ray(inter_point - ray.dir * EPS, -norm.reflection(ray.dir), ray.density);
 
 	new_ray.debug = ray.debug;
@@ -104,7 +104,7 @@ shared_ptr<Trace> Space::find_first(const Ray& ray) const {
 	real_t min = numeric_limits<real_t>::max();
 	shared_ptr<Trace> ret;
 
-	for (auto& obj : objs) {
+	for (auto & obj : objs) {
 		auto tmp = obj->get_trace(ray);
 		if (tmp) {
 			real_t d = tmp->intersection_dist();
@@ -116,7 +116,7 @@ shared_ptr<Trace> Space::find_first(const Ray& ray) const {
 }
 
 bool Space::find_any(const Ray& ray, real_t dist) const {
-	for (const auto& obj : objs) {
+	for (auto & obj : objs) {
 		shared_ptr<Trace> tmp = obj->get_trace(ray);
 		if (tmp && (tmp->intersection_dist() < dist))
 			return true;

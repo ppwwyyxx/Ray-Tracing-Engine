@@ -1,5 +1,5 @@
 // File: texture.hh
-// Date: Thu Jun 13 17:16:21 2013 +0800
+// Date: Fri Jun 14 10:57:52 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -13,7 +13,7 @@ class Texture {
 	public:
 		virtual shared_ptr<Surface> get_property(real_t x, real_t y) const = 0;
 
-		virtual shared_ptr<Surface> get_property()
+		virtual shared_ptr<Surface> get_property() const
 			// without coordinate, always call this before get_property(x, y)
 		{ return nullptr; }
 
@@ -33,7 +33,7 @@ class HomoTexture :public Texture {
 			error_exit("should not be here");
 		}
 
-		shared_ptr<Surface> get_property()
+		shared_ptr<Surface> get_property() const
 		{ return make_shared<Surface>(pty); }
 
 		static const HomoTexture BLUE;

@@ -1,5 +1,5 @@
 // File: sphere.cc
-// Date: Thu Jun 13 22:04:03 2013 +0800
+// Date: Fri Jun 14 10:58:00 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "renderable/sphere.hh"
@@ -55,7 +55,7 @@ Vec SphereTrace::normal() {
 	else return -ret;
 }
 
-shared_ptr<Surface> SphereTrace::transform_get_property() {
+shared_ptr<Surface> SphereTrace::transform_get_property() const {
 	m_assert(fabs(sphere.north.sqr() - 1) < EPS);
 	Vec norm = (inter_point - sphere.sphere.center);
 	Vec projxy = Vec(norm.x, norm.y, 0).get_normalized(),

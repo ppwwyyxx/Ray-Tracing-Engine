@@ -1,5 +1,5 @@
 // File: geometry.hh
-// Date: Thu Jun 13 21:29:33 2013 +0800
+// Date: Fri Jun 14 10:49:51 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -70,7 +70,7 @@ class Vector {
 		virtual void normalize() {
 			real_t m = 1 / mod();
 			*this *= m;		// work?
-			m_assert(std::isnormal(m));
+			m_assert(std::isfinite(m));
 		}
 
 		Vector get_normalized() const
@@ -136,12 +136,12 @@ class Vector {
 		static Vector get_zero()
 		{ return Vector(0, 0, 0); }
 
-		inline bool isnoraml() const
-		{ return isfinite(x) && isfinite(y) && isfinite(z); }
+		inline bool isfinite() const
+		{ return std::isfinite(x) && std::isfinite(y) && std::isfinite(z); }
 
 		// i'm norm
 		Vector reflection(const Vector& v) const {
-			m_assert(fabs(v.sqr() - 1) < EPS && (sqr() - 1 < EPS));
+			m_assert(fabs(v.sqr() - 1) < EPS && (fabs(sqr() - 1) < EPS));
 			return *this * 2 * dot(v) - v;
 		}
 

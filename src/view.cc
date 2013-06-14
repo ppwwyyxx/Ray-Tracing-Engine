@@ -1,5 +1,5 @@
 // File: view.cc
-// Date: Mon Jun 10 23:51:08 2013 +0800
+// Date: Fri Jun 14 10:46:26 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "view.hh"
@@ -31,6 +31,7 @@ Color View::render(int i, int j, bool debug) const {
 	Vec dest = corner + dir_h * (geo.h - 1 - i) + dir_w * j;
 	Ray ray(view_point, dest - view_point, 1, true);
 	if (debug) ray.debug = true;
+	m_assert(ray.orig.isfinite() && ray.dir.isfinite());
 	return sp->trace(ray);
 }
 
@@ -46,7 +47,7 @@ void View::twist(int angle) {
 
 
 void View::zoom(real_t ratio) {
-	ratio = 1 / ratio;
+	ratio = 1.0 / ratio;
 	size *= ratio;
 	Vec dir = (view_point - mid);
 	view_point = mid + dir * ratio;
