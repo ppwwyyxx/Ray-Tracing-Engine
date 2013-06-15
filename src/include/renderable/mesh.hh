@@ -1,10 +1,11 @@
 // File: mesh.hh
-// Date: Fri Jun 14 23:33:18 2013 +0800
+// Date: Sat Jun 15 12:06:12 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
 #include <string>
 #include "renderable/face.hh"
+#include "lib/kdtree.hh"
 
 #define INRANGE(x) (x) < (int)vtxs.size()
 class Mesh: public RenderAble {
@@ -16,6 +17,7 @@ class Mesh: public RenderAble {
 		vector<shared_ptr<Face>> faces;
 		vector<Vertex> vtxs;
 		vector<shared_ptr<RenderAble>> faces_p;
+		shared_ptr<KDTree> tree;
 
 		Vec bound_min = Vec::max(), bound_max = -Vec::max();
 

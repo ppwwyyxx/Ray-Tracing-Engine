@@ -1,10 +1,9 @@
 // File: mesh.cc
-// Date: Fri Jun 14 23:41:43 2013 +0800
+// Date: Sat Jun 15 11:53:53 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "renderable/mesh.hh"
 #include "lib/objreader.hh"
-#include "lib/kdtree.hh"
 using namespace std;
 
 Mesh::Mesh(std::string fname, const shared_ptr<Texture>& _texture) {
@@ -13,16 +12,19 @@ Mesh::Mesh(std::string fname, const shared_ptr<Texture>& _texture) {
 }
 
 shared_ptr<Trace> Mesh::get_trace(const Ray& ray) const {
-	shared_ptr<Trace> ret(new MeshTrace(*this, ray));
-	if (ret->intersect()) return ret;
-	return nullptr;
+	/*
+	 *shared_ptr<Trace> ret(new MeshTrace(*this, ray));
+	 *if (ret->intersect()) return ret;
+	 *return nullptr;
+	 */
+	return tree->get_trace(ray);
 }
 
 AABB Mesh::get_aabb() const
 { return AABB(bound_min, bound_max); }
 
 void Mesh::finish_add() {
-	KDTree tree(faces_p, get_aabb());
+	tree = shared_ptr<KDTree>(new KDTree(faces_p, get_aabb()));
 }
 
 shared_ptr<Surface> MeshTrace::transform_get_property() const {

@@ -1,5 +1,5 @@
 // File: aabb.hh
-// Date: Sat Jun 15 00:06:19 2013 +0800
+// Date: Sat Jun 15 12:06:12 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -69,30 +69,28 @@ class AABB {
 
 		// An efficient and robust ray-box intersection algorithm
 		// Williams, etc. SIGGRAPH 2005
-		bool intersect(const Ray& ray, real_t &mind, real_t &maxd) {
+		bool intersect(const Ray& ray, real_t &mind, bool &inside) {
 			if (empty())
 				return false;
 			Vec inv(1.0 / ray.dir.x, 1.0 / ray.dir.y, 1.0 / ray.dir.z);
-			real_t t_min = std::numeric_limits<real_t>::max();
-			real_t t_max = -t_min;
+			real_t t_min = std::numeric_limits<real_t>::max(),
+				   t_max = -t_min;
 
-#define UPDATE(t)\
-			do {\
-				bool sign = inv.t < 0;\
-				real_t tmp_min = ((sign ? max : min).t - ray.orig.t) * inv.t;\
-				real_t tmp_max = ((sign ? min : max).t - ray.orig.t) * inv.t;\
-				update_min(t_min, tmp_min);\
-				update_max(t_max, tmp_max);\
-				if (t_min > t_max)\
-					return false;\
-			} while (0)
+			REP(t, 3) {
+				bool sign = (inv[t] < 0);
+				real_t tmp_min = ((sign ? max : min)[t] - ray.orig[t]) * inv[t];
+				real_t tmp_max = ((sign ? min : max)[t] - ray.orig[t]) * inv[t];
+				update_min(t_min, tmp_min);
+				update_max(t_max, tmp_max);
+				if (t_min + EPS > t_max) return false;
+			}
 
-			UPDATE(x); UPDATE(y); UPDATE(z);
-#undef UPDATE
-			if (mind < 0)
+			if (t_max < 0) return false;
+			if (std::isinf(t_min) || std::isinf(t_max))
 				return false;
 
-			mind = t_min, maxd = t_max;
+			if (t_min < 0) mind = t_max, inside = true;
+			else mind = t_min, inside = false;
 			return true;
 		}
 
