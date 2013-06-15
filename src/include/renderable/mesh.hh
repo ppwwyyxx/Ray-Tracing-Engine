@@ -1,5 +1,5 @@
 // File: mesh.hh
-// Date: Sat Jun 15 20:43:40 2013 +0800
+// Date: Sat Jun 15 20:51:03 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -16,7 +16,7 @@ class Mesh: public RenderAble {
 		bool mapped = false;
 		bool use_tree = false;
 		Vec pivot = Vec::infinity();
-		real_t zoom_size = std::numeric_limits<real_t>::infinity();
+		real_t zoom_size = 5;
 
 		vector<Vertex> vtxs;
 		vector<rdptr> faces;

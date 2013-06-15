@@ -1,5 +1,5 @@
 // File: mesh.cc
-// Date: Sat Jun 15 20:46:41 2013 +0800
+// Date: Sat Jun 15 20:50:47 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "renderable/mesh.hh"
@@ -17,6 +17,7 @@ void Mesh::transform_vtxs() {
 	for (auto &k : vtxs)
 		sum = sum + vtxs.pos;
 	sum = sum / vtxs.size();
+	if (std::isinf(pivot.x)) pivot = sum;
 	sum = pivot - sum;		// + diff
 
 	for (auto & k : vtxs)
