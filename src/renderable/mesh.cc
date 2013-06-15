@@ -1,5 +1,5 @@
 // File: mesh.cc
-// Date: Sat Jun 15 20:33:45 2013 +0800
+// Date: Sat Jun 15 20:46:41 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "renderable/mesh.hh"
@@ -9,6 +9,18 @@ using namespace std;
 Mesh::Mesh(std::string fname, const shared_ptr<Texture>& _texture) {
 	texture = _texture;
 	ObjReader::read_in(fname, this);
+}
+
+void Mesh::transform_vtxs() {
+	Vec sum;
+	real_t zfactor = zoom_size / (bound_max - bound_min).get_max();		// * factor
+	for (auto &k : vtxs)
+		sum = sum + vtxs.pos;
+	sum = sum / vtxs.size();
+	sum = pivot - sum;		// + diff
+
+	for (auto & k : vtxs)
+		k.pos = pivot + (k.pos + diff - pivot) * factor;
 }
 
 shared_ptr<Trace> Mesh::get_trace(const Ray& ray) const {

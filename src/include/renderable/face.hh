@@ -1,5 +1,5 @@
 // File: face.hh
-// Date: Sat Jun 15 20:26:11 2013 +0800
+// Date: Sat Jun 15 20:39:08 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -19,14 +19,12 @@ class Triangle {
 		Vec norm;
 
 		Triangle(const Vec& a, const Vec& b, const Vec& c):
-			v(a), e1(b - a), e2(c - a),norm(e1.cross(e2))
-		{}
+			v(a), e1(b - a), e2(c - a),norm(e1.cross(e2)) {}
 
 		Vec get(int i) const {
 			if (!i) return v + e1;
 			else return v + e2;
 		}
-
 
 		real_t get_intersect(const Ray& ray, real_t& gx, real_t& gy) const;
 };

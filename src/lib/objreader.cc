@@ -1,5 +1,5 @@
 // File: objreader.cc
-// Date: Sat Jun 15 20:33:23 2013 +0800
+// Date: Sat Jun 15 20:40:19 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <cstring>
@@ -7,6 +7,7 @@
 using namespace std;
 
 const int LINE_MAX_LEN = 1000;
+// assume that all vertex appears before face
 void ObjReader::read_in(string fname, Mesh* mesh) {
 	ifstream fin(fname);
 	static char input[LINE_MAX_LEN];
