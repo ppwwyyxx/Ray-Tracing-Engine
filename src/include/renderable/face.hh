@@ -1,5 +1,5 @@
 // File: face.hh
-// Date: Sat Jun 15 20:39:08 2013 +0800
+// Date: Sat Jun 15 22:16:41 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -56,7 +56,9 @@ class Face : public RenderAble {
 			tri(_vtxs[a].pos, _vtxs[b].pos, _vtxs[c].pos),
 			norm(tri.norm),
 			vtxid{a, b, c},
-			vtxs(_vtxs){}
+			vtxs(_vtxs){
+			m_assert(!tri.e1.is_zero());
+		}
 
 		void add_adj_face(Face* f)
 		{ adj_faces.push_back(f); }

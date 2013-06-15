@@ -1,27 +1,33 @@
 // File: mesh.cc
-// Date: Sat Jun 15 20:50:47 2013 +0800
+// Date: Sat Jun 15 22:24:38 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
+#include <algorithm>
 #include "renderable/mesh.hh"
 #include "lib/objreader.hh"
 using namespace std;
 
-Mesh::Mesh(std::string fname, const shared_ptr<Texture>& _texture) {
+Mesh::Mesh(std::string fname, const Vec& _pivot, real_t _zsize, const shared_ptr<Texture>& _texture):
+	pivot(_pivot), zoom_size(_zsize) {
 	texture = _texture;
 	ObjReader::read_in(fname, this);
 }
 
 void Mesh::transform_vtxs() {
+	cout << pivot << endl;
 	Vec sum;
 	real_t zfactor = zoom_size / (bound_max - bound_min).get_max();		// * factor
 	for (auto &k : vtxs)
-		sum = sum + vtxs.pos;
+		sum = sum + k.pos;
 	sum = sum / vtxs.size();
 	if (std::isinf(pivot.x)) pivot = sum;
 	sum = pivot - sum;		// + diff
+	cout << sum << "pi: " << pivot << " fa: " << zfactor << endl;
 
-	for (auto & k : vtxs)
-		k.pos = pivot + (k.pos + diff - pivot) * factor;
+	for_each(vtxs.begin(), vtxs.end(), [&](Vertex &v) {
+				v.pos = pivot + (v.pos + sum - pivot) * zfactor;
+		});
+	for (auto k : vtxs) cout << k.pos << endl;
 }
 
 shared_ptr<Trace> Mesh::get_trace(const Ray& ray) const {

@@ -1,5 +1,5 @@
 // File: objreader.cc
-// Date: Sat Jun 15 20:40:19 2013 +0800
+// Date: Sat Jun 15 22:16:51 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <cstring>
@@ -12,6 +12,7 @@ void ObjReader::read_in(string fname, Mesh* mesh) {
 	ifstream fin(fname);
 	static char input[LINE_MAX_LEN];
 	int nnorm = 0;
+	bool startf = false;
 	while (fin.getline(input, LINE_MAX_LEN, '\n')) {
 		if (input[0] == '#' || strlen(input) <= 1)
 			continue;
@@ -34,6 +35,10 @@ void ObjReader::read_in(string fname, Mesh* mesh) {
 			}
 			case 'f':
 			{				// XXX some model is 'f 1 2 3 4 5 6'
+				if (!startf) {
+					startf = true;
+					mesh->transform_vtxs();
+				}
 				int x, y, z;
 				sscanf(input + 2, "%d %d %d", &x, &y, &z);
 				if (x != y && y != z && x != z)
