@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Sat Jun 15 16:31:18 2013 +0800
+// Date: Sat Jun 15 16:45:42 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "space.hh"
 #include "renderable/plane.hh"
@@ -31,9 +31,9 @@ int main(int argc, char* argv[]) {
 	int w, h;
 	w = h = 500;
 	Space s;
-	s.add_light(Light(Vec(0, -100, 50), Color(0.9, 1, 1), 2));
-	s.add_light(Light(Vec(0, 0, 80), Color::WHITE, 1));
-	s.add_light(Light(Vec(0, 0, -50), Color::WHITE, 0.6));
+	s.add_light(Light(Vec(0, -50, 0), Color(0.9, 1, 1), 8));
+	s.add_light(Light(Vec(0, -10, 80), Color::WHITE, 5));
+	s.add_light(Light(Vec(0, -30, -50), Color::WHITE, 6));
 
 
 	shared_ptr<Texture> t1(new GridTexture(GridTexture::BLACK_WHITE));
@@ -57,7 +57,7 @@ int main(int argc, char* argv[]) {
 	 *s.add_obj(new Sphere(sphere));
 	 */
 
-	View v(make_shared<Space>(s), Vec(0, -40, 5), Vec(0, 0, 5), 100, Geometry(w, h));
+	View v(make_shared<Space>(s), Vec(0, -100, 5), Vec(0, 0, 5), 300, Geometry(w, h));
 	CVViewer viewer(v);
 	viewer.view();
 }
