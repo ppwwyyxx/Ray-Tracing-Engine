@@ -1,5 +1,5 @@
 // File: kdtree.cc
-// Date: Sat Jun 15 12:06:14 2013 +0800
+// Date: Sat Jun 15 15:38:54 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include <algorithm>
 #include "lib/kdtree.hh"
@@ -15,6 +15,8 @@ class KDTree::Node {
 		Node(const AABB& _box, Node* p1 = nullptr, Node* p2 = nullptr) :
 			box(_box), child{p1, p2} { }
 
+		~Node() { delete child[0]; delete child[1]; }
+
 		bool leaf() const
 		{ return child[0] == nullptr && child[1] == nullptr; }
 
@@ -25,6 +27,9 @@ class KDTree::Node {
 		{ objs.push_back(obj); }
 
 		shared_ptr<Trace> get_trace(const Ray& ray, real_t inter_dist) const {
+			/*
+			 *print_debug("in get_trace\n");
+			 */
 			// call when know to intersect
 			if (leaf()) {
 				// find first obj
@@ -44,40 +49,52 @@ class KDTree::Node {
 			real_t mind = -1, mind2 = -1;
 			bool inside;
 			real_t pivot = ray.get_dist(inter_dist)[pl.axis];
-			int first_met = (int)(pivot <= pl.pos);
+			int first_met = (int)(pivot > pl.pos);
 
-			if (child[first_met] != nullptr) {
-				if (child[first_met]->box.intersect(ray, mind, inside)) {
-					auto ret = child[first_met]->get_trace(ray, mind);
-					if (ret != nullptr) {
-						Vec inter_point = ret->intersection_point();
-						if (child[first_met]->box.contain(inter_point)) return ret;
-						// interpoint must in the box
-					}
-				}
+			Node* ch0 = child[0], *ch1 = child[1];
+			if (!ch0 || !ch0->box.intersect(ray, mind, inside)) ch0 = nullptr;
+			if (!ch1 || !ch1->box.intersect(ray, mind2, inside)) ch1 = nullptr;
+			if (ch0) {
+				auto ret = ch0->get_trace(ray, mind);
+				if (ret) return ret;
 			}
+			if (ch1)
+				return ch1->get_trace(ray, mind2);
 
-			// second box
-
-			if (child[1 - first_met] != nullptr)
-				child[1 - first_met]->box.intersect(ray, mind2, inside);
-
-			if (mind == -1 && mind2 == -1) {
-				m_assert(false);
-				return nullptr;					// not intersect with both box
-			}
-			if (!(mind2 == -1 || mind <= mind2)) {
-				print_debug("%lf, %lf\n", mind, mind2);
-				m_assert(false);
-			}
-
-			if (mind2 != -1) {			// have intersection with second
-				auto ret = child[1 - first_met]->get_trace(ray, mind2);
-				if (ret != nullptr) {
-					Vec inter_point = ret->intersection_point();
-					if (child[1 - first_met]->box.contain(inter_point)) return ret;
-				}
-			}
+/*
+ *            if (child[first_met] != nullptr) {
+ *                if (child[first_met]->box.intersect(ray, mind, inside)) {
+ *                    auto ret = child[first_met]->get_trace(ray, mind);
+ *                    if (ret != nullptr) {
+ *                        Vec inter_point = ret->intersection_point();
+ *                        if (child[first_met]->box.contain(inter_point)) return ret;
+ *                        // interpoint must in the box
+ *                    }
+ *                }
+ *            }
+ *
+ *            // second box
+ *
+ *            if (child[1 - first_met] != nullptr)
+ *                child[1 - first_met]->box.intersect(ray, mind2, inside);
+ *
+ *            if (child[1] != nullptr && child[0] != nullptr && mind == -1 && mind2 == -1) {
+ *                m_assert(false);
+ *                return nullptr;					// not intersect with both box
+ *            }
+ *            if (!(mind2 == -1 || mind <= mind2)) {
+ *                print_debug("%lf, %lf\n", mind, mind2);
+ *                m_assert(false);
+ *            }
+ *
+ *            if (mind2 != -1) {			// have intersection with second
+ *                auto ret = child[1 - first_met]->get_trace(ray, mind2);
+ *                if (ret != nullptr) {
+ *                    Vec inter_point = ret->intersection_point();
+ *                    if (child[1 - first_met]->box.contain(inter_point)) return ret;
+ *                }
+ *            }
+ */
 			return nullptr;
 		}
 
@@ -95,9 +112,9 @@ KDTree::KDTree(const vector<shared_ptr<RenderAble>>& objs, const AABB& space) {
 }
 
 shared_ptr<Trace> KDTree::get_trace(const Ray& ray) const {
-	real_t mind;
-	bool inside;
-	if (!root->box.intersect(ray, mind, inside)) return nullptr;
+	real_t mind; bool inside;
+	if (!(root->box.intersect(ray, mind, inside)))
+		return nullptr;
 	return root->get_trace(ray, mind);
 }
 
@@ -119,16 +136,16 @@ KDTree::Node* KDTree::build(const vector<RenderWrapper>& objs, const AABB& box, 
 	if (objs.size() == 0) return nullptr;
 
 	Node* ret = new Node(box);
-	for (auto & obj : objs)
-		ret->add_obj(obj.obj);
 
-	if (depth > KDTREE_MAX_DEPTH) return ret;
+	if (depth > KDTREE_MAX_DEPTH) return nullptr;
 
 	AAPlane pl = cut(objs, box, depth);
 	pair<AABB, AABB> par;
 	try {
 		par = box.cut(pl);
 	} catch (...) {
+		for (auto& obj : objs)
+			ret->add_obj(obj.obj);
 		return ret;		// pl is outside box, cannot go further
 	}
 	ret->pl = pl;
@@ -140,6 +157,10 @@ KDTree::Node* KDTree::build(const vector<RenderWrapper>& objs, const AABB& box, 
 	}
 	Node *lch = build(objl, par.first, depth + 1),
 		 *rch = build(objr, par.second, depth + 1);
+
+	if (lch == nullptr && rch == nullptr)		// add obj to leaf node
+		for (auto& obj : objs) ret->add_obj(obj.obj);
+
 	ret->child[0] = lch, ret->child[1] = rch;
 	print_debug("depth: %d, lsize: %d, rsize: %d\n", depth, (int)objl.size(), (int)objr.size());
 	return ret;

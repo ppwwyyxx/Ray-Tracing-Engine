@@ -1,5 +1,5 @@
 // File: mesh.hh
-// Date: Sat Jun 15 12:06:12 2013 +0800
+// Date: Sat Jun 15 15:38:40 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -13,6 +13,7 @@ class Mesh: public RenderAble {
 		bool have_inside = false;
 		bool smooth = true;
 		bool mapped = false;
+		bool use_tree = false;
 
 		vector<shared_ptr<Face>> faces;
 		vector<Vertex> vtxs;
@@ -44,6 +45,7 @@ class Mesh: public RenderAble {
 		void add_face(int a, int b, int c) {
 			m_assert(INRANGE(max(a, max(b, c))));
 			Face f(vtxs, a, b, c);
+			f.host = this;
 			faces.push_back(shared_ptr<Face>(new Face(f)));
 			faces_p.push_back(shared_ptr<RenderAble>(new Face(f)));
 		}

@@ -1,5 +1,5 @@
 // File: renderable.hh
-// Date: Fri Jun 14 22:13:59 2013 +0800
+// Date: Sat Jun 15 14:08:59 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 

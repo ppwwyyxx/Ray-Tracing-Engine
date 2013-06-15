@@ -1,5 +1,5 @@
 # $File: Makefile
-# $Date: Fri Jun 14 23:36:04 2013 +0800
+# $Date: Sat Jun 15 14:55:57 2013 +0800
 
 OBJ_DIR = obj
 TARGET = main
@@ -7,7 +7,7 @@ TARGET = main
 INCLUDE_DIR = -Iinclude
 DEFINES = -DDEBUG
 
-OPTFLAGS = -Wall -Wextra -g
+OPTFLAGS = -Wall -Wextra -O3
 #OPTFLAGS = -O3
 
 LIBS = opencv
@@ -17,13 +17,14 @@ CXXFLAGS = $(INCLUDE_DIR)
 CXXFLAGS += $(shell Magick++-config --cxxflags)
 CXXFLAGS += $(DEFINES) -std=c++11 $(OPTFLAGS) -fopenmp
 LDFLAGS = $(shell pkg-config $(LIBS) --libs)
+LDFLAGS += $(OPTFLAGS)
 LDFLAGS += $(shell Magick++-config --ldflags --libs) -fopenmp
 
 CC = g++
 SHELL = bash
 ccSOURCES = $(shell find -name "*.cc" | sed 's/^\.\///g')
 OBJS = $(addprefix $(OBJ_DIR)/,$(ccSOURCES:.cc=.o))
-DEPFILES = $(OBJS:.o=.d)
+DEPFILES = $(OBJS:.o=.dep)
 
 .PHONY: all clean run
 
@@ -35,10 +36,10 @@ $(OBJ_DIR)/%.o: %.cc
 	@echo "[cc] $< ..."
 	@$(CC) -c $< -o $@ $(CXXFLAGS)
 
-$(OBJ_DIR)/%.d: %.cc  Makefile
+$(OBJ_DIR)/%.dep: %.cc  Makefile
 	@mkdir -p $(dir $@)
 	@echo "[dep] $< ..."
-	@$(CC) $(CXXFLAGS) $(INCLUDE_DIR) $(DEFINES) -MM -MT "$(OBJ_DIR)/$(<:.cc=.o) $(OBJ_DIR)/$(<:.cc=.d)" "$<"  > "$@"
+	@$(CC) $(CXXFLAGS) $(INCLUDE_DIR) $(DEFINES) -MM -MT "$(OBJ_DIR)/$(<:.cc=.o) $(OBJ_DIR)/$(<:.cc=.dep)" "$<"  > "$@"
 
 
 $(TARGET): $(OBJS)

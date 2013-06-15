@@ -1,9 +1,8 @@
 // File: face.hh
-// Date: Fri Jun 14 22:22:09 2013 +0800
+// Date: Sat Jun 15 15:21:16 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
-#include <tuple>
 #include <memory>
 #include <vector>
 
@@ -29,7 +28,7 @@ class Triangle {
 		}
 
 
-		tuple<real_t, real_t, real_t> get_intersect(const Ray& ray) const;
+		real_t get_intersect(const Ray& ray, real_t& gx, real_t& gy) const;
 };
 
 class Vertex {
@@ -48,6 +47,8 @@ class Face : public RenderAble {
 	public:
 		Triangle tri;
 		Vec norm; // can later be re-calculated, can be assigned other than tri.normal
+
+		RenderAble* host;
 
 		tuple<int, int, int> vtxid;
 		vector<Face*> adj_faces;
@@ -85,4 +86,7 @@ class FaceTrace : public Trace {
 		real_t intersection_dist();
 
 		Vec normal();
+
+		shared_ptr<Surface> get_property() const
+		{ return face.host->texture->get_property(); }
 };

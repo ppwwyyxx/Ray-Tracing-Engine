@@ -1,5 +1,5 @@
 // File: aabb.hh
-// Date: Sat Jun 15 12:06:12 2013 +0800
+// Date: Sat Jun 15 15:32:48 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -53,10 +53,13 @@ class AABB {
 			max.update_max(b.max);
 		}
 
-		void update(const Vec& v) {
-			min.update_min(v);
-			max.update_max(v);
+		inline void update(const Vec& v) {
+			update_min(v);
+			update_max(v);
 		}
+
+		inline void update_min(const Vec& v) {min.update_min(v); }
+		inline void update_max(const Vec& v) {max.update_max(v); }
 
 		std::pair<AABB, AABB> cut(const AAPlane& pl) const {
 			AABB l = *this, r = *this;
@@ -73,21 +76,24 @@ class AABB {
 			if (empty())
 				return false;
 			Vec inv(1.0 / ray.dir.x, 1.0 / ray.dir.y, 1.0 / ray.dir.z);
-			real_t t_min = std::numeric_limits<real_t>::max(),
-				   t_max = -t_min;
+			real_t t_max = std::numeric_limits<real_t>::max(),
+				   t_min = -t_max;
 
-			REP(t, 3) {
-				bool sign = (inv[t] < 0);
-				real_t tmp_min = ((sign ? max : min)[t] - ray.orig[t]) * inv[t];
-				real_t tmp_max = ((sign ? min : max)[t] - ray.orig[t]) * inv[t];
-				update_min(t_min, tmp_min);
-				update_max(t_max, tmp_max);
-				if (t_min + EPS > t_max) return false;
-			}
+#define UPDATE(t) \
+			do { \
+				if (ray.dir.t > EPS) { \
+					bool sign = (inv.t < 0); \
+					real_t tmp_min = ((sign ? max : min).t - ray.orig.t) * inv.t; \
+					real_t tmp_max = ((sign ? min : max).t - ray.orig.t) * inv.t; \
+					::update_max(t_min, tmp_min); \
+					::update_min(t_max, tmp_max); \
+					if (t_min + EPS > t_max) return false; \
+				} \
+			} while (0)
+			UPDATE(x); UPDATE(y); UPDATE(z);
+#undef UPDATE
 
 			if (t_max < 0) return false;
-			if (std::isinf(t_min) || std::isinf(t_max))
-				return false;
 
 			if (t_min < 0) mind = t_max, inside = true;
 			else mind = t_min, inside = false;
