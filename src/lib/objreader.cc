@@ -1,5 +1,5 @@
 // File: objreader.cc
-// Date: Sat Jun 15 22:16:51 2013 +0800
+// Date: Sat Jun 15 22:28:46 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <cstring>
