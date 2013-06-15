@@ -1,5 +1,5 @@
 // File: mesh.hh
-// Date: Sat Jun 15 16:16:55 2013 +0800
+// Date: Sat Jun 15 20:36:24 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -10,20 +10,21 @@
 #define INRANGE(x) (x) < (int)vtxs.size()
 class Mesh: public RenderAble {
 	public:
+		// config
 		bool have_inside = false;
 		bool smooth = false;
 		bool mapped = false;
 		bool use_tree = false;
+		Vec pivot = Vec::infinity();
+		real_t zoom_factor = std::numeric_limits<real_t>::infinity();
 
-		vector<shared_ptr<Face>> faces;
 		vector<Vertex> vtxs;
-		vector<rdptr> faces_p;
+		vector<rdptr> faces;
 		shared_ptr<KDTree> tree;
 
 		Vec bound_min = Vec::max(), bound_max = -Vec::max();
 
 		Mesh() {}
-
 		Mesh(std::string fname, const shared_ptr<Texture>& _texture = nullptr);
 
 		void add_vertex(const Vec& p) {
@@ -46,8 +47,7 @@ class Mesh: public RenderAble {
 			m_assert(INRANGE(max(a, max(b, c))));
 			Face f(vtxs, a, b, c);
 			f.host = this;
-			faces.push_back(shared_ptr<Face>(new Face(f)));
-			faces_p.push_back(rdptr(new Face(f)));
+			faces.push_back(rdptr(new Face(f)));
 		}
 
 		void finish_add();

@@ -1,5 +1,5 @@
 // File: mesh.cc
-// Date: Sat Jun 15 16:17:31 2013 +0800
+// Date: Sat Jun 15 20:33:45 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "renderable/mesh.hh"
@@ -23,9 +23,9 @@ AABB Mesh::get_aabb() const
 { return AABB(bound_min, bound_max); }
 
 void Mesh::finish_add() {
-	if (faces_p.size() > USE_KDTREE_THRES) {
+	if (faces.size() > USE_KDTREE_THRES) {
 		use_tree = true;
-		tree = shared_ptr<KDTree>(new KDTree(faces_p, get_aabb()));
+		tree = shared_ptr<KDTree>(new KDTree(faces, get_aabb()));
 	}
 }
 
