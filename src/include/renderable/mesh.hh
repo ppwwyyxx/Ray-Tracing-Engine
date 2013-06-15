@@ -1,5 +1,5 @@
 // File: mesh.hh
-// Date: Sat Jun 15 15:38:40 2013 +0800
+// Date: Sat Jun 15 15:43:33 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -17,7 +17,7 @@ class Mesh: public RenderAble {
 
 		vector<shared_ptr<Face>> faces;
 		vector<Vertex> vtxs;
-		vector<shared_ptr<RenderAble>> faces_p;
+		vector<rdptr> faces_p;
 		shared_ptr<KDTree> tree;
 
 		Vec bound_min = Vec::max(), bound_max = -Vec::max();
@@ -47,7 +47,7 @@ class Mesh: public RenderAble {
 			Face f(vtxs, a, b, c);
 			f.host = this;
 			faces.push_back(shared_ptr<Face>(new Face(f)));
-			faces_p.push_back(shared_ptr<RenderAble>(new Face(f)));
+			faces_p.push_back(rdptr(new Face(f)));
 		}
 
 		void finish_add();

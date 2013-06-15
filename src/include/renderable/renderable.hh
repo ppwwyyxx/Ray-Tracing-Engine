@@ -1,5 +1,5 @@
 // File: renderable.hh
-// Date: Sat Jun 15 14:08:59 2013 +0800
+// Date: Sat Jun 15 15:42:25 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 
@@ -14,6 +14,7 @@ using std::make_shared;
 
 class Trace;
 class RenderAble;
+typedef shared_ptr<RenderAble> rdptr;
 
 class RenderAble {
 	private:

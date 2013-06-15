@@ -1,5 +1,5 @@
 // File: kdtree.cc
-// Date: Sat Jun 15 15:38:54 2013 +0800
+// Date: Sat Jun 15 15:43:18 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include <algorithm>
 #include "lib/kdtree.hh"
@@ -20,10 +20,10 @@ class KDTree::Node {
 		bool leaf() const
 		{ return child[0] == nullptr && child[1] == nullptr; }
 
-		void set_objs(const vector<shared_ptr<RenderAble>>& _objs)
+		void set_objs(const vector<rdptr>& _objs)
 		{ objs = _objs; }
 
-		void add_obj(shared_ptr<RenderAble> obj)
+		void add_obj(rdptr obj)
 		{ objs.push_back(obj); }
 
 		shared_ptr<Trace> get_trace(const Ray& ray, real_t inter_dist) const {
@@ -100,11 +100,11 @@ class KDTree::Node {
 
 
 	private:
-		vector<shared_ptr<RenderAble>> objs;
+		vector<rdptr> objs;
 
 };
 
-KDTree::KDTree(const vector<shared_ptr<RenderAble>>& objs, const AABB& space) {
+KDTree::KDTree(const vector<rdptr>& objs, const AABB& space) {
 	vector<RenderWrapper> objlist;
 	for (auto & obj : objs)
 		objlist.push_back(RenderWrapper(obj, obj->get_aabb()));
