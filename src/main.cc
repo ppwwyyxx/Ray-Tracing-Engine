@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Sat Jun 15 16:09:35 2013 +0800
+// Date: Sat Jun 15 16:31:18 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "space.hh"
 #include "renderable/plane.hh"
@@ -41,7 +41,7 @@ int main(int argc, char* argv[]) {
 	shared_ptr<Texture> tred(new HomoTexture(Surface::RED));
 	Plane plane1(InfPlane::XYPLANE, t1);
 
-	Mesh mesh("../res/teapot.obj");
+	Mesh mesh("../res/magnolia.obj");
 	mesh.set_texture(tred);
 	mesh.finish_add();
 	cout << mesh.get_aabb() << endl;
@@ -57,7 +57,7 @@ int main(int argc, char* argv[]) {
 	 *s.add_obj(new Sphere(sphere));
 	 */
 
-	View v(make_shared<Space>(s), Vec(0, -50, 5), Vec(0, 0, 5), 300, Geometry(w, h));
+	View v(make_shared<Space>(s), Vec(0, -40, 5), Vec(0, 0, 5), 100, Geometry(w, h));
 	CVViewer viewer(v);
 	viewer.view();
 }
