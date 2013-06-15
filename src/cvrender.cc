@@ -1,5 +1,5 @@
 // File: cvrender.cc
-// Date: Sat Jun 15 13:22:53 2013 +0800
+// Date: Sat Jun 15 16:55:41 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <opencv2/opencv.hpp>
@@ -50,9 +50,12 @@ void CVViewer::render_all() {
 	HWTimer timer;
 
 #pragma omp parallel for schedule(dynamic)
-	REP(i, geo.h) REP(j, geo.w) {
-		Color col = v.render(i, j);
-		r.write(j, i, col);
+	REP(i, geo.h) {
+		print_debug("progress: %lf\n", (double)i / geo.h);
+		REP(j, geo.w) {
+			Color col = v.render(i, j);
+			r.write(j, i, col);
+		}
 	}
 	print_debug("%lf seconds.\n", timer.get_sec());
 }
