@@ -1,5 +1,5 @@
 // File: mesh.hh
-// Date: Sat Jun 15 15:43:33 2013 +0800
+// Date: Sat Jun 15 16:16:55 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -11,7 +11,7 @@
 class Mesh: public RenderAble {
 	public:
 		bool have_inside = false;
-		bool smooth = true;
+		bool smooth = false;
 		bool mapped = false;
 		bool use_tree = false;
 

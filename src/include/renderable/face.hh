@@ -1,5 +1,5 @@
 // File: face.hh
-// Date: Sat Jun 15 15:21:16 2013 +0800
+// Date: Sat Jun 15 16:25:43 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -52,14 +52,25 @@ class Face : public RenderAble {
 
 		tuple<int, int, int> vtxid;
 		vector<Face*> adj_faces;
+		const vector<Vertex>& vtxs;
 
-		Face(const vector<Vertex>& vtxs, int a, int b, int c):
-			tri(vtxs[a].pos, vtxs[b].pos, vtxs[c].pos),
+		Face(const vector<Vertex>& _vtxs, int a, int b, int c):
+			tri(_vtxs[a].pos, _vtxs[b].pos, _vtxs[c].pos),
 			norm(tri.norm),
-			vtxid{a, b, c} {}
+			vtxid{a, b, c},
+			vtxs(_vtxs){}
 
 		void add_adj_face(Face* f)
 		{ adj_faces.push_back(f); }
+
+		Vec get_norm(int i) const {
+			if (i == 0)
+				return vtxs[get<0>(vtxid)].norm;
+			else if (i == 1)
+				return vtxs[get<1>(vtxid)].norm;
+			else
+				return vtxs[get<2>(vtxid)].norm;
+		}
 
 		shared_ptr<Trace> get_trace(const Ray& ray) const;
 

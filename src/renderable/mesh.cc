@@ -1,5 +1,5 @@
 // File: mesh.cc
-// Date: Sat Jun 15 15:38:40 2013 +0800
+// Date: Sat Jun 15 16:17:31 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "renderable/mesh.hh"

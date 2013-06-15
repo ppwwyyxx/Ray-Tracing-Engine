@@ -1,5 +1,5 @@
 // File: face.cc
-// Date: Sat Jun 15 15:32:19 2013 +0800
+// Date: Sat Jun 15 16:25:41 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "renderable/mesh.hh"
@@ -70,6 +70,10 @@ real_t FaceTrace::intersection_dist() { return inter_dist; }
 
 Vec FaceTrace::normal() {		// norm to the ray side
 	Vec ret = face.norm.get_normalized();
+	/*
+	 *ret = (face.get_norm(0) + face.get_norm(1) + face.get_norm(2)).get_normalized();
+	 */
+	cout << ret << endl;
 	if (Vec(face.tri.v, ray.orig).dot(ret) < 0)
 		return -ret;
 	return ret;

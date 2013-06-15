@@ -1,5 +1,5 @@
 // File: objreader.cc
-// Date: Fri Jun 14 23:44:27 2013 +0800
+// Date: Sat Jun 15 16:16:43 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <cstring>
@@ -10,7 +10,7 @@ const int LINE_MAX_LEN = 1000;
 void ObjReader::read_in(string fname, Mesh* mesh) {
 	ifstream fin(fname);
 	static char input[LINE_MAX_LEN];
-	int nvtx = 0, nnorm = 0;
+	int nnorm = 0;
 	while (fin.getline(input, LINE_MAX_LEN, '\n')) {
 		if (input[0] == '#' || strlen(input) <= 1)
 			continue;
@@ -48,6 +48,10 @@ void ObjReader::read_in(string fname, Mesh* mesh) {
 		}
 	}
 	fin.close();
+	if (nnorm == mesh->vtxs.size()) {
+		cout << "use vn" << endl;
+		mesh->smooth = true;
+	}
 	cout << "nvtx: " << mesh->vtxs.size() << ", nface: " << mesh->faces.size() << endl;
 }
 
