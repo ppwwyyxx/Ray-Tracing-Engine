@@ -1,5 +1,5 @@
 // File: kdtree.cc
-// Date: Sat Jun 15 15:43:18 2013 +0800
+// Date: Sat Jun 15 16:00:14 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include <algorithm>
 #include "lib/kdtree.hh"
@@ -56,10 +56,18 @@ class KDTree::Node {
 			if (!ch1 || !ch1->box.intersect(ray, mind2, inside)) ch1 = nullptr;
 			if (ch0) {
 				auto ret = ch0->get_trace(ray, mind);
-				if (ret) return ret;
+				if (ret) {
+					Vec inter_p = ret->intersection_point();
+					if (ch0->box.contain(inter_p)) return ret;
+				}
 			}
-			if (ch1)
-				return ch1->get_trace(ray, mind2);
+			if (ch1) {
+				auto ret = ch1->get_trace(ray, mind2);
+				if (ret) {
+					Vec inter_p = ret->intersection_point();
+					if (ch1->box.contain(inter_p)) return ret;
+				}
+			}
 
 /*
  *            if (child[first_met] != nullptr) {
