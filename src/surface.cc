@@ -1,5 +1,5 @@
 // File: surface.cc
-// Date: Sat Jun 15 16:44:25 2013 +0800
+// Date: Mon Jun 17 11:09:30 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "material/surface.hh"

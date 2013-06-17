@@ -1,5 +1,5 @@
 // File: mesh.cc
-// Date: Sat Jun 15 22:28:09 2013 +0800
+// Date: Mon Jun 17 10:55:58 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <algorithm>
@@ -23,6 +23,8 @@ void Mesh::transform_vtxs() {
 		[&](Vertex &v) {
 			v.pos = pivot + (v.pos + sum - pivot) * zfactor;
 	});
+	bound_min = pivot + (bound_min + sum - pivot) * zfactor;
+	bound_max = pivot + (bound_max + sum - pivot) * zfactor;
 }
 
 shared_ptr<Trace> Mesh::get_trace(const Ray& ray) const {

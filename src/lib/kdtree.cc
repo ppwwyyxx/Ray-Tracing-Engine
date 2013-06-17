@@ -1,5 +1,5 @@
 // File: kdtree.cc
-// Date: Sat Jun 15 16:00:14 2013 +0800
+// Date: Mon Jun 17 11:06:20 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include <algorithm>
 #include "lib/kdtree.hh"
@@ -51,7 +51,7 @@ class KDTree::Node {
 			real_t pivot = ray.get_dist(inter_dist)[pl.axis];
 			int first_met = (int)(pivot > pl.pos);
 
-			Node* ch0 = child[0], *ch1 = child[1];
+			Node* ch0 = child[first_met], *ch1 = child[1 - first_met];
 			if (!ch0 || !ch0->box.intersect(ray, mind, inside)) ch0 = nullptr;
 			if (!ch1 || !ch1->box.intersect(ray, mind2, inside)) ch1 = nullptr;
 			if (ch0) {
@@ -128,12 +128,18 @@ shared_ptr<Trace> KDTree::get_trace(const Ray& ray) const {
 
 AAPlane KDTree::cut(const vector<RenderWrapper>& objs, const AABB& box, int depth) const {
 	AAPlane ret;
-	ret.axis = static_cast<AXIS>(depth % 3);
+	ret.axis = static_cast<AXIS>(depth % 3 + 2);
 
 	vector<real_t> min_list;
 	for (auto &obj : objs)
 		min_list.push_back(obj.box.min[ret.axis]);
 	nth_element(min_list.begin(), min_list.begin() + min_list.size() / 2, min_list.end());
+	/*
+	 *for (auto & k : min_list)
+	 *    cout << k << " ";
+	 *cout << endl;
+	 *cout << ret.pos << endl;
+	 */
 	// partial sort
 	ret.pos = min_list[min_list.size() / 2] + 2 * EPS;		// SEE what happen
 
@@ -148,6 +154,7 @@ KDTree::Node* KDTree::build(const vector<RenderWrapper>& objs, const AABB& box, 
 	if (depth > KDTREE_MAX_DEPTH) return nullptr;
 
 	AAPlane pl = cut(objs, box, depth);
+	print_debug("axis: %d, pos: %lf\n", pl.axis, pl.pos);
 	pair<AABB, AABB> par;
 	try {
 		par = box.cut(pl);
@@ -160,8 +167,10 @@ KDTree::Node* KDTree::build(const vector<RenderWrapper>& objs, const AABB& box, 
 
 	vector<RenderWrapper> objl, objr;
 	for (auto & obj : objs) {
-		if (par.first.intersect(obj.box)) objl.push_back(obj);
-		if (par.second.intersect(obj.box)) objr.push_back(obj);
+		if (par.first.intersect(obj.box))
+			objl.push_back(obj);
+		if (par.second.intersect(obj.box))
+			objr.push_back(obj);
 	}
 	Node *lch = build(objl, par.first, depth + 1),
 		 *rch = build(objr, par.second, depth + 1);

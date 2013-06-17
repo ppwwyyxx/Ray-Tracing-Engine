@@ -1,5 +1,5 @@
 // File: space.cc
-// Date: Sat Jun 15 16:40:36 2013 +0800
+// Date: Mon Jun 17 11:04:58 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <limits>
@@ -78,13 +78,15 @@ Color Space::trace(const Ray& ray, real_t dist, int depth) {
 
 	// reflected ray : go back a little, same density
 	m_assert(fabs(ray.dir.sqr() - 1) < EPS);
-	Ray new_ray(inter_point - ray.dir * EPS, -norm.reflection(ray.dir), ray.density);
+	if (surf->ambient.get_max() < 1 - EPS) {		// do reflection if ambient is small
+		Ray new_ray(inter_point - ray.dir * EPS, -norm.reflection(ray.dir), ray.density);
 
-	new_ray.debug = ray.debug;
-	real_t lmn = (new_ray.dir.dot(norm));
-	Color refl = trace(new_ray, dist, depth + 1);
-	if (refl.get_max() > 0.02)
-		ret += refl * surf->diffuse * lmn * REFL_DECAY * surf->shininess;
+		new_ray.debug = ray.debug;
+		real_t lmn = (new_ray.dir.dot(norm));
+		Color refl = trace(new_ray, dist, depth + 1);
+		if (refl.get_max() > 0.02)
+			ret += refl * surf->diffuse * lmn * REFL_DECAY * surf->shininess;
+	}
 
 
 	// transmission
