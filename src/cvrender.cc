@@ -1,5 +1,5 @@
 // File: cvrender.cc
-// Date: Mon Jun 17 19:40:19 2013 +0800
+// Date: Mon Jun 17 21:39:11 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <opencv2/opencv.hpp>
@@ -20,6 +20,7 @@ using namespace cv;
 #define KEY_S 115
 #define KEY_J 106
 #define KEY_K 107
+#define KEY_Q 113
 
 #define VIEWER_ANGLE 30
 #define ZOOMING 1.2
@@ -75,6 +76,7 @@ void CVViewer::view() {
 			int ret = r.finish();
 			switch (ret) {
 				case KEY_EXIT:
+				case KEY_Q:
 				/*
 				 *case KEY_ESC:
 				 */

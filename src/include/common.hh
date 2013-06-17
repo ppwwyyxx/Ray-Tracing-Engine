@@ -1,5 +1,5 @@
 // File: common.hh
-// Date: Mon Jun 17 18:50:35 2013 +0800
+// Date: Mon Jun 17 22:12:15 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -23,7 +23,7 @@ const real_t TRANSM_BLEND_FACTOR = 0.7;
 const real_t DEFAULT_REFRACTIVE_INDEX = 1.05;
 const real_t AIR_REFRACTIVE_INDEX = 1;
 
-const int KDTREE_MAX_DEPTH = 5;
+const int KDTREE_MAX_DEPTH = 20;
 const int KDTREE_TERMINATE_OBJ_CNT = 10;
 const int USE_KDTREE_THRES = 50;
 const int MAX_RECURSIVE_DEPTH = 2;

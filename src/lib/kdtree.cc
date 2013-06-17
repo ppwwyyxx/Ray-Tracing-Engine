@@ -1,5 +1,5 @@
 // File: kdtree.cc
-// Date: Mon Jun 17 19:51:59 2013 +0800
+// Date: Mon Jun 17 22:57:55 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include <algorithm>
 #include "lib/kdtree.hh"
@@ -269,7 +269,9 @@ KDTree::Node* KDTree::build(const vector<RenderWrapper>& objs, const AABB& box, 
 	ret->child[0] = lch, ret->child[1] = rch;
 	if (ret->leaf()) ADDOBJ;		// add obj to leaf node
 
-	print_debug("depth: %d, lsize: %d, rsize: %d\n", depth, (int)objl.size(), (int)objr.size());
+	/*
+	 *print_debug("depth: %d, lsize: %d, rsize: %d\n", depth, (int)objl.size(), (int)objr.size());
+	 */
 	return ret;
 #undef ADDOBJ
 }
