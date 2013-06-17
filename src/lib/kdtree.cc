@@ -1,5 +1,5 @@
 // File: kdtree.cc
-// Date: Mon Jun 17 11:06:20 2013 +0800
+// Date: Mon Jun 17 12:22:18 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include <algorithm>
 #include "lib/kdtree.hh"
@@ -53,7 +53,6 @@ class KDTree::Node {
 
 			Node* ch0 = child[first_met], *ch1 = child[1 - first_met];
 			if (!ch0 || !ch0->box.intersect(ray, mind, inside)) ch0 = nullptr;
-			if (!ch1 || !ch1->box.intersect(ray, mind2, inside)) ch1 = nullptr;
 			if (ch0) {
 				auto ret = ch0->get_trace(ray, mind);
 				if (ret) {
@@ -61,6 +60,10 @@ class KDTree::Node {
 					if (ch0->box.contain(inter_p)) return ret;
 				}
 			}
+
+			if (!ch1 || !ch1->box.intersect(ray, mind2, inside)) ch1 = nullptr;
+			m_assert(!(ch0 && ch1 && mind == -1 && mind2 == -1));
+			m_assert(!(ch0 && ch1 && mind > mind2));
 			if (ch1) {
 				auto ret = ch1->get_trace(ray, mind2);
 				if (ret) {
@@ -68,41 +71,6 @@ class KDTree::Node {
 					if (ch1->box.contain(inter_p)) return ret;
 				}
 			}
-
-/*
- *            if (child[first_met] != nullptr) {
- *                if (child[first_met]->box.intersect(ray, mind, inside)) {
- *                    auto ret = child[first_met]->get_trace(ray, mind);
- *                    if (ret != nullptr) {
- *                        Vec inter_point = ret->intersection_point();
- *                        if (child[first_met]->box.contain(inter_point)) return ret;
- *                        // interpoint must in the box
- *                    }
- *                }
- *            }
- *
- *            // second box
- *
- *            if (child[1 - first_met] != nullptr)
- *                child[1 - first_met]->box.intersect(ray, mind2, inside);
- *
- *            if (child[1] != nullptr && child[0] != nullptr && mind == -1 && mind2 == -1) {
- *                m_assert(false);
- *                return nullptr;					// not intersect with both box
- *            }
- *            if (!(mind2 == -1 || mind <= mind2)) {
- *                print_debug("%lf, %lf\n", mind, mind2);
- *                m_assert(false);
- *            }
- *
- *            if (mind2 != -1) {			// have intersection with second
- *                auto ret = child[1 - first_met]->get_trace(ray, mind2);
- *                if (ret != nullptr) {
- *                    Vec inter_point = ret->intersection_point();
- *                    if (child[1 - first_met]->box.contain(inter_point)) return ret;
- *                }
- *            }
- */
 			return nullptr;
 		}
 
@@ -134,12 +102,6 @@ AAPlane KDTree::cut(const vector<RenderWrapper>& objs, const AABB& box, int dept
 	for (auto &obj : objs)
 		min_list.push_back(obj.box.min[ret.axis]);
 	nth_element(min_list.begin(), min_list.begin() + min_list.size() / 2, min_list.end());
-	/*
-	 *for (auto & k : min_list)
-	 *    cout << k << " ";
-	 *cout << endl;
-	 *cout << ret.pos << endl;
-	 */
 	// partial sort
 	ret.pos = min_list[min_list.size() / 2] + 2 * EPS;		// SEE what happen
 
