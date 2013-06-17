@@ -1,8 +1,9 @@
 // File: kdtree.cc
-// Date: Mon Jun 17 16:54:26 2013 +0800
+// Date: Mon Jun 17 18:02:35 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include <algorithm>
 #include "lib/kdtree.hh"
+#include "lib/utils.hh"
 #include "lib/debugutils.hh"
 using namespace std;
 
@@ -87,7 +88,9 @@ KDTree::KDTree(const vector<rdptr>& objs, const AABB& space) {
 	vector<RenderWrapper> objlist;
 	for (auto & obj : objs)
 		objlist.push_back(RenderWrapper(obj, obj->get_aabb()));
+	HWTimer timer;
 	root = build(objlist, space, 0);
+	print_debug("build tree takes %lf seconds\n", timer.get_sec());
 	// TODO: cleantree: delete node with single children, then delete assert above!
 }
 
@@ -125,44 +128,87 @@ KDTree::Node* KDTree::build(const vector<RenderWrapper>& objs, const AABB& box, 
 		return ret;
 	}
 	pair<AABB, AABB> par;
+	AAPlane best_pl;
+	real_t min_cost = numeric_limits<real_t>::max();
 
+	// algo 1 (naive kdtree)
 /*
- *    AAPlane pl = cut(objs, box, depth);
+ *    best_pl = cut(objs, box, depth);
  *    try {
- *        par = box.cut(pl);
+ *        par = box.cut(best_pl);
  *    } catch (...) {
  *        ADDOBJ;
  *        return ret;		// pl is outside box, cannot go further
  *    }
- *    ret->pl = pl;
+ *    ret->pl = best_pl;
  *
  *    vector<RenderWrapper> objl, objr;
  *    for (auto & obj : objs) {
- *        if (obj.box.max[pl.axis] >= pl.pos - EPS) objr.push_back(obj);
- *        if (obj.box.min[pl.axis] <= pl.pos + EPS) objl.push_back(obj);
+ *        if (obj.box.max[pl.axis] >= best_pl.pos - EPS) objr.push_back(obj);
+ *        if (obj.box.min[pl.axis] <= best_pl.pos + EPS) objl.push_back(obj);
  *    }
  */
-	// start of algo 2
-	AAPlane best_pl;
-	real_t min_cost = numeric_limits<real_t>::max();
-	for (auto & obj : objs) {
-		auto & bbox = obj.box;
-		REP(dim, 3) {
-			real_t cand_pos = bbox.min[dim] - EPS;
-			if (cand_pos < box.min[dim] + EPS) continue;
-			AAPlane pl(dim, cand_pos);
-			auto par = box.cut(pl);
-			int lcnt = 0, rcnt = 0;
-			for (auto & obj : objs) {
-				if (obj.box.min[dim] <= cand_pos) lcnt ++;
-				if (obj.box.max[dim] >= cand_pos) rcnt ++;
+
+	// algo 2 (SAH kdtree)
+	// start of O(n^2) build
+	/*
+	 *for (auto & obj : objs) {
+	 *    auto & bbox = obj.box;
+	 *    REP(dim, 3) {
+	 *        real_t cand_pos = bbox.min[dim] - EPS;
+	 *        if (cand_pos < box.min[dim] + EPS) continue;
+	 *        AAPlane pl(dim, cand_pos);
+	 *        auto par = box.cut(pl);
+	 *        int lcnt = 0, rcnt = 0;
+	 *        for (auto & obj : objs) {
+	 *            if (obj.box.min[dim] <= cand_pos) lcnt ++;
+	 *            if (obj.box.max[dim] >= cand_pos) rcnt ++;
+	 *        }
+	 *        real_t cost = par.first.area() * lcnt + par.second.area() * rcnt;
+	 *        if (!lcnt || !rcnt) cost *= 0.8;
+	 *        if (update_min(min_cost, cost))
+	 *            best_pl = pl;
+	 *    }
+	 *}
+	 */
+	// end of O(n^2)
+
+	// start of O(n log(n)) build
+	int nobj = objs.size();
+	REP(dim, 3) {
+		vector<pair<real_t, bool>> cand_list;		//// true: min, false: max
+		for (auto & obj: objs)
+			cand_list.push_back(make_pair(obj.box.min[dim] - EPS, true)),
+				cand_list.push_back(make_pair(obj.box.max[dim] + EPS, false));
+
+		sort(cand_list.begin(), cand_list.end(),
+			[](const pair<real_t, bool>& a, const pair<real_t, bool>& b)
+			{return a.first < b.first;});
+
+		int lcnt = 0, rcnt = nobj;
+		auto ptr = cand_list.begin();
+
+		do {
+			AAPlane pl(dim, ptr->first);
+			try {
+				auto par = box.cut(pl);
+				real_t cost = par.first.area() * lcnt + par.second.area() * rcnt;
+				if (lcnt == 0 || rcnt == 0 || (lcnt + rcnt == nobj - 1 && rcnt == 1))
+					cost *= 0.8;		// this is a hack
+				if (update_min(min_cost, cost)) best_pl = pl;
+			} catch (...) {}
+
+			if (ptr->second) lcnt ++; else rcnt --;
+
+			auto old = ptr++;
+			while (ptr != cand_list.end() && ptr->first - old->first < EPS) {
+				if (ptr->second) lcnt ++;
+				else rcnt --;
+				old = ptr++;
 			}
-			real_t cost = par.first.area() * lcnt + par.second.area() * rcnt;
-			if (!lcnt || !rcnt) cost *= 0.8;
-			if (update_min(min_cost, cost))
-				best_pl = pl;
-		}
+		} while (ptr != cand_list.end());
 	}
+	// end of O(n log(n))
 
 	if (best_pl.axis == ERROR) {
 		ADDOBJ;
