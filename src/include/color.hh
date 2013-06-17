@@ -1,5 +1,5 @@
 // File: color.hh
-// Date: Fri Jun 14 22:07:26 2013 +0800
+// Date: Mon Jun 17 23:53:54 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -12,6 +12,9 @@ class Color: public Vector {
 	public:
 		Color(real_t r = 0, real_t g = 0, real_t b = 0):
 			Vector(r, g, b){}
+
+		Color(const Vec& v):
+			Vector(v.x, v.y, v.z){}
 
 		static constexpr real_t C_EPS = 1e-4;
 

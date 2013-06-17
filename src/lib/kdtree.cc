@@ -1,7 +1,8 @@
 // File: kdtree.cc
-// Date: Mon Jun 17 22:57:55 2013 +0800
+// Date: Tue Jun 18 00:41:53 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include <algorithm>
+#include <omp.h>
 #include "lib/kdtree.hh"
 #include "lib/utils.hh"
 #include "lib/debugutils.hh"
@@ -86,12 +87,12 @@ class KDTree::Node {
  */
 
 			m_assert(!(ch0 && ch1 && mind == -1 && mind2 == -1));
-			if (ch0 && ch1 && mind > mind2 + EPS) {
-				print_debug("%lf, %lf\n", mind, mind2);
-				/*
-				 *m_assert(false);
-				 */
-			}
+			/*
+			 *if (ch0 && ch1 && mind > mind2 + EPS) {
+			 *    print_debug("%lf, %lf\n", mind, mind2);
+			 *    m_assert(false);
+			 *}
+			 */
 			if (ch1) {
 				auto ret = ch1->get_trace(ray, mind2);
 				if (ret) {
@@ -124,7 +125,7 @@ KDTree::KDTree(const vector<rdptr>& objs, const AABB& space) {
 	for (auto & obj : objs)
 		objlist.push_back(RenderWrapper(obj, obj->get_aabb()));
 	Timer timer;
-	root = build(objlist, space, 0);
+	root = build(move(objlist), space, 0);
 	print_debug("build tree takes %lf seconds\n", timer.get_time());
 	// TODO: cleantree: delete node with single children, then delete assert above!
 }
@@ -162,6 +163,7 @@ KDTree::Node* KDTree::build(const vector<RenderWrapper>& objs, const AABB& box, 
 		ADDOBJ;
 		return ret;
 	}
+	int nobj = objs.size();
 	pair<AABB, AABB> par;
 	AAPlane best_pl;
 	real_t min_cost = numeric_limits<real_t>::max();
@@ -189,30 +191,33 @@ KDTree::Node* KDTree::build(const vector<RenderWrapper>& objs, const AABB& box, 
 	// Wald, Ingo and Havran, Vlastimil
 	//
 	// start of O(n^2) build
-	/*
-	 *for (auto & obj : objs) {
-	 *    auto & bbox = obj.box;
-	 *    REP(dim, 3) {
-	 *        real_t cand_pos = bbox.min[dim] - EPS;
-	 *        if (cand_pos < box.min[dim] + EPS) continue;
-	 *        AAPlane pl(dim, cand_pos);
-	 *        auto par = box.cut(pl);
-	 *        int lcnt = 0, rcnt = 0;
-	 *        for (auto & obj : objs) {
-	 *            if (obj.box.min[dim] <= cand_pos) lcnt ++;
-	 *            if (obj.box.max[dim] >= cand_pos) rcnt ++;
-	 *        }
-	 *        real_t cost = par.first.area() * lcnt + par.second.area() * rcnt;
-	 *        if (!lcnt || !rcnt) cost *= 0.8;
-	 *        if (update_min(min_cost, cost))
-	 *            best_pl = pl;
-	 *    }
-	 *}
-	 */
+/*
+ *#pragma omp parallel for schedule(dynamic)
+ *    REP(k, nobj) {
+ *        auto &obj = objs[k];
+ *        auto & bbox = obj.box;
+ *        REP(dim, 3) {
+ *            real_t cand_pos = bbox.min[dim] - EPS;
+ *            if (cand_pos < box.min[dim] + EPS) continue;
+ *            AAPlane pl(dim, cand_pos);
+ *            auto par = box.cut(pl);
+ *            int lcnt = 0, rcnt = 0;
+ *            for (auto & obj : objs) {
+ *                if (obj.box.min[dim] <= cand_pos) lcnt ++;
+ *                if (obj.box.max[dim] >= cand_pos) rcnt ++;
+ *            }
+ *            real_t cost = par.first.area() * lcnt + par.second.area() * rcnt;
+ *            if (!lcnt || !rcnt) cost *= 0.8;
+ *#pragma omp critical
+ *            if (update_min(min_cost, cost))
+ *                best_pl = pl;
+ *        }
+ *    }
+ */
 	// end of O(n^2)
 
-	// start of O(n log(n)) build
-	int nobj = objs.size();
+	// start of O(n log^2(n)) build
+#pragma omp parallel for schedule(dynamic)
 	REP(dim, 3) {
 		vector<pair<real_t, bool>> cand_list;		//// true: min, false: max
 		for (auto & obj: objs)
@@ -233,6 +238,7 @@ KDTree::Node* KDTree::build(const vector<RenderWrapper>& objs, const AABB& box, 
 				real_t cost = par.first.area() * lcnt + par.second.area() * rcnt;
 				if (lcnt == 0 || rcnt == 0 || (lcnt + rcnt == nobj - 1 && rcnt == 1))
 					cost *= 0.8;		// this is a hack
+#pragma omp critical
 				if (update_min(min_cost, cost)) best_pl = pl;
 			} catch (...) {}
 
@@ -246,7 +252,7 @@ KDTree::Node* KDTree::build(const vector<RenderWrapper>& objs, const AABB& box, 
 			}
 		} while (ptr != cand_list.end());
 	}
-	// end of O(n log(n))
+	// end of O(n log^2(n))
 
 	if (best_pl.axis == ERROR) {
 		ADDOBJ;
@@ -264,8 +270,8 @@ KDTree::Node* KDTree::build(const vector<RenderWrapper>& objs, const AABB& box, 
 	// end of algo 2
 
 
-	Node *lch = build(objl, par.first, depth + 1),
-		 *rch = build(objr, par.second, depth + 1);
+	Node *lch = build(move(objl), par.first, depth + 1),
+		 *rch = build(move(objr), par.second, depth + 1);
 	ret->child[0] = lch, ret->child[1] = rch;
 	if (ret->leaf()) ADDOBJ;		// add obj to leaf node
 

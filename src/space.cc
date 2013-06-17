@@ -1,5 +1,5 @@
 // File: space.cc
-// Date: Mon Jun 17 19:05:25 2013 +0800
+// Date: Mon Jun 17 23:54:45 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <limits>
@@ -78,7 +78,6 @@ Color Space::trace(const Ray& ray, real_t dist, int depth) {
 	// reflected ray : go back a little, same density
 	m_assert(fabs(ray.dir.sqr() - 1) < EPS);
 	if (surf->ambient < 1 - EPS) {		// do reflection if ambient is small
-		print_debug("Here2\n");
 		Ray new_ray(inter_point - ray.dir * EPS, -norm.reflection(ray.dir), ray.density);
 		m_assert(fabs((-norm.reflection(ray.dir)).sqr() - 1) < EPS);
 
@@ -91,7 +90,6 @@ Color Space::trace(const Ray& ray, real_t dist, int depth) {
 
 	// transmission
 	if (surf->transparency > EPS) {
-		print_debug("Here\n");
 		Vec tr_dir = norm.transmission(ray.dir, density / ray.density);
 		if (isnormal(tr_dir.x)) { // have transmission
 			// transmission ray : go forward a little

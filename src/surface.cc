@@ -1,5 +1,5 @@
 // File: surface.cc
-// Date: Mon Jun 17 16:06:28 2013 +0800
+// Date: Mon Jun 17 23:52:56 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "material/surface.hh"
@@ -9,7 +9,7 @@ const Surface
 	Surface::WHITE_REFL(0, 20, 1, Color::WHITE, Color::WHITE * DEFAULT_SPECULAR),
 	Surface::BLACK_REFL(0, 20, 1, Color::BLACK, Color::WHITE * DEFAULT_SPECULAR),
 	Surface::BLUE_REFL(1, 50, 0.5, Color::BLUE, Color::WHITE * DEFAULT_SPECULAR),
-	Surface::RED(0, 20, 1, Color::RED, Color::WHITE * DEFAULT_SPECULAR);
+	Surface::RED(0.2, 20, 0.2, (Color)(Color::RED + Color::BLUE) * 0.5, Color::WHITE * DEFAULT_SPECULAR);
 
 
 
