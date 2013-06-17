@@ -1,10 +1,11 @@
 // File: kdtree.cc
-// Date: Mon Jun 17 18:02:35 2013 +0800
+// Date: Mon Jun 17 18:07:16 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include <algorithm>
 #include "lib/kdtree.hh"
 #include "lib/utils.hh"
 #include "lib/debugutils.hh"
+#include "lib/Timer.hh"
 using namespace std;
 
 class KDTree::Node {
@@ -88,9 +89,9 @@ KDTree::KDTree(const vector<rdptr>& objs, const AABB& space) {
 	vector<RenderWrapper> objlist;
 	for (auto & obj : objs)
 		objlist.push_back(RenderWrapper(obj, obj->get_aabb()));
-	HWTimer timer;
+	Timer timer;
 	root = build(objlist, space, 0);
-	print_debug("build tree takes %lf seconds\n", timer.get_sec());
+	print_debug("build tree takes %lf seconds\n", timer.get_time());
 	// TODO: cleantree: delete node with single children, then delete assert above!
 }
 

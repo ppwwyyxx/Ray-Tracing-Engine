@@ -1,12 +1,12 @@
 // File: cvrender.hh
-// Date: Mon Jun 10 21:18:36 2013 +0800
+// Date: Mon Jun 17 18:07:58 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 
 #pragma once
+#include <opencv2/opencv.hpp>
 
 #include "render.hh"
-#include <opencv2/opencv.hpp>
 
 class CVRender: public RenderBase {
 	cv::Mat img;

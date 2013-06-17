@@ -1,5 +1,5 @@
 // File: cvrender.cc
-// Date: Mon Jun 17 16:39:29 2013 +0800
+// Date: Mon Jun 17 18:07:02 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <opencv2/opencv.hpp>
@@ -8,6 +8,7 @@
 #include "render/cvrender.hh"
 #include "viewer.hh"
 #include "lib/utils.hh"
+#include "lib/Timer.hh"
 using namespace cv;
 
 #define KEY_UP 65362
@@ -47,7 +48,7 @@ CVRender::CVRender(const Geometry &m_g):
 }
 
 void CVViewer::render_all() {
-	HWTimer timer;
+	Timer timer;
 
 #pragma omp parallel for schedule(dynamic)
 	REP(i, geo.h) {
@@ -58,7 +59,7 @@ void CVViewer::render_all() {
 			r.write(j, i, col);
 		}
 	}
-	print_debug("%lf seconds.\n", timer.get_sec());
+	print_debug("%lf seconds.\n", timer.get_time());
 }
 
 void CVViewer::view() {

@@ -1,11 +1,11 @@
 // File: main.cc
-// Date: Mon Jun 17 16:34:52 2013 +0800
+// Date: Mon Jun 17 18:08:21 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
+#include "viewer.hh"
 #include "space.hh"
 #include "renderable/plane.hh"
 #include "renderable/sphere.hh"
 #include "view.hh"
-#include "viewer.hh"
 #include "lib/imagereader.hh"
 #include "renderable/mesh.hh"
 #include "lib/objreader.hh"

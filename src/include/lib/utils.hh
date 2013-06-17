@@ -1,13 +1,14 @@
 // File: utils.hh
-// Date: Fri Jun 14 20:38:56 2013 +0800
+// Date: Mon Jun 17 18:08:04 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
+
 #pragma once
+
 #include <cstdarg>
 #include <cstdlib>
 #include <string>
 #include <sstream>
-#include <sys/time.h>
 using namespace std;
 
 string TERM_COLOR(int k);
@@ -25,14 +26,13 @@ const real_t EPS = 1e-6;
 
 inline real_t sqr(real_t x) { return x * x; }
 
-#define BETWI(a, b, c) ((a >= b) && (a <= c - 1))
-#define BETW(a, b, c) ((a >= b && a <= c))
+#define BETW(a, b, c) ((a >= b) && (a <= c))
 #define REP(x, y) for (int x = 0; x < (y); x ++)
 #define REPL(x, y, z) for (int x = y; x < (z); x ++)
 #define REPD(x, y, z) for (int x = y; x >= (z); x --)
 
-#define PR(a) std::cout << (a) << std::endl
-#define PPR(s, a) std::cout << s << " " << (a) << std::endl
+#define P(a) std::cout << (a) << std::endl
+#define PP(s, a) std::cout << s << " " << (a) << std::endl
 
 template <typename T>
 inline void free_2d(T** ptr, int w) {
@@ -59,16 +59,3 @@ void c_printf(const char* col, const char* fmt, ...);
 
 void c_fprintf(const char* col, FILE* fp, const char* fmt, ...);
 
-class HWTimer {
-	timeval m_start;
-
-	public:
-
-		HWTimer();
-
-		real_t sec() const;
-
-		real_t get_sec();
-
-		void reset();
-};
