@@ -1,5 +1,5 @@
 // File: kdtree.cc
-// Date: Mon Jun 17 12:22:18 2013 +0800
+// Date: Mon Jun 17 14:26:33 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include <algorithm>
 #include "lib/kdtree.hh"
@@ -96,7 +96,7 @@ shared_ptr<Trace> KDTree::get_trace(const Ray& ray) const {
 
 AAPlane KDTree::cut(const vector<RenderWrapper>& objs, const AABB& box, int depth) const {
 	AAPlane ret;
-	ret.axis = static_cast<AXIS>(depth % 3 + 2);
+	ret.axis = static_cast<AXIS>(depth % 3);
 
 	vector<real_t> min_list;
 	for (auto &obj : objs)
@@ -111,18 +111,22 @@ AAPlane KDTree::cut(const vector<RenderWrapper>& objs, const AABB& box, int dept
 KDTree::Node* KDTree::build(const vector<RenderWrapper>& objs, const AABB& box, int depth) {
 	if (objs.size() == 0) return nullptr;
 
+#define ADDOBJ for (auto& obj : objs) ret->add_obj(obj.obj)
+
 	Node* ret = new Node(box);
 
 	if (depth > KDTREE_MAX_DEPTH) return nullptr;
+	if (objs.size() < KDTREE_TERMINATE_OBJ_CNT) {
+		ADDOBJ;
+		return ret;
+	}
 
 	AAPlane pl = cut(objs, box, depth);
-	print_debug("axis: %d, pos: %lf\n", pl.axis, pl.pos);
 	pair<AABB, AABB> par;
 	try {
 		par = box.cut(pl);
 	} catch (...) {
-		for (auto& obj : objs)
-			ret->add_obj(obj.obj);
+		ADDOBJ;
 		return ret;		// pl is outside box, cannot go further
 	}
 	ret->pl = pl;
@@ -137,11 +141,11 @@ KDTree::Node* KDTree::build(const vector<RenderWrapper>& objs, const AABB& box, 
 	Node *lch = build(objl, par.first, depth + 1),
 		 *rch = build(objr, par.second, depth + 1);
 
-	if (lch == nullptr && rch == nullptr)		// add obj to leaf node
-		for (auto& obj : objs) ret->add_obj(obj.obj);
+	if (lch == nullptr && rch == nullptr) ADDOBJ;		// add obj to leaf node
 
 	ret->child[0] = lch, ret->child[1] = rch;
 	print_debug("depth: %d, lsize: %d, rsize: %d\n", depth, (int)objl.size(), (int)objr.size());
 	return ret;
+#undef ADDOBJ
 }
 

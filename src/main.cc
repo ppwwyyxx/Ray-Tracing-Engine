@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Mon Jun 17 13:54:41 2013 +0800
+// Date: Mon Jun 17 14:02:43 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "space.hh"
 #include "renderable/plane.hh"
@@ -37,7 +37,7 @@ int main(int argc, char* argv[]) {
 	shared_ptr<Texture> tred(new HomoTexture(Surface::RED));
 	Plane plane1(InfPlane::XYPLANE, t1);
 
-	Mesh mesh("../res/humanoid_tri.obj", Vec(0, 0, 4), 5);
+	Mesh mesh("../res/zyk/teapot.obj", Vec(0, 0, 4), 5);
 	mesh.set_texture(tred);
 	mesh.finish_add();
 	cout << mesh.get_aabb() << endl;
