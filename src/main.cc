@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Mon Jun 17 18:46:27 2013 +0800
+// Date: Mon Jun 17 19:52:19 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "viewer.hh"
 #include "space.hh"
@@ -53,7 +53,7 @@ int main(int argc, char* argv[]) {
 	 *s.add_obj(new Sphere(sphere));
 	 */
 
-	View v(make_shared<Space>(s), Vec(0.2, 0, 7), Vec(0, 0, 2), 30, Geometry(w, h));
+	View v(make_shared<Space>(s), Vec(0.2, 0, 8), Vec(0, 0, 2), 30, Geometry(w, h));
 	CVViewer viewer(v);
 	viewer.view();
 }
