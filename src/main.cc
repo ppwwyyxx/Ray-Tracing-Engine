@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Mon Jun 17 11:09:30 2013 +0800
+// Date: Mon Jun 17 13:28:15 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "space.hh"
 #include "renderable/plane.hh"
@@ -23,16 +23,13 @@ using namespace std;
  */
 
 int main(int argc, char* argv[]) {
-	/*
-	 *blxl();
-	 *return 0;
-	 */
 	int w, h;
 	w = h = 500;
 	Space s;
-	s.add_light(Light(Vec(0, -20, 0), Color(0.9, 1, 1), 1.5));
-	s.add_light(Light(Vec(0, -10, 8), Color::WHITE, 1.2));
-	s.add_light(Light(Vec(0, -2, -20), Color::WHITE, 0.5));
+	s.add_light(Light(Vec(0, -20, 10), Color::WHITE, 2));
+	s.add_light(Light(Vec(0, -10, 8), Color::WHITE, 2.2));
+	s.add_light(Light(Vec(0, -2, -20), Color::WHITE, 1.5));
+	s.add_light(Light(Vec(0, 0, 20), Color::WHITE, 1.5));
 
 
 	shared_ptr<Texture> t1(new GridTexture(GridTexture::BLACK_WHITE));
@@ -44,15 +41,20 @@ int main(int argc, char* argv[]) {
 	mesh.set_texture(tred);
 	mesh.finish_add();
 	cout << mesh.get_aabb() << endl;
-	s.add_obj(new Mesh(mesh));
+	/*
+	 *s.add_obj(new Mesh(mesh));
+	 */
 	/*
 	 *s.add_obj(new Face(face));
 	 */
 	s.add_obj(new Plane(plane1));
 	Sphere sphere(PureSphere(Vec(1, 0, 5), 0.5), t2);
+	/*
+	 *Sphere sphere(PureSphere::TestSphere, t2);
+	 */
 	s.add_obj(new Sphere(sphere));
 
-	View v(make_shared<Space>(s), Vec(0.2, -5, 5), Vec(0, 0, 5), 10, Geometry(w, h));
+	View v(make_shared<Space>(s), Vec(0.2, -10, 5), Vec(0, 0, 2), 20, Geometry(w, h));
 	CVViewer viewer(v);
 	viewer.view();
 }

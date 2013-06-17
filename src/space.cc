@@ -1,5 +1,5 @@
 // File: space.cc
-// Date: Mon Jun 17 11:04:58 2013 +0800
+// Date: Mon Jun 17 13:25:43 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <limits>
@@ -45,7 +45,7 @@ Color Space::trace(const Ray& ray, real_t dist, int depth) {
 	// phong model
 	// http://en.wikipedia.org/wiki/Phong_reflection_model
 	// ambient
-	Color ret = surf->ambient * ambient;
+	Color ret = ambient * (surf->diffuse + Color::WHITE) * surf->ambient * 0.5;
 
 	for (const shared_ptr<Light> &i : lights) {
 		Vec lm = (i->src - inter_point).get_normalized();
@@ -55,8 +55,7 @@ Color Space::trace(const Ray& ray, real_t dist, int depth) {
 		// shadow if not visible to this light
 		// go foward a little
 		if (find_any(Ray(inter_point + lm * EPS, lm), dist_to_light)) {
-			if (lmn > 0)
-				ret += surf->diffuse * ambient * REFL_DECAY;
+			// if (lmn > 0) ret += surf->diffuse * ambient * REFL_DECAY;
 			continue;
 		}
 
@@ -64,7 +63,7 @@ Color Space::trace(const Ray& ray, real_t dist, int depth) {
 
 		// diffuse
 		if (lmn > 0)
-			ret += surf->diffuse * lmn * i->color * i->intensity * damping;		// add beer
+			ret += surf->diffuse * i->color * (i->intensity * damping * lmn);		// add beer
 
 		// specular
 		real_t rmv = -norm.reflection(lm).dot(ray.dir);
@@ -78,31 +77,28 @@ Color Space::trace(const Ray& ray, real_t dist, int depth) {
 
 	// reflected ray : go back a little, same density
 	m_assert(fabs(ray.dir.sqr() - 1) < EPS);
-	if (surf->ambient.get_max() < 1 - EPS) {		// do reflection if ambient is small
+	if (surf->ambient < 1 - EPS) {		// do reflection if ambient is small
 		Ray new_ray(inter_point - ray.dir * EPS, -norm.reflection(ray.dir), ray.density);
+		m_assert(fabs((-norm.reflection(ray.dir)).sqr() - 1) < EPS);
 
 		new_ray.debug = ray.debug;
 		real_t lmn = (new_ray.dir.dot(norm));
 		Color refl = trace(new_ray, dist, depth + 1);
-		if (refl.get_max() > 0.02)
-			ret += refl * surf->diffuse * lmn * REFL_DECAY * surf->shininess;
+		ret += refl * surf->diffuse * (lmn * REFL_DECAY * (1 - surf->ambient) * surf->shininess);
 	}
 
 
 	// transmission
-	/*
-	 *if (surf->transparency > 0) {
-	 *    Vec tr_dir = norm.transmission(ray.dir, density / ray.density);
-	 *    if (isnormal(tr_dir.x)) { // have transmission
-	 *        // transmission ray : go forward a little
-	 *        new_ray = Ray(inter_point + ray.dir * EPS, tr_dir, density);
-	 *        new_ray.debug = ray.debug;
-	 *        Color transm = trace(new_ray, dist, depth + 1);
-	 *        ret += transm * surf->transparency;
-	 *        ret *= TRANSM_BLEND_FACTOR;
-	 *    }
-	 *}
-	 */
+	if (surf->transparency > 0) {
+		Vec tr_dir = norm.transmission(ray.dir, density / ray.density);
+		if (isnormal(tr_dir.x)) { // have transmission
+			// transmission ray : go forward a little
+			Ray new_ray(inter_point + ray.dir * EPS, tr_dir, density);
+			new_ray.debug = ray.debug;
+			Color transm = trace(new_ray, dist, depth + 1);
+			ret += transm * surf->transparency;
+		}
+	}
 
 	ret.normalize();
 	return ret;

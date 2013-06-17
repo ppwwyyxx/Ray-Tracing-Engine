@@ -1,5 +1,5 @@
 // File: geometry.hh
-// Date: Mon Jun 17 11:02:02 2013 +0800
+// Date: Mon Jun 17 13:11:27 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -123,7 +123,7 @@ class Vector {
 			return *this * 2 * dot(v) - v;
 		}
 
-		// i'm norm
+		// i'm norm, return norm
 		Vector transmission(const Vector& v_in, real_t density) const {
 			Vector ret = Vector::infinity();
 

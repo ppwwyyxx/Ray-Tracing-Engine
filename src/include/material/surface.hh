@@ -1,5 +1,5 @@
 // File: surface.hh
-// Date: Mon Jun 10 00:53:42 2013 +0800
+// Date: Mon Jun 17 12:37:12 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -11,18 +11,18 @@ class Surface {
 	public:
 		real_t transparency = 0,
 			   shininess = 0,
-			   refractive = 0;
+			   refractive = 0,
+			   ambient = 0;
 		Color diffuse = Color::BLACK,
-			  ambient = Color::BLACK,
 			  specular = Color::BLACK;
 
 		Surface(){}
 
 		Surface(real_t _transparency, real_t _shininess,
-				const Color& _diffuse, const Color& _ambient,
+				real_t _ambient, const Color& _diffuse,
 				const Color& _specular, real_t _refractive = DEFAULT_REFRACTIVE_INDEX):
 			transparency(_transparency), shininess(_shininess), refractive(_refractive),
-			diffuse(_diffuse), ambient(_ambient), specular(_specular) {}
+			ambient(_ambient), diffuse(_diffuse), specular(_specular) {}
 
 		static const Surface WHITE_REFL, BLACK_REFL, BLUE_REFL, RED;
 };
