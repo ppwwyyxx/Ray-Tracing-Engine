@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Mon Jun 17 13:28:15 2013 +0800
+// Date: Mon Jun 17 13:54:41 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "space.hh"
 #include "renderable/plane.hh"
@@ -41,9 +41,7 @@ int main(int argc, char* argv[]) {
 	mesh.set_texture(tred);
 	mesh.finish_add();
 	cout << mesh.get_aabb() << endl;
-	/*
-	 *s.add_obj(new Mesh(mesh));
-	 */
+	s.add_obj(new Mesh(mesh));
 	/*
 	 *s.add_obj(new Face(face));
 	 */
