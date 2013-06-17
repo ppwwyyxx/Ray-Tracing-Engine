@@ -1,5 +1,5 @@
 // File: kdtree.cc
-// Date: Mon Jun 17 14:26:33 2013 +0800
+// Date: Mon Jun 17 16:54:26 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include <algorithm>
 #include "lib/kdtree.hh"
@@ -63,7 +63,10 @@ class KDTree::Node {
 
 			if (!ch1 || !ch1->box.intersect(ray, mind2, inside)) ch1 = nullptr;
 			m_assert(!(ch0 && ch1 && mind == -1 && mind2 == -1));
-			m_assert(!(ch0 && ch1 && mind > mind2));
+			if (ch0 && ch1 && mind > mind2 + EPS) {
+				print_debug("%lf, %lf\n", mind, mind2);
+				m_assert(false);
+			}
 			if (ch1) {
 				auto ret = ch1->get_trace(ray, mind2);
 				if (ret) {
@@ -85,6 +88,7 @@ KDTree::KDTree(const vector<rdptr>& objs, const AABB& space) {
 	for (auto & obj : objs)
 		objlist.push_back(RenderWrapper(obj, obj->get_aabb()));
 	root = build(objlist, space, 0);
+	// TODO: cleantree: delete node with single children, then delete assert above!
 }
 
 shared_ptr<Trace> KDTree::get_trace(const Ray& ray) const {
@@ -120,24 +124,62 @@ KDTree::Node* KDTree::build(const vector<RenderWrapper>& objs, const AABB& box, 
 		ADDOBJ;
 		return ret;
 	}
-
-	AAPlane pl = cut(objs, box, depth);
 	pair<AABB, AABB> par;
-	try {
-		par = box.cut(pl);
-	} catch (...) {
-		ADDOBJ;
-		return ret;		// pl is outside box, cannot go further
-	}
-	ret->pl = pl;
 
+/*
+ *    AAPlane pl = cut(objs, box, depth);
+ *    try {
+ *        par = box.cut(pl);
+ *    } catch (...) {
+ *        ADDOBJ;
+ *        return ret;		// pl is outside box, cannot go further
+ *    }
+ *    ret->pl = pl;
+ *
+ *    vector<RenderWrapper> objl, objr;
+ *    for (auto & obj : objs) {
+ *        if (obj.box.max[pl.axis] >= pl.pos - EPS) objr.push_back(obj);
+ *        if (obj.box.min[pl.axis] <= pl.pos + EPS) objl.push_back(obj);
+ *    }
+ */
+	// start of algo 2
+	AAPlane best_pl;
+	real_t min_cost = numeric_limits<real_t>::max();
+	for (auto & obj : objs) {
+		auto & bbox = obj.box;
+		REP(dim, 3) {
+			real_t cand_pos = bbox.min[dim] - EPS;
+			if (cand_pos < box.min[dim] + EPS) continue;
+			AAPlane pl(dim, cand_pos);
+			auto par = box.cut(pl);
+			int lcnt = 0, rcnt = 0;
+			for (auto & obj : objs) {
+				if (obj.box.min[dim] <= cand_pos) lcnt ++;
+				if (obj.box.max[dim] >= cand_pos) rcnt ++;
+			}
+			real_t cost = par.first.area() * lcnt + par.second.area() * rcnt;
+			if (!lcnt || !rcnt) cost *= 0.8;
+			if (update_min(min_cost, cost))
+				best_pl = pl;
+		}
+	}
+
+	if (best_pl.axis == ERROR) {
+		ADDOBJ;
+		return ret;
+	}
+
+	ret->pl = best_pl;
+	par = box.cut(best_pl);
 	vector<RenderWrapper> objl, objr;
 	for (auto & obj : objs) {
-		if (par.first.intersect(obj.box))
-			objl.push_back(obj);
-		if (par.second.intersect(obj.box))
-			objr.push_back(obj);
+		if (obj.box.max[best_pl.axis] >= best_pl.pos) objr.push_back(obj);
+		if (obj.box.min[best_pl.axis] <= best_pl.pos) objl.push_back(obj);
 	}
+	// what if no plane is found?
+	// end of algo 2
+
+
 	Node *lch = build(objl, par.first, depth + 1),
 		 *rch = build(objr, par.second, depth + 1);
 

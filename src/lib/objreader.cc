@@ -1,5 +1,5 @@
 // File: objreader.cc
-// Date: Sat Jun 15 22:28:46 2013 +0800
+// Date: Mon Jun 17 16:07:51 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <cstring>
@@ -19,6 +19,7 @@ void ObjReader::read_in(string fname, Mesh* mesh) {
 		switch (input[0]) {
 			case 'v':
 			{
+				m_assert(!startf);		// v comes before f
 				if (input[1] == ' ') {	// v x y z
 					real_t x, y, z;
 					sscanf(input + 2, "%lf %lf %lf", &x, &y, &z);

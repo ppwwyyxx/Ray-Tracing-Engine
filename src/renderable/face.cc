@@ -1,5 +1,5 @@
 // File: face.cc
-// Date: Sat Jun 15 16:31:35 2013 +0800
+// Date: Mon Jun 17 16:06:00 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "renderable/mesh.hh"
@@ -15,7 +15,7 @@ real_t Triangle::get_intersect(const Ray& ray, real_t& gx, real_t& gy) const {
 	 *cout << v << " " << e1 << " "    << e2 << endl;
 	 *cout << endl;
 	 */
-	if (fabs(ray.dir.dot(norm.get_normalized())) < EPS)		// parallel
+	if (fabs(ray.dir.dot(norm)) < EPS)		// parallel
 		return -1;
 
 	real_t inv = 1.0 / ray.dir.dot(norm);
@@ -23,7 +23,7 @@ real_t Triangle::get_intersect(const Ray& ray, real_t& gx, real_t& gy) const {
 	Vec line(ray.orig, v),
 		line_r(ray.dir.cross(line));
 	real_t dist = line.dot(norm) * inv;
-	if (dist < -EPS) return -1;
+	if (dist < 0) return -1;
 
 	gx = -line_r.dot(e2) * inv;
 	if (gx < -EPS || gx > 1 + EPS) return -1;
@@ -55,6 +55,7 @@ AABB Face::get_aabb() const {
 }
 
 shared_ptr<Surface> FaceTrace::transform_get_property() const {
+	m_assert(false);		// XXX for now
 	real_t x = gx / 0.1, y = gy / 0.1;
 	return face.texture->get_property(x, y);
 }

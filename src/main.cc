@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Mon Jun 17 14:02:43 2013 +0800
+// Date: Mon Jun 17 16:34:52 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "space.hh"
 #include "renderable/plane.hh"
@@ -26,10 +26,9 @@ int main(int argc, char* argv[]) {
 	int w, h;
 	w = h = 500;
 	Space s;
-	s.add_light(Light(Vec(0, -20, 10), Color::WHITE, 2));
 	s.add_light(Light(Vec(0, -10, 8), Color::WHITE, 2.2));
 	s.add_light(Light(Vec(0, -2, -20), Color::WHITE, 1.5));
-	s.add_light(Light(Vec(0, 0, 20), Color::WHITE, 1.5));
+	s.add_light(Light(Vec(0, -3, 4), Color::WHITE, 1.5));
 
 
 	shared_ptr<Texture> t1(new GridTexture(GridTexture::BLACK_WHITE));
@@ -37,7 +36,7 @@ int main(int argc, char* argv[]) {
 	shared_ptr<Texture> tred(new HomoTexture(Surface::RED));
 	Plane plane1(InfPlane::XYPLANE, t1);
 
-	Mesh mesh("../res/zyk/teapot.obj", Vec(0, 0, 4), 5);
+	Mesh mesh("../res/zyk/rose.obj", Vec(0, 0, 4), 5);
 	mesh.set_texture(tred);
 	mesh.finish_add();
 	cout << mesh.get_aabb() << endl;
@@ -50,9 +49,11 @@ int main(int argc, char* argv[]) {
 	/*
 	 *Sphere sphere(PureSphere::TestSphere, t2);
 	 */
-	s.add_obj(new Sphere(sphere));
+	/*
+	 *s.add_obj(new Sphere(sphere));
+	 */
 
-	View v(make_shared<Space>(s), Vec(0.2, -10, 5), Vec(0, 0, 2), 20, Geometry(w, h));
+	View v(make_shared<Space>(s), Vec(0.2, -3, 6), Vec(0, 0, 2), 20, Geometry(w, h));
 	CVViewer viewer(v);
 	viewer.view();
 }

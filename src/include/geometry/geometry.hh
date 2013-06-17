@@ -1,5 +1,5 @@
 // File: geometry.hh
-// Date: Mon Jun 17 13:11:27 2013 +0800
+// Date: Mon Jun 17 15:24:49 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -50,6 +50,9 @@ class Vector {
 
 		real_t mod() const
 		{ return sqrt(sqr()); }
+
+		inline real_t area() const // require *this > 0
+		{ return x * y + y * z + z * x; }
 
 		real_t dot(const Vector &v) const
 		{ return x * v.x + y * v.y + z * v.z; }

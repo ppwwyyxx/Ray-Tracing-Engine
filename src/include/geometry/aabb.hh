@@ -1,5 +1,5 @@
 // File: aabb.hh
-// Date: Sat Jun 15 15:32:48 2013 +0800
+// Date: Mon Jun 17 15:40:05 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -13,6 +13,12 @@ class AAPlane {
 	public:
 		AXIS axis;
 		real_t pos;
+
+		AAPlane():
+			axis(ERROR) {}
+		AAPlane(int _axis, real_t _pos):
+			axis(static_cast<AXIS>(_axis)), pos(_pos)
+		{}
 };
 
 // axis-aligned bounding box
@@ -29,6 +35,7 @@ class AABB {
 		void set(const Vec& vmin, const Vec& vmax) { min = vmin, max = vmax; }
 		Vec size() const { return max - min; }
 		bool empty() const { return (min.x >= max.x || min.y >= max.y || min.z >= max.z); }
+		real_t area() const { return (max - min).area(); }
 		bool contain(const Vec& p) const { return p < max && min < p; }
 		// override >
 		//
@@ -65,13 +72,14 @@ class AABB {
 			AABB l = *this, r = *this;
 			if (!BETW(pl.pos, min[pl.axis], max[pl.axis]))
 				throw "Outside";
-			l.max[pl.axis] = pl.pos;
-			r.min[pl.axis] = pl.pos;
+			l.max[pl.axis] = pl.pos + EPS;		// to loose
+			r.min[pl.axis] = pl.pos - EPS;
 			return std::make_pair(l, r);
 		}
 
 		// An efficient and robust ray-box intersection algorithm
 		// Williams, etc. SIGGRAPH 2005
+		// loose
 		bool intersect(const Ray& ray, real_t &mind, bool &inside) {
 			if (empty())
 				return false;

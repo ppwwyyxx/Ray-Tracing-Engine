@@ -1,5 +1,5 @@
 // File: cvrender.cc
-// Date: Sat Jun 15 21:47:29 2013 +0800
+// Date: Mon Jun 17 16:39:29 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <opencv2/opencv.hpp>
@@ -70,7 +70,9 @@ void CVViewer::view() {
 			int ret = r.finish();
 			switch (ret) {
 				case KEY_EXIT:
-				case KEY_ESC:
+				/*
+				 *case KEY_ESC:
+				 */
 					return;
 					break;
 				case KEY_LEFT:
