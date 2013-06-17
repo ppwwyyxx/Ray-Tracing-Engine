@@ -1,5 +1,5 @@
 // File: kdtree.cc
-// Date: Mon Jun 17 18:07:16 2013 +0800
+// Date: Mon Jun 17 19:39:34 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include <algorithm>
 #include "lib/kdtree.hh"
@@ -58,12 +58,33 @@ class KDTree::Node {
 			if (ch0) {
 				auto ret = ch0->get_trace(ray, mind);
 				if (ret) {
+					if (ray.debug) {
+						cout << "ray intersect with box " << ch0->box << endl;
+						cout << "interpoint: " << ret->intersection_point() << endl;
+						cout << endl;
+					}
+					if (!ch0->leaf()) return ret;
 					Vec inter_p = ret->intersection_point();
 					if (ch0->box.contain(inter_p)) return ret;
+				} else {
+					if (ray.debug)
+						cout << "not intersect with box" << ch0->box << endl;
 				}
 			}
 
 			if (!ch1 || !ch1->box.intersect(ray, mind2, inside)) ch1 = nullptr;
+
+/*
+ *
+ *            // slower one
+ *            if (ray.debug) {
+ *                cout << mind << mind2 << endl;
+ *            }
+ *            if (ch0 && ((!ch1) || (mind < mind2))) return ch0->get_trace(ray, mind);
+ *            else if (ch1) return ch1->get_trace(ray, mind2);
+ *            else return nullptr;
+ */
+
 			m_assert(!(ch0 && ch1 && mind == -1 && mind2 == -1));
 			if (ch0 && ch1 && mind > mind2 + EPS) {
 				print_debug("%lf, %lf\n", mind, mind2);
@@ -72,10 +93,21 @@ class KDTree::Node {
 			if (ch1) {
 				auto ret = ch1->get_trace(ray, mind2);
 				if (ret) {
+					if (ray.debug) {
+						cout << "ray intersect with box " << ch0->box << endl;
+						cout << "interpoint: " << ret->intersection_point() << endl;
+						cout << endl;
+					}
+					if (!ch1->leaf()) return ret;
 					Vec inter_p = ret->intersection_point();
 					if (ch1->box.contain(inter_p)) return ret;
+				} else {
+					if (ray.debug)
+						cout << "not intersect with box" << ch0->box << endl;
 				}
 			}
+			if (ray.debug)
+				cout << "reaching end of node->get_trace()" << endl;
 			return nullptr;
 		}
 
@@ -133,22 +165,20 @@ KDTree::Node* KDTree::build(const vector<RenderWrapper>& objs, const AABB& box, 
 	real_t min_cost = numeric_limits<real_t>::max();
 
 	// algo 1 (naive kdtree)
-/*
- *    best_pl = cut(objs, box, depth);
- *    try {
- *        par = box.cut(best_pl);
- *    } catch (...) {
- *        ADDOBJ;
- *        return ret;		// pl is outside box, cannot go further
- *    }
- *    ret->pl = best_pl;
- *
- *    vector<RenderWrapper> objl, objr;
- *    for (auto & obj : objs) {
- *        if (obj.box.max[pl.axis] >= best_pl.pos - EPS) objr.push_back(obj);
- *        if (obj.box.min[pl.axis] <= best_pl.pos + EPS) objl.push_back(obj);
- *    }
- */
+	best_pl = cut(objs, box, depth);
+	try {
+		par = box.cut(best_pl);
+	} catch (...) {
+		ADDOBJ;
+		return ret;		// pl is outside box, cannot go further
+	}
+	ret->pl = best_pl;
+
+	vector<RenderWrapper> objl, objr;
+	for (auto & obj : objs) {
+		if (obj.box.max[best_pl.axis] >= best_pl.pos - EPS) objr.push_back(obj);
+		if (obj.box.min[best_pl.axis] <= best_pl.pos + EPS) objl.push_back(obj);
+	}
 
 	// algo 2 (SAH kdtree)
 	// start of O(n^2) build
@@ -175,64 +205,65 @@ KDTree::Node* KDTree::build(const vector<RenderWrapper>& objs, const AABB& box, 
 	// end of O(n^2)
 
 	// start of O(n log(n)) build
-	int nobj = objs.size();
-	REP(dim, 3) {
-		vector<pair<real_t, bool>> cand_list;		//// true: min, false: max
-		for (auto & obj: objs)
-			cand_list.push_back(make_pair(obj.box.min[dim] - EPS, true)),
-				cand_list.push_back(make_pair(obj.box.max[dim] + EPS, false));
-
-		sort(cand_list.begin(), cand_list.end(),
-			[](const pair<real_t, bool>& a, const pair<real_t, bool>& b)
-			{return a.first < b.first;});
-
-		int lcnt = 0, rcnt = nobj;
-		auto ptr = cand_list.begin();
-
-		do {
-			AAPlane pl(dim, ptr->first);
-			try {
-				auto par = box.cut(pl);
-				real_t cost = par.first.area() * lcnt + par.second.area() * rcnt;
-				if (lcnt == 0 || rcnt == 0 || (lcnt + rcnt == nobj - 1 && rcnt == 1))
-					cost *= 0.8;		// this is a hack
-				if (update_min(min_cost, cost)) best_pl = pl;
-			} catch (...) {}
-
-			if (ptr->second) lcnt ++; else rcnt --;
-
-			auto old = ptr++;
-			while (ptr != cand_list.end() && ptr->first - old->first < EPS) {
-				if (ptr->second) lcnt ++;
-				else rcnt --;
-				old = ptr++;
-			}
-		} while (ptr != cand_list.end());
-	}
-	// end of O(n log(n))
-
-	if (best_pl.axis == ERROR) {
-		ADDOBJ;
-		return ret;
-	}
-
-	ret->pl = best_pl;
-	par = box.cut(best_pl);
-	vector<RenderWrapper> objl, objr;
-	for (auto & obj : objs) {
-		if (obj.box.max[best_pl.axis] >= best_pl.pos) objr.push_back(obj);
-		if (obj.box.min[best_pl.axis] <= best_pl.pos) objl.push_back(obj);
-	}
+/*
+ *    int nobj = objs.size();
+ *    REP(dim, 3) {
+ *        vector<pair<real_t, bool>> cand_list;		//// true: min, false: max
+ *        for (auto & obj: objs)
+ *            cand_list.push_back(make_pair(obj.box.min[dim] - EPS, true)),
+ *                cand_list.push_back(make_pair(obj.box.max[dim] + EPS, false));
+ *
+ *        sort(cand_list.begin(), cand_list.end(),
+ *            [](const pair<real_t, bool>& a, const pair<real_t, bool>& b)
+ *            {return a.first < b.first;});
+ *
+ *        int lcnt = 0, rcnt = nobj;
+ *        auto ptr = cand_list.begin();
+ *
+ *        do {
+ *            AAPlane pl(dim, ptr->first);
+ *            try {
+ *                auto par = box.cut(pl);
+ *                real_t cost = par.first.area() * lcnt + par.second.area() * rcnt;
+ *                if (lcnt == 0 || rcnt == 0 || (lcnt + rcnt == nobj - 1 && rcnt == 1))
+ *                    cost *= 0.8;		// this is a hack
+ *                if (update_min(min_cost, cost)) best_pl = pl;
+ *            } catch (...) {}
+ *
+ *            if (ptr->second) lcnt ++; else rcnt --;
+ *
+ *            auto old = ptr++;
+ *            while (ptr != cand_list.end() && ptr->first - old->first < EPS) {
+ *                if (ptr->second) lcnt ++;
+ *                else rcnt --;
+ *                old = ptr++;
+ *            }
+ *        } while (ptr != cand_list.end());
+ *    }
+ *    // end of O(n log(n))
+ *
+ *    if (best_pl.axis == ERROR) {
+ *        ADDOBJ;
+ *        return ret;
+ *    }
+ *
+ *    ret->pl = best_pl;
+ *    par = box.cut(best_pl);
+ *    vector<RenderWrapper> objl, objr;
+ *    for (auto & obj : objs) {
+ *        if (obj.box.max[best_pl.axis] >= best_pl.pos) objr.push_back(obj);
+ *        if (obj.box.min[best_pl.axis] <= best_pl.pos) objl.push_back(obj);
+ *    }
+ */
 	// what if no plane is found?
 	// end of algo 2
 
 
 	Node *lch = build(objl, par.first, depth + 1),
 		 *rch = build(objr, par.second, depth + 1);
-
-	if (lch == nullptr && rch == nullptr) ADDOBJ;		// add obj to leaf node
-
 	ret->child[0] = lch, ret->child[1] = rch;
+	if (ret->leaf()) ADDOBJ;		// add obj to leaf node
+
 	print_debug("depth: %d, lsize: %d, rsize: %d\n", depth, (int)objl.size(), (int)objr.size());
 	return ret;
 #undef ADDOBJ

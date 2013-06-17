@@ -1,5 +1,5 @@
 // File: space.cc
-// Date: Mon Jun 17 16:40:45 2013 +0800
+// Date: Mon Jun 17 19:05:25 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <limits>
@@ -54,7 +54,7 @@ Color Space::trace(const Ray& ray, real_t dist, int depth) {
 
 		// shadow if not visible to this light
 		// go foward a little
-		if (find_any(Ray(inter_point + lm * EPS, lm), dist_to_light)) {
+		if (find_any(Ray(inter_point + lm * (20 * EPS), lm), dist_to_light)) {
 			// if (lmn > 0) ret += surf->diffuse * ambient * REFL_DECAY;
 			continue;
 		}

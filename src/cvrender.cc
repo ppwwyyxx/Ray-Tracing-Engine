@@ -1,5 +1,5 @@
 // File: cvrender.cc
-// Date: Mon Jun 17 18:07:02 2013 +0800
+// Date: Mon Jun 17 19:40:19 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <opencv2/opencv.hpp>
@@ -49,6 +49,10 @@ CVRender::CVRender(const Geometry &m_g):
 
 void CVViewer::render_all() {
 	Timer timer;
+	/*
+	 *int i = 230, j = 230;
+	 *v.render(i, j, true);
+	 */
 
 #pragma omp parallel for schedule(dynamic)
 	REP(i, geo.h) {

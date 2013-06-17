@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Mon Jun 17 18:08:21 2013 +0800
+// Date: Mon Jun 17 18:46:27 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "viewer.hh"
 #include "space.hh"
@@ -27,7 +27,7 @@ int main(int argc, char* argv[]) {
 	w = h = 500;
 	Space s;
 	s.add_light(Light(Vec(0, -10, 8), Color::WHITE, 2.2));
-	s.add_light(Light(Vec(0, -2, -20), Color::WHITE, 1.5));
+	s.add_light(Light(Vec(0, 0, 9), Color::WHITE, 1.5));
 	s.add_light(Light(Vec(0, -3, 4), Color::WHITE, 1.5));
 
 
@@ -36,7 +36,7 @@ int main(int argc, char* argv[]) {
 	shared_ptr<Texture> tred(new HomoTexture(Surface::RED));
 	Plane plane1(InfPlane::XYPLANE, t1);
 
-	Mesh mesh("../res/zyk/rose.obj", Vec(0, 0, 4), 5);
+	Mesh mesh("../res/zyk/teapot.obj", Vec(0, 0, 4), 5);
 	mesh.set_texture(tred);
 	mesh.finish_add();
 	cout << mesh.get_aabb() << endl;
@@ -53,7 +53,7 @@ int main(int argc, char* argv[]) {
 	 *s.add_obj(new Sphere(sphere));
 	 */
 
-	View v(make_shared<Space>(s), Vec(0.2, -3, 6), Vec(0, 0, 2), 20, Geometry(w, h));
+	View v(make_shared<Space>(s), Vec(0.2, 0, 7), Vec(0, 0, 2), 30, Geometry(w, h));
 	CVViewer viewer(v);
 	viewer.view();
 }

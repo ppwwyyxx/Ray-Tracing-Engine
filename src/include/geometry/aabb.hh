@@ -1,5 +1,5 @@
 // File: aabb.hh
-// Date: Mon Jun 17 15:40:05 2013 +0800
+// Date: Mon Jun 17 19:41:27 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -89,7 +89,7 @@ class AABB {
 
 #define UPDATE(t) \
 			do { \
-				if (ray.dir.t > EPS) { \
+				if (fabs(ray.dir.t) > EPS) { \
 					bool sign = (inv.t < 0); \
 					real_t tmp_min = ((sign ? max : min).t - ray.orig.t) * inv.t; \
 					real_t tmp_max = ((sign ? min : max).t - ray.orig.t) * inv.t; \
@@ -105,6 +105,9 @@ class AABB {
 
 			if (t_min < 0) mind = t_max, inside = true;
 			else mind = t_min, inside = false;
+			if (ray.debug) {
+				cout << "intersect with box " << (*this) << " at " << mind << ", inside: " << inside << endl;
+			}
 			return true;
 		}
 

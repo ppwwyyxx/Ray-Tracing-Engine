@@ -1,5 +1,5 @@
 // File: view.cc
-// Date: Fri Jun 14 10:46:26 2013 +0800
+// Date: Mon Jun 17 19:06:29 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "view.hh"
