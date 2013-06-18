@@ -1,5 +1,5 @@
 // File: kdtree.hh
-// Date: Tue Jun 18 09:54:50 2013 +0800
+// Date: Tue Jun 18 11:59:01 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -30,6 +30,6 @@ class KDTree {
 	private:
 		Node* build(const vector<RenderWrapper>& objs, const AABB& box, int depth);
 
-		AAPlane cut(const vector<RenderWrapper>& objs, const AABB& box, int depth) const;
+		AAPlane cut(const vector<RenderWrapper>& objs, int depth) const;
 
 };

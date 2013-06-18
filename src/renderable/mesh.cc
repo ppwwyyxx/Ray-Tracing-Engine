@@ -1,5 +1,5 @@
 // File: mesh.cc
-// Date: Tue Jun 18 10:44:04 2013 +0800
+// Date: Tue Jun 18 11:58:42 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <algorithm>
@@ -48,7 +48,6 @@ void Mesh::finish_add() {
 	}
 	if (smooth) {		// calculate vtx norm
 		int nvtx = vtxs.size();
-		int nface = faces.size();
 
 		struct NormSum {
 			Vec sum = Vec(0, 0, 0);

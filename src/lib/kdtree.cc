@@ -1,5 +1,5 @@
 // File: kdtree.cc
-// Date: Tue Jun 18 09:55:09 2013 +0800
+// Date: Tue Jun 18 11:59:02 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include <algorithm>
 #include <omp.h>
@@ -27,8 +27,6 @@ class KDTree::Node {
 
 		bool leaf() const
 		{ return child[0] == nullptr && child[1] == nullptr; }
-
-		void clean_child() { child[0] == nullptr, child[1] == nullptr; }
 
 		void set_objs(const vector<rdptr>& _objs)
 		{ objs = _objs; }
@@ -143,7 +141,7 @@ shared_ptr<Trace> KDTree::get_trace(const Ray& ray) const {
 	return root->get_trace(ray, mind);
 }
 
-AAPlane KDTree::cut(const vector<RenderWrapper>& objs, const AABB& box, int depth) const {
+AAPlane KDTree::cut(const vector<RenderWrapper>& objs, int depth) const {
 	AAPlane ret;
 	ret.axis = static_cast<AXIS>(depth % 3);
 

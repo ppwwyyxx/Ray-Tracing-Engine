@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Tue Jun 18 11:48:55 2013 +0800
+// Date: Tue Jun 18 11:59:42 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "viewer.hh"
 #include "space.hh"
@@ -40,7 +40,7 @@ int main(int argc, char* argv[]) {
 	Plane plane1(InfPlane::XYPLANE, t1);
 
 	//Mesh mesh("../res/models/Buddha.obj", Vec(0, 0, 2), 5);
-	Mesh mesh("sx.obj", Vec(0, 0, 2), 5);
+	Mesh mesh("../res/models/fixed.perfect.dragon.100K.0.07.obj", Vec(0, 0, 2), 5);
 	mesh.set_texture(tred);
 	cout << mesh.get_aabb() << endl;
 	mesh.finish_add();

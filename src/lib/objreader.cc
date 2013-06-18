@@ -1,5 +1,5 @@
 // File: objreader.cc
-// Date: Tue Jun 18 11:55:40 2013 +0800
+// Date: Tue Jun 18 11:59:13 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <cstring>
@@ -11,7 +11,6 @@ const int LINE_MAX_LEN = 1000;
 void ObjReader::read_in(string fname, Mesh* mesh) {
 	ifstream fin(fname);
 	static char input[LINE_MAX_LEN];
-	int nnorm = 0;
 	while (fin.getline(input, LINE_MAX_LEN, '\n')) {
 		if (input[0] == '#' || strlen(input) <= 1)
 			continue;
