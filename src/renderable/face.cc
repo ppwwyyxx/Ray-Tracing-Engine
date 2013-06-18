@@ -1,5 +1,5 @@
 // File: face.cc
-// Date: Mon Jun 17 16:06:00 2013 +0800
+// Date: Tue Jun 18 10:54:47 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "renderable/mesh.hh"
@@ -54,6 +54,16 @@ AABB Face::get_aabb() const {
 	return ret;
 }
 
+Vec Face::get_smooth_norm(real_t gx, real_t gy) const {
+	// e1 : gx, e2: gy
+	Vec ret;
+	ret = ret + get_norm(0) * (1 - gx - gy) + get_norm(1) * gx + get_norm(2) * gy;
+	return ret.get_normalized();
+}
+
+shared_ptr<Surface> FaceTrace::get_property() const
+{ return face.host->texture->get_property(); }
+
 shared_ptr<Surface> FaceTrace::transform_get_property() const {
 	m_assert(false);		// XXX for now
 	real_t x = gx / 0.1, y = gy / 0.1;
@@ -61,7 +71,6 @@ shared_ptr<Surface> FaceTrace::transform_get_property() const {
 }
 
 bool FaceTrace::intersect() {
-	real_t gx, gy;
 	inter_dist = face.tri.get_intersect(ray, gx, gy);
 	if (inter_dist < 0) return false;
 	return true;
@@ -70,10 +79,11 @@ bool FaceTrace::intersect() {
 real_t FaceTrace::intersection_dist() { return inter_dist; }
 
 Vec FaceTrace::normal() {		// norm to the ray side
-	Vec ret = face.norm.get_normalized();
-	/*
-	 *ret = (face.get_norm(0) + face.get_norm(1) + face.get_norm(2)).get_normalized();
-	 */
+	Vec ret;
+	if (face.host->smooth)
+		ret = face.get_smooth_norm(gx, gy);
+	else
+		ret = face.norm.get_normalized();
 	if (Vec(face.tri.v, ray.orig).dot(ret) < 0)
 		return -ret;
 	return ret;

@@ -1,5 +1,5 @@
 // File: face.hh
-// Date: Sat Jun 15 22:16:41 2013 +0800
+// Date: Tue Jun 18 10:54:48 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -41,15 +41,15 @@ class Vertex {
 			pos(_pos), id(_id) {}
 };
 
+class Mesh;
 class Face : public RenderAble {
 	public:
 		Triangle tri;
 		Vec norm; // can later be re-calculated, can be assigned other than tri.normal
 
-		RenderAble* host;
+		Mesh* host;
 
 		tuple<int, int, int> vtxid;
-		vector<Face*> adj_faces;
 		const vector<Vertex>& vtxs;
 
 		Face(const vector<Vertex>& _vtxs, int a, int b, int c):
@@ -60,8 +60,14 @@ class Face : public RenderAble {
 			m_assert(!tri.e1.is_zero());
 		}
 
-		void add_adj_face(Face* f)
-		{ adj_faces.push_back(f); }
+		shared_ptr<Trace> get_trace(const Ray& ray) const;
+
+		Vec get_smooth_norm(real_t gx, real_t gy) const;
+
+		AABB get_aabb() const;
+
+	protected:
+		friend class FaceTrace;
 
 		Vec get_norm(int i) const {
 			if (i == 0)
@@ -71,13 +77,6 @@ class Face : public RenderAble {
 			else
 				return vtxs[get<2>(vtxid)].norm;
 		}
-
-		shared_ptr<Trace> get_trace(const Ray& ray) const;
-
-		AABB get_aabb() const;
-
-	protected:
-		friend class FaceTrace;
 
 };
 
@@ -98,6 +97,5 @@ class FaceTrace : public Trace {
 
 		Vec normal();
 
-		shared_ptr<Surface> get_property() const
-		{ return face.host->texture->get_property(); }
+		shared_ptr<Surface> get_property() const;
 };

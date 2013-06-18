@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Tue Jun 18 10:14:41 2013 +0800
+// Date: Tue Jun 18 10:54:38 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "viewer.hh"
 #include "space.hh"
@@ -38,6 +38,7 @@ int main(int argc, char* argv[]) {
 
 	Mesh mesh("../res/zyk/teapot.obj", Vec(0, 0, 2), 5);
 	mesh.set_texture(tred);
+	mesh.smooth = false;
 	mesh.finish_add();
 	cout << mesh.get_aabb() << endl;
 	s.add_obj(new Mesh(mesh));
@@ -53,7 +54,7 @@ int main(int argc, char* argv[]) {
 	 *s.add_obj(new Sphere(sphere));
 	 */
 
-	View v(make_shared<Space>(s), Vec(0.2, 0, 12), Vec(0, 0, 2), 15, Geometry(w, h));
+	View v(make_shared<Space>(s), Vec(0.2, 0, 6), Vec(0, 0, 2), 6, Geometry(w, h));
 	CVViewer viewer(v);
 	viewer.view();
 }

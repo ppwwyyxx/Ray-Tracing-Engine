@@ -1,5 +1,5 @@
 // File: objreader.cc
-// Date: Mon Jun 17 16:07:51 2013 +0800
+// Date: Tue Jun 18 10:30:27 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <cstring>
@@ -12,14 +12,12 @@ void ObjReader::read_in(string fname, Mesh* mesh) {
 	ifstream fin(fname);
 	static char input[LINE_MAX_LEN];
 	int nnorm = 0;
-	bool startf = false;
 	while (fin.getline(input, LINE_MAX_LEN, '\n')) {
 		if (input[0] == '#' || strlen(input) <= 1)
 			continue;
 		switch (input[0]) {
 			case 'v':
 			{
-				m_assert(!startf);		// v comes before f
 				if (input[1] == ' ') {	// v x y z
 					real_t x, y, z;
 					sscanf(input + 2, "%lf %lf %lf", &x, &y, &z);
@@ -27,7 +25,9 @@ void ObjReader::read_in(string fname, Mesh* mesh) {
 				} else if (input[1] == 'n') {  // vn x y z
 					real_t x, y, z;
 					sscanf(input + 3, "%lf %lf %lf", &x, &y, &z);
-					mesh->set_norm(nnorm++, Vec(x, y, z));
+					/*
+					 *mesh->set_norm(nnorm++, Vec(x, y, z));
+					 */// don't use vn
 				} else {
 					cout << input << endl;
 					error_exit("unrecognized format");
@@ -36,14 +36,10 @@ void ObjReader::read_in(string fname, Mesh* mesh) {
 			}
 			case 'f':
 			{				// XXX some model is 'f 1 2 3 4 5 6'
-				if (!startf) {
-					startf = true;
-					mesh->transform_vtxs();
-				}
 				int x, y, z;
 				sscanf(input + 2, "%d %d %d", &x, &y, &z);
 				if (x != y && y != z && x != z)
-					mesh->add_face(x - 1, y - 1, z - 1);
+					mesh->add_faceid(x - 1, y - 1, z - 1);
 				break;
 			}
 			case 'g':
@@ -55,10 +51,6 @@ void ObjReader::read_in(string fname, Mesh* mesh) {
 		}
 	}
 	fin.close();
-	if (nnorm == mesh->vtxs.size()) {
-		cout << "use vn" << endl;
-		mesh->smooth = true;
-	}
 	cout << "nvtx: " << mesh->vtxs.size() << ", nface: " << mesh->faces.size() << endl;
 }
 

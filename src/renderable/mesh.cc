@@ -1,5 +1,5 @@
 // File: mesh.cc
-// Date: Mon Jun 17 10:55:58 2013 +0800
+// Date: Tue Jun 18 10:44:04 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <algorithm>
@@ -39,9 +39,34 @@ AABB Mesh::get_aabb() const
 { return AABB(bound_min, bound_max); }
 
 void Mesh::finish_add() {
+	transform_vtxs();
+	for (auto &ids : face_ids) add_face(ids);
+
 	if (faces.size() > USE_KDTREE_THRES) {
 		use_tree = true;
 		tree = shared_ptr<KDTree>(new KDTree(faces, get_aabb()));
+	}
+	if (smooth) {		// calculate vtx norm
+		int nvtx = vtxs.size();
+		int nface = faces.size();
+
+		struct NormSum {
+			Vec sum = Vec(0, 0, 0);
+			int cnt = 0;
+			void add(const Vec& v) { sum = sum + v, cnt ++; }
+		};
+
+		NormSum* norm_sum = new NormSum[nvtx];
+		for (auto & t : face_ids) {
+			Vec tmp_norm = Triangle(vtxs[get<0>(t)].pos, vtxs[get<1>(t)].pos, vtxs[get<2>(t)].pos).norm;
+			norm_sum[get<0>(t)].add(tmp_norm);
+			norm_sum[get<1>(t)].add(tmp_norm);
+			norm_sum[get<2>(t)].add(tmp_norm);
+		}
+		REP(k, nvtx)
+			vtxs[k].norm = norm_sum[k].sum / norm_sum[k].cnt;
+		face_ids.clear();
+		delete[] norm_sum;
 	}
 }
 

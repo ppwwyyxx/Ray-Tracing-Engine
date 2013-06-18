@@ -1,5 +1,5 @@
 // File: mesh.hh
-// Date: Sat Jun 15 22:28:47 2013 +0800
+// Date: Tue Jun 18 10:53:00 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -20,6 +20,7 @@ class Mesh: public RenderAble {
 
 		vector<Vertex> vtxs;
 		vector<rdptr> faces;
+		vector<tuple<int, int, int>> face_ids;
 		shared_ptr<KDTree> tree;
 
 		Vec bound_min = Vec::max(), bound_max = -Vec::max();
@@ -43,11 +44,9 @@ class Mesh: public RenderAble {
 			vtxs[t].norm = norm;
 		}
 
-		void add_face(int a, int b, int c) {
+		void add_faceid(int a, int b, int c) {
 			m_assert(INRANGE(max(a, max(b, c))));
-			Face f(vtxs, a, b, c);
-			f.host = this;
-			faces.push_back(rdptr(new Face(f)));
+			face_ids.push_back(tuple<int, int, int>{a, b, c});
 		}
 
 		void transform_vtxs();
@@ -60,6 +59,16 @@ class Mesh: public RenderAble {
 
 	protected:
 		friend class MeshTrace;
+
+		void add_face(const tuple<int, int, int>& t)
+		{ add_face(get<0>(t), get<1>(t), get<2>(t));}
+
+		void add_face(int a, int b, int c) {
+			m_assert(INRANGE(max(a, max(b, c))));
+			Face f(vtxs, a, b, c);
+			f.host = this;
+			faces.push_back(rdptr(new Face(f)));
+		}
 };
 
 class MeshTrace : public Trace {
