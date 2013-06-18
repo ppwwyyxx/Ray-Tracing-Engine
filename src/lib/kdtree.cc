@@ -1,5 +1,5 @@
 // File: kdtree.cc
-// Date: Tue Jun 18 00:41:53 2013 +0800
+// Date: Tue Jun 18 09:23:13 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include <algorithm>
 #include <omp.h>
@@ -22,6 +22,8 @@ class KDTree::Node {
 
 		bool leaf() const
 		{ return child[0] == nullptr && child[1] == nullptr; }
+
+		void clean_child() { child[0] == nullptr, child[1] == nullptr; }
 
 		void set_objs(const vector<rdptr>& _objs)
 		{ objs = _objs; }
@@ -126,6 +128,7 @@ KDTree::KDTree(const vector<rdptr>& objs, const AABB& space) {
 		objlist.push_back(RenderWrapper(obj, obj->get_aabb()));
 	Timer timer;
 	root = build(move(objlist), space, 0);
+	shrinktree(root);
 	print_debug("build tree takes %lf seconds\n", timer.get_time());
 	// TODO: cleantree: delete node with single children, then delete assert above!
 }
@@ -282,3 +285,24 @@ KDTree::Node* KDTree::build(const vector<RenderWrapper>& objs, const AABB& box, 
 #undef ADDOBJ
 }
 
+
+void KDTree::shrinktree(Node* node) {
+	if (node->leaf()) return;
+	while (!(node->child[0] && node->child[1])) {
+		if (!node->child[0]) {
+			Node* old = node->child[1];
+			node->child[0] = old->child[0];
+			node->child[1] = old->child[1];
+			old->clean_child();
+			delete old;
+		} else {
+			Node* old = node->child[0];
+			node->child[0] = old->child[0];
+			node->child[1] = old->child[1];
+			old->clean_child();
+			delete old;
+		}
+	}
+	shrinktree(node->child[0]);
+	shrinktree(node->child[1]);
+}
