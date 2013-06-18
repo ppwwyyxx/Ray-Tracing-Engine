@@ -1,5 +1,5 @@
 // File: space.hh
-// Date: Tue Jun 18 15:44:16 2013 +0800
+// Date: Tue Jun 18 17:35:10 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -19,7 +19,9 @@ class Space {
 		vector<shared_ptr<Light>>  lights;
 		vector<rdptr> objs;
 
+		// config
 		bool use_tree = true;
+		bool use_soft_shadow = true;
 
 		int max_depth = MAX_RECURSIVE_DEPTH;
 		int now_ray_count;
@@ -32,17 +34,9 @@ class Space {
 
 		~Space(){}
 
-		void add_light(const Light& light)
-		{ lights.push_back(make_shared<Light>(light)); }
+		void add_light(const Light& light);
 
-		void add_obj(const rdptr& objptr) {
-			objs.push_back(objptr);
-			if (!objptr->infinity) {
-				auto k = objptr->get_aabb();
-				bound_min.update_min(k.min);
-				bound_max.update_max(k.max);
-			}
-		}
+		void add_obj(const rdptr& objptr);
 
 		void add_obj(RenderAble* objptr)
 		{ add_obj(rdptr(objptr)); }

@@ -1,5 +1,5 @@
 // File: plane.hh
-// Date: Tue Jun 18 15:40:18 2013 +0800
+// Date: Tue Jun 18 17:14:29 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -26,7 +26,7 @@ class Plane : public RenderAble {
 
 		Plane(const InfPlane& _plane, const shared_ptr<Texture>& _texture):
 			Plane(_plane)
-		{ texture = _texture; infinity = true; }
+		{ texture = _texture; infinity = true; have_inside = false; }
 
 		void set_finite(real_t radius, Vec center);
 

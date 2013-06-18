@@ -1,5 +1,5 @@
 % File: diary.tex
-% Date: Tue Jun 18 16:45:30 2013 +0800
+% Date: Tue Jun 18 17:36:36 2013 +0800
 % Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 \section{过程记录}
 \begin{enumerate}
@@ -128,6 +128,19 @@
   \centering
   \includegraphics[scale=0.4]{res/pic_texture.png}
   \caption{\label{fig:texture}}
+\end{figure}
+
+\item 加入了软阴影效果如下所示,左图渲染时间为0.15s, 右图为1.06s,此图将每个点光源变为20个密集点光源.
+\begin{figure}[H]
+\begin{minipage}[b]{0.46\linewidth}
+  \centering
+  \includegraphics[width=\textwidth]{res/no_soft.png}
+\end{minipage}
+\begin{minipage}[b]{0.46\linewidth}
+  \centering
+  \includegraphics[width=\textwidth]{res/soft.png}
+\end{minipage}
+  \caption{\label{fig:soft}}
 \end{figure}
 
 

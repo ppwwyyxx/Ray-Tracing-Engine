@@ -1,5 +1,5 @@
 // File: space.cc
-// Date: Tue Jun 18 16:01:00 2013 +0800
+// Date: Tue Jun 18 17:34:31 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <limits>
@@ -7,6 +7,31 @@
 #include "space.hh"
 
 using namespace std;
+
+void Space::add_light(const Light& light) {
+	if (use_soft_shadow) {
+		real_t delta_theta = 2 * M_PI / SOFT_SHADOW_LIGHT;
+		real_t theta = 0;
+		REP(k, SOFT_SHADOW_LIGHT) {
+			Vec diff = Vec(cos(theta), sin(theta), 0) * SOFT_SHADOW_RADIUS;
+			theta += delta_theta;
+
+			Light newlight(light.src + diff, light.color, light.intensity / SOFT_SHADOW_LIGHT);
+			lights.push_back(make_shared<Light>(newlight));
+		}
+
+	} else
+		lights.push_back(make_shared<Light>(light));
+}
+
+void Space::add_obj(const rdptr& objptr) {
+	objs.push_back(objptr);
+	if (!objptr->infinity) {
+		auto k = objptr->get_aabb();
+		bound_min.update_min(k.min);
+		bound_max.update_max(k.max);
+	}
+}
 
 void Space::init() {		// called from View::View()
 	ambient = Color::BLACK;
@@ -21,7 +46,7 @@ void Space::init() {		// called from View::View()
 		for (auto &k : objs) if (k->infinity) infinite_obj.push_back(k);
 		objs.erase(remove_if(objs.begin(), objs.end(),
 					[](const rdptr& p) {
-						return p->infinity;
+					return p->infinity;
 					}), objs.end());
 
 		infinite_obj.push_back(rdptr(new KDTree(objs, AABB(bound_min, bound_max))));
@@ -106,7 +131,7 @@ Color Space::trace(const Ray& ray, real_t dist, int depth) {
 			Ray new_ray(inter_point + ray.dir * EPS, tr_dir, density);
 			new_ray.debug = ray.debug;
 			Color transm = trace(new_ray, dist, depth + 1);
-			ret += transm * surf->transparency;
+			ret += (transm + surf->diffuse * 0.1) * surf->transparency;
 		}
 	}
 

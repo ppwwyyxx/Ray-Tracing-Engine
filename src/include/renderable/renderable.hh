@@ -1,5 +1,5 @@
 // File: renderable.hh
-// Date: Tue Jun 18 16:00:38 2013 +0800
+// Date: Tue Jun 18 17:14:00 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 
@@ -23,6 +23,7 @@ class RenderAble {
 		virtual ~RenderAble(){}
 
 		bool infinity = false;
+		bool have_inside = true;
 		shared_ptr<Texture> texture;
 
 		void set_texture(const shared_ptr<Texture>& _texture)

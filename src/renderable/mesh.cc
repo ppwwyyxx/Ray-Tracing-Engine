@@ -1,5 +1,5 @@
 // File: mesh.cc
-// Date: Tue Jun 18 15:21:30 2013 +0800
+// Date: Tue Jun 18 17:14:45 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <algorithm>
@@ -42,10 +42,8 @@ void Mesh::finish_add() {
 	transform_vtxs();
 	for (auto &ids : face_ids) add_face(ids);
 
-	if (faces.size() > USE_KDTREE_THRES) {
-		use_tree = true;
-		tree = shared_ptr<KDTree>(new KDTree(faces, get_aabb()));
-	}
+	tree = shared_ptr<KDTree>(new KDTree(faces, get_aabb()));
+
 	if (smooth) {		// calculate vtx norm
 		int nvtx = vtxs.size();
 

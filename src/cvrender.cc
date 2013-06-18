@@ -1,5 +1,5 @@
 // File: cvrender.cc
-// Date: Tue Jun 18 11:05:07 2013 +0800
+// Date: Tue Jun 18 17:27:41 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <opencv2/opencv.hpp>
@@ -16,6 +16,7 @@ using namespace cv;
 #define KEY_ESC 27
 #define KEY_S 115
 #define KEY_Q 113
+#define KEY_P 112
 
 #define KEY_J 106
 #define KEY_K 107
@@ -90,6 +91,16 @@ void CVViewer::view() {
 				 */
 					return;
 					break;
+				case KEY_S:
+					r.save();
+					rerender = false;
+					print_debug("saved\n");
+					break;
+				case KEY_P:
+					cout << "viewpoint: " << v.view_point << endl;
+					cout << "middle: " << v.mid << endl;
+					rerender = false;
+					break;
 				case KEY_LEFT:
 					v.rotate(VIEWER_ANGLE);
 					break;
@@ -101,11 +112,6 @@ void CVViewer::view() {
 					break;
 				case KEY_DOWN:
 					v.twist(-VIEWER_ANGLE);
-					break;
-				case KEY_S:
-					r.save();
-					rerender = false;
-					print_debug("saved\n");
 					break;
 				case KEY_J:
 					v.shift(-SHIFT_DISTANCE, false);
