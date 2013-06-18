@@ -1,5 +1,5 @@
 // File: kdtree.cc
-// Date: Tue Jun 18 14:58:37 2013 +0800
+// Date: Tue Jun 18 15:12:49 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include <algorithm>
 #include <omp.h>

@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Tue Jun 18 14:58:56 2013 +0800
+// Date: Tue Jun 18 15:08:55 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "viewer.hh"
 #include "space.hh"
@@ -29,7 +29,9 @@ int main(int argc, char* argv[]) {
 	s.add_light(Light(Vec(0, -10, 8), Color::WHITE, 2.0));
 	s.add_light(Light(Vec(0, 10, 8), Color::WHITE, 2.0));
 	s.add_light(Light(Vec(-10, 0, 8), Color::WHITE, 2.0));
-	s.add_light(Light(Vec(10, 0, 8), Color::WHITE, 2.0));
+	/*
+	 *s.add_light(Light(Vec(10, 0, 8), Color::WHITE, 2.0));
+	 */
 	s.add_light(Light(Vec(0, 0, 9), Color::WHITE, 1.5));
 	s.add_light(Light(Vec(0, -3, -4), Color::WHITE, 8));
 

@@ -1,5 +1,5 @@
 // File: space.cc
-// Date: Tue Jun 18 14:38:03 2013 +0800
+// Date: Tue Jun 18 15:13:07 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <limits>
@@ -106,7 +106,7 @@ shared_ptr<Trace> Space::find_first(const Ray& ray) const {
 	shared_ptr<Trace> ret;
 
 	for (auto & obj : objs) {
-		auto tmp = obj->get_trace(ray);
+		auto tmp = obj->get_trace(ray, min == numeric_limits<real_t>::max() ? -1 : min);
 		if (tmp) {
 			real_t d = tmp->intersection_dist();
 			if (update_min(min, d))
@@ -116,11 +116,10 @@ shared_ptr<Trace> Space::find_first(const Ray& ray) const {
 	return ret;
 }
 
-bool Space::find_any(const Ray& ray, real_t dist) const {
+bool Space::find_any(const Ray& ray, real_t max_dist) const {
 	for (auto & obj : objs) {
-		shared_ptr<Trace> tmp = obj->get_trace(ray);
-		if (tmp && (tmp->intersection_dist() < dist))
-			return true;
+		shared_ptr<Trace> tmp = obj->get_trace(ray, max_dist);
+		if (tmp) return true;
 	}
 	return false;
 }
