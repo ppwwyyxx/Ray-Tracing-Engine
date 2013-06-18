@@ -1,5 +1,5 @@
 // File: kdtree.cc
-// Date: Tue Jun 18 09:23:13 2013 +0800
+// Date: Tue Jun 18 09:55:09 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include <algorithm>
 #include <omp.h>
@@ -18,7 +18,12 @@ class KDTree::Node {
 		Node(const AABB& _box, Node* p1 = nullptr, Node* p2 = nullptr) :
 			box(_box), child{p1, p2} { }
 
-		~Node() { delete child[0]; delete child[1]; }
+		~Node() {
+			/*
+			 *if (child[0] != nullptr) delete child[0];
+			 *if (child[1] != nullptr) delete child[1];
+			 */
+		}
 
 		bool leaf() const
 		{ return child[0] == nullptr && child[1] == nullptr; }
@@ -77,16 +82,16 @@ class KDTree::Node {
 
 			if (!ch1 || !ch1->box.intersect(ray, mind2, inside)) ch1 = nullptr;
 
-/*
- *
- *            // slower one
- *            if (ray.debug) {
- *                cout << mind << mind2 << endl;
- *            }
- *            if (ch0 && ((!ch1) || (mind < mind2))) return ch0->get_trace(ray, mind);
- *            else if (ch1) return ch1->get_trace(ray, mind2);
- *            else return nullptr;
- */
+
+			// slower one
+			/*
+			 *if (ray.debug) {
+			 *    cout << mind << mind2 << endl;
+			 *}
+			 *if (ch0 && ((!ch1) || (mind < mind2))) return ch0->get_trace(ray, mind);
+			 *else if (ch1) return ch1->get_trace(ray, mind2);
+			 *else return nullptr;
+			 */
 
 			m_assert(!(ch0 && ch1 && mind == -1 && mind2 == -1));
 			/*
@@ -128,9 +133,7 @@ KDTree::KDTree(const vector<rdptr>& objs, const AABB& space) {
 		objlist.push_back(RenderWrapper(obj, obj->get_aabb()));
 	Timer timer;
 	root = build(move(objlist), space, 0);
-	shrinktree(root);
 	print_debug("build tree takes %lf seconds\n", timer.get_time());
-	// TODO: cleantree: delete node with single children, then delete assert above!
 }
 
 shared_ptr<Trace> KDTree::get_trace(const Ray& ray) const {
@@ -285,24 +288,3 @@ KDTree::Node* KDTree::build(const vector<RenderWrapper>& objs, const AABB& box, 
 #undef ADDOBJ
 }
 
-
-void KDTree::shrinktree(Node* node) {
-	if (node->leaf()) return;
-	while (!(node->child[0] && node->child[1])) {
-		if (!node->child[0]) {
-			Node* old = node->child[1];
-			node->child[0] = old->child[0];
-			node->child[1] = old->child[1];
-			old->clean_child();
-			delete old;
-		} else {
-			Node* old = node->child[0];
-			node->child[0] = old->child[0];
-			node->child[1] = old->child[1];
-			old->clean_child();
-			delete old;
-		}
-	}
-	shrinktree(node->child[0]);
-	shrinktree(node->child[1]);
-}
