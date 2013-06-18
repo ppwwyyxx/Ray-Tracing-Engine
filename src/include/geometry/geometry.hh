@@ -1,5 +1,5 @@
 // File: geometry.hh
-// Date: Mon Jun 17 15:24:49 2013 +0800
+// Date: Tue Jun 18 20:17:54 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -133,6 +133,7 @@ class Vector {
 			density = 1 / density;
 			real_t cos1 = -dot(v_in);
 			if (cos1 < EPS) return ret;
+			if (cos1 / v_in.mod() < 0.1) return v_in.get_normalized();
 			m_assert(cos1 >= 0);
 			real_t cos2 = 1 - ::sqr(density) * (1 - ::sqr(cos1));
 			if (cos2 < 0) return ret;

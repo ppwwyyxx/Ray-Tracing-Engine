@@ -1,11 +1,11 @@
 // File: sphere.cc
-// Date: Tue Jun 18 16:01:35 2013 +0800
+// Date: Tue Jun 18 20:19:00 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "renderable/sphere.hh"
 using namespace std;
 
-const PureSphere PureSphere::TestSphere(Vec(0, 0, 3), 3);
+const PureSphere PureSphere::TestSphere(Vec(0, 0, 2), 2);
 
 shared_ptr<Trace> Sphere::get_trace(const Ray& ray, real_t dist) const {
 	shared_ptr<Trace> ret(new SphereTrace(*this, ray));

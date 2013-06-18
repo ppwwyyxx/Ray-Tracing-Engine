@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Tue Jun 18 19:33:28 2013 +0800
+// Date: Tue Jun 18 20:18:23 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "viewer.hh"
 #include "space.hh"
@@ -44,7 +44,7 @@ int main(int argc, char* argv[]) {
 	shared_ptr<Texture> t2(new HomoTexture(HomoTexture::BLUE));
 	shared_ptr<Texture> tpic(new ImgTexture("/tmp/tex.jpg", 100, 0.6));
 	shared_ptr<Texture> tred(new HomoTexture(Surface::RED));
-	Plane plane1(InfPlane::XYPLANE, t1);
+	Plane plane1(InfPlane::XYPLANE, tpic);
 
 	const char* fname = "../res/models/fixed.perfect.dragon.100K.0.07.obj";
 	/*
@@ -57,14 +57,12 @@ int main(int argc, char* argv[]) {
 //	REP(i, 100) REP(j, 100) s.add_obj(new Sphere(PureSphere(Vec(i * 2, j * 2, 1), 0.5), t2));
 
 	s.add_obj(new Plane(plane1));
-//	Sphere sphere(PureSphere(Vec(1, 0, 5), 0.5), t2);
+//	Sphere sphere(PureSphere(Vec(1, 0, 1), 0.5), t2);
 	Sphere sphere(PureSphere::TestSphere, t2);
-	/*
-	 *s.add_obj(new Sphere(sphere));
-	 */
+	s.add_obj(new Sphere(sphere));
 
 //	View v(make_shared<Space>(s), Vec(0.2, 0, 12), Vec(0, 0, 2), 10, Geometry(w, h));
-	View v(make_shared<Space>(s), Vec(-3.3, 7, 0.6), Vec(-3.2, 0, 0), 2, Geometry(w, h));
+	View v(make_shared<Space>(s), Vec(-10.3, -34, 7.37), Vec(-1.47, 0, 1.23), 10, Geometry(w, h));
 	CVViewer viewer(v);
 	viewer.view();
 }
