@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Tue Jun 18 09:55:33 2013 +0800
+// Date: Tue Jun 18 10:14:41 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "viewer.hh"
 #include "space.hh"
@@ -36,7 +36,7 @@ int main(int argc, char* argv[]) {
 	shared_ptr<Texture> tred(new HomoTexture(Surface::RED));
 	Plane plane1(InfPlane::XYPLANE, t1);
 
-	Mesh mesh("../res/models/fixed.perfect.dragon.100K.0.07.obj", Vec(0, 0, 2), 5);
+	Mesh mesh("../res/zyk/teapot.obj", Vec(0, 0, 2), 5);
 	mesh.set_texture(tred);
 	mesh.finish_add();
 	cout << mesh.get_aabb() << endl;

@@ -1,5 +1,5 @@
 // File: view.hh
-// Date: Tue Apr 09 10:15:39 2013 +0800
+// Date: Tue Jun 18 10:13:34 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -23,9 +23,9 @@ class View {
 	public:
 		std::shared_ptr<Space> sp;
 		Vec view_point;
-		Vec dir_w, dir_h;
 		Vec mid;
 		real_t size;
+		Vec dir_w, dir_h;
 
 		View(const std::shared_ptr<Space> m_sp, const Vec& m_view_point,
 				const Vec& m_mid, real_t w, const Geometry& m_geo);
@@ -35,6 +35,8 @@ class View {
 		void twist(int angle); // -180 ~ 180
 
 		void rotate(int angle); // -180 ~ 180
+
+		void shift(real_t dist, bool horiz);
 
 		Color render(int i, int j, bool debug = false) const;	// i row j column
 

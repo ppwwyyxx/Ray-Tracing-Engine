@@ -1,5 +1,5 @@
 // File: cvrender.cc
-// Date: Mon Jun 17 21:39:11 2013 +0800
+// Date: Tue Jun 18 10:19:50 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <opencv2/opencv.hpp>
@@ -11,19 +11,26 @@
 #include "lib/Timer.hh"
 using namespace cv;
 
+
+#define KEY_EXIT -1
+#define KEY_ESC 27
+#define KEY_S 115
+#define KEY_Q 113
+
+#define KEY_J 106
+#define KEY_K 107
+#define KEY_H 104
+#define KEY_L 108
 #define KEY_UP 65362
 #define KEY_DOWN 65364
 #define KEY_LEFT 65361
 #define KEY_RIGHT 65363
-#define KEY_EXIT -1
-#define KEY_ESC 27
-#define KEY_S 115
-#define KEY_J 106
-#define KEY_K 107
-#define KEY_Q 113
+#define KEY_plus 61
+#define KEY_minus 45
 
 #define VIEWER_ANGLE 30
 #define ZOOMING 1.2
+#define SHIFT_DISTANCE 20
 
 
 int CVRender::finish() {
@@ -74,6 +81,7 @@ void CVViewer::view() {
 		bool rerender = false;
 		while (!rerender) {
 			int ret = r.finish();
+			rerender = true;
 			switch (ret) {
 				case KEY_EXIT:
 				case KEY_Q:
@@ -84,33 +92,41 @@ void CVViewer::view() {
 					break;
 				case KEY_LEFT:
 					v.rotate(VIEWER_ANGLE);
-					rerender = true;
 					break;
 				case KEY_RIGHT:
 					v.rotate(-VIEWER_ANGLE);
-					rerender = true;
 					break;
 				case KEY_UP:
 					v.twist(VIEWER_ANGLE);
-					rerender = true;
 					break;
 				case KEY_DOWN:
 					v.twist(-VIEWER_ANGLE);
-					rerender = true;
 					break;
 				case KEY_S:
 					r.save();
+					rerender = false;
 					print_debug("saved\n");
 					break;
 				case KEY_J:
-					v.zoom(1 / ZOOMING);
-					rerender = true;
+					v.shift(-SHIFT_DISTANCE, false);
 					break;
 				case KEY_K:
+					v.shift(SHIFT_DISTANCE, false);
+					break;
+				case KEY_H:
+					v.shift(-SHIFT_DISTANCE, true);
+					break;
+				case KEY_L:
+					v.shift(SHIFT_DISTANCE, true);
+					break;
+				case KEY_plus:
 					v.zoom(ZOOMING);
-					rerender = true;
+					break;
+				case KEY_minus:
+					v.zoom(1.0 / ZOOMING);
 					break;
 				default:
+					rerender = false;
 					cout << ret << endl;
 					break;
 			}

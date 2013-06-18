@@ -1,18 +1,15 @@
 // File: view.cc
-// Date: Mon Jun 17 19:06:29 2013 +0800
+// Date: Tue Jun 18 10:13:50 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "view.hh"
 
 using namespace std;
 
-View::View(const std::shared_ptr<Space> m_sp, const Vec& m_view_point,
-				const Vec& m_mid, real_t w, const Geometry& m_geo):
-			geo(m_geo)
-{
-	view_point = m_view_point, sp = m_sp, mid = m_mid, size = w;
-	Vec norm = (view_point - mid).get_normalized();
-	Vec tmp;
+View::View(const std::shared_ptr<Space> _sp, const Vec& _view_point,
+				const Vec& _mid, real_t _size, const Geometry& m_geo):
+			geo(m_geo), sp(_sp), view_point(_view_point), mid(_mid), size(_size)
+{ Vec norm = (view_point - mid).get_normalized(); Vec tmp;
 	if ((fabs(norm.y) > EPS) || (fabs(norm.x) > EPS))
 		tmp = Vec(-norm.y, norm.x, 0);
 	else
@@ -45,7 +42,6 @@ void View::twist(int angle) {
 	resume_dir_vector();
 }
 
-
 void View::zoom(real_t ratio) {
 	ratio = 1.0 / ratio;
 	size *= ratio;
@@ -63,6 +59,11 @@ void View::rotate(int angle) {
 	view_point = mid + norm * (view_point - mid).mod();
 	m_assert(fabs(dir_w.sqr()) - 1 < EPS);
 	dir_w = -norm.cross(dir_h);
-
 	resume_dir_vector();
+}
+
+void View::shift(real_t dist, bool horiz) {
+	Vec diff = (horiz ? dir_w : dir_h) * dist;
+	view_point = view_point + diff;
+	mid = mid + diff;
 }
