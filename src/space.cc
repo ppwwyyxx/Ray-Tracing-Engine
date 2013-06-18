@@ -1,5 +1,5 @@
 // File: space.cc
-// Date: Tue Jun 18 17:34:31 2013 +0800
+// Date: Tue Jun 18 19:23:43 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <limits>
@@ -49,7 +49,8 @@ void Space::init() {		// called from View::View()
 					return p->infinity;
 					}), objs.end());
 
-		infinite_obj.push_back(rdptr(new KDTree(objs, AABB(bound_min, bound_max))));
+		if (objs.size())
+			infinite_obj.push_back(rdptr(new KDTree(objs, AABB(bound_min, bound_max))));
 		objs = infinite_obj;
 	}
 }

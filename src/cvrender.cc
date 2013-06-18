@@ -1,9 +1,10 @@
 // File: cvrender.cc
-// Date: Tue Jun 18 18:02:56 2013 +0800
+// Date: Tue Jun 18 19:37:43 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <opencv2/opencv.hpp>
 #include <omp.h>
+#include <algorithm>
 
 #include "render/cvrender.hh"
 #include "viewer.hh"
@@ -34,14 +35,19 @@ using namespace cv;
 #define SHIFT_DISTANCE 20
 
 
+CVRender::CVRender(const Geometry &m_g):
+	RenderBase(m_g) {
+		img.create(m_g.h, m_g.w, CV_8UC3);
+		img.setTo(Scalar(0, 0, 0));
+}
+
 int CVRender::finish() {
 	imshow("show", img);
 	int k = waitKey(0);
 	return k;
 }
 
-void CVRender::save(const char* fname)
-{ imwrite(fname, img); }
+void CVRender::save(const char* fname) { imwrite(fname, img); }
 
 void CVRender::_write(int x, int y, const Color& c) {
 	// bgr color space
@@ -50,31 +56,70 @@ void CVRender::_write(int x, int y, const Color& c) {
 	img.ptr<uchar>(y)[x * 3 + 2] = c.x * 255;
 }
 
-CVRender::CVRender(const Geometry &m_g):
-	RenderBase(m_g) {
-		img.create(m_g.h, m_g.w, CV_8UC3);
-		img.setTo(Scalar(0, 0, 0));
+Color CVRender::get(const Mat& img, int i, int j) const
+{ return Color(img.ptr<uchar>(j)[i * 3] / 255.0,
+		img.ptr<uchar>(j)[i * 3 + 1] / 255.0,
+		img.ptr<uchar>(j)[i * 3 + 2] / 255.0); }
+
+/*
+ *void CVRender::antialias() {
+ *    float kernel[9] = {1, 2, 1,
+ *                     2, 4, 2,
+ *                     1, 2, 1};
+ *    double sum = std::accumulate(kernel, kernel + 9, 0);
+ *    REP(k, 9) kernel[k] /= sum;
+ *
+ *    Mat km = Mat(3, 3, CV_32F, kernel);
+ *    Mat dst;
+ *    dst.create(img.size(), img.type());
+ *    filter2D(img, dst, img.depth(), km);
+ *    img = dst;
+ *}
+ */
+
+void CVRender::antialias() {
+	float kernel[9] = {1, 2, 1,
+					 2, 4, 2,
+					 1, 2, 1};
+	double sum = std::accumulate(kernel, kernel + 9, 0);
+	REP(k, 9) kernel[k] /= sum;
+
+	vector<Coor> cand;
+
+	REPL(i, 1, img.size().width - 1) REPL(j, 1, img.size().height - 1) {
+		Color col = get(img, i, j);
+		real_t s = 0;
+		for (int di : {-1, 0, 1}) for (int dj : {-1, 0, 1}) {
+			Color newcol = get(img, i + di, j + dj);
+			s += (newcol - col).sqr();
+		}
+		if (s > 5) cand.push_back(Coor(i, j));
+	}
+	Mat dst = img;
+	for (auto &k : cand) {
+		Color newcol = Color::BLACK;
+		for (int di : {-1, 0, 1}) for (int dj : {-1, 0, 1})
+			newcol += get(dst, k.x + di, k.y + dj) * kernel[(di + 1) * 3 + dj + 1];
+		_write(k.x, k.y, newcol);
+	}
+
 }
 
 void CVViewer::render_all() {
 	Timer timer;
-	/*
-	 *int i = 230, j = 230;
-	 *v.render(i, j, true);
-	 */
-
 #pragma omp parallel for schedule(dynamic)
 	REP(i, geo.h) {
-		if (omp_get_thread_num() == 0) {
-			print_debug("progress: %d %%\r", (i * 100 / geo.h));
-			fflush(stderr);
+		if (!omp_get_thread_num()) {
+			printf("progress: %d %%\r", (i * 100 / geo.h));
+			fflush(stdout);
 		}
 		REP(j, geo.w) {
 			Color col = v.render(i, j);
 			r.write(j, i, col);
 		}
 	}
-	print_debug("Spend %lf seconds\n", timer.get_time());
+	printf("Spend %lf seconds\n", timer.get_time());
+//	r.antialias();
 }
 
 void CVViewer::view() {
@@ -88,9 +133,9 @@ void CVViewer::view() {
 			switch (ret) {
 				case KEY_EXIT:
 				case KEY_Q:
-				/*
-				 *case KEY_ESC:
-				 */
+					/*
+					 *case KEY_ESC:
+					 */
 					return;
 					break;
 				case KEY_S:
@@ -142,3 +187,4 @@ void CVViewer::view() {
 		}
 	}
 }
+

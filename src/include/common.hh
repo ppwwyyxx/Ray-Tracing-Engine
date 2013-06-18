@@ -1,5 +1,5 @@
 // File: common.hh
-// Date: Tue Jun 18 17:35:00 2013 +0800
+// Date: Tue Jun 18 18:56:54 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -15,7 +15,7 @@
 
 const real_t DEFAULT_TRACING_WEIGHT_THRESHOLD = EPS;
 const real_t AMBIENT_FACTOR = 0.03;
-const real_t AIR_BEER_DENSITY = 0.05;
+const real_t AIR_BEER_DENSITY = 0.03;
 const real_t DEFAULT_SPECULAR = 0.4;
 const real_t REFL_DIFFUSE_FACTOR = 0.3;
 const real_t REFL_DECAY = 0.01;
