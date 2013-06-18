@@ -1,5 +1,5 @@
 // File: kdtree.cc
-// Date: Tue Jun 18 11:59:02 2013 +0800
+// Date: Tue Jun 18 14:58:37 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include <algorithm>
 #include <omp.h>
@@ -18,12 +18,7 @@ class KDTree::Node {
 		Node(const AABB& _box, Node* p1 = nullptr, Node* p2 = nullptr) :
 			box(_box), child{p1, p2} { }
 
-		~Node() {
-			/*
-			 *if (child[0] != nullptr) delete child[0];
-			 *if (child[1] != nullptr) delete child[1];
-			 */
-		}
+		~Node() { delete child[0]; delete child[1]; }
 
 		bool leaf() const
 		{ return child[0] == nullptr && child[1] == nullptr; }
@@ -34,7 +29,7 @@ class KDTree::Node {
 		void add_obj(rdptr obj)
 		{ objs.push_back(obj); }
 
-		shared_ptr<Trace> get_trace(const Ray& ray, real_t inter_dist) const {
+		shared_ptr<Trace> get_trace(const Ray& ray, real_t inter_dist, real_t max_dist = -1) const {
 			/*
 			 *print_debug("in get_trace\n");
 			 */
@@ -45,7 +40,7 @@ class KDTree::Node {
 				shared_ptr<Trace> ret;
 
 				for (auto & obj : objs) {
-					auto tmp = obj->get_trace(ray);
+					auto tmp = obj->get_trace(ray, max_dist);
 					if (tmp) {
 						real_t d = tmp->intersection_dist();
 						if (update_min(min, d)) ret = tmp;
@@ -61,8 +56,8 @@ class KDTree::Node {
 
 			Node* ch0 = child[first_met], *ch1 = child[1 - first_met];
 			if (!ch0 || !ch0->box.intersect(ray, mind, inside)) ch0 = nullptr;
-			if (ch0) {
-				auto ret = ch0->get_trace(ray, mind);
+			if (ch0 && (max_dist == -1 || mind < max_dist)) {
+				auto ret = ch0->get_trace(ray, mind, max_dist);
 				if (ret) {
 					if (ray.debug) {
 						cout << "ray intersect with box " << ch0->box << endl;
@@ -98,8 +93,8 @@ class KDTree::Node {
 			 *    m_assert(false);
 			 *}
 			 */
-			if (ch1) {
-				auto ret = ch1->get_trace(ray, mind2);
+			if (ch1 && (max_dist == -1 || mind2 < max_dist)) {
+				auto ret = ch1->get_trace(ray, mind2, max_dist);
 				if (ret) {
 					if (ray.debug) {
 						cout << "ray intersect with box " << ch0->box << endl;
@@ -134,11 +129,12 @@ KDTree::KDTree(const vector<rdptr>& objs, const AABB& space) {
 	print_debug("build tree takes %lf seconds\n", timer.get_time());
 }
 
-shared_ptr<Trace> KDTree::get_trace(const Ray& ray) const {
+shared_ptr<Trace> KDTree::get_trace(const Ray& ray, real_t max_dist) const {
 	real_t mind; bool inside;
 	if (!(root->box.intersect(ray, mind, inside)))
 		return nullptr;
-	return root->get_trace(ray, mind);
+	if (mind > max_dist && max_dist != -1) return nullptr;
+	return root->get_trace(ray, mind, max_dist);
 }
 
 AAPlane KDTree::cut(const vector<RenderWrapper>& objs, int depth) const {
@@ -162,8 +158,8 @@ KDTree::Node* KDTree::build(const vector<RenderWrapper>& objs, const AABB& box, 
 
 	Node* ret = new Node(box);
 
-	if (depth > KDTREE_MAX_DEPTH) return nullptr;
-	if (objs.size() < KDTREE_TERMINATE_OBJ_CNT) {
+//	if (depth > KDTREE_MAX_DEPTH) return nullptr;
+	if (objs.size() <= KDTREE_TERMINATE_OBJ_CNT) {
 		ADDOBJ;
 		return ret;
 	}
@@ -274,14 +270,12 @@ KDTree::Node* KDTree::build(const vector<RenderWrapper>& objs, const AABB& box, 
 	// end of algo 2
 
 
+//	print_debug("depth: %d, lsize: %d, rsize: %d\n", depth, (int)objl.size(), (int)objr.size());
 	Node *lch = build(move(objl), par.first, depth + 1),
 		 *rch = build(move(objr), par.second, depth + 1);
 	ret->child[0] = lch, ret->child[1] = rch;
 	if (ret->leaf()) ADDOBJ;		// add obj to leaf node
 
-	/*
-	 *print_debug("depth: %d, lsize: %d, rsize: %d\n", depth, (int)objl.size(), (int)objr.size());
-	 */
 	return ret;
 #undef ADDOBJ
 }

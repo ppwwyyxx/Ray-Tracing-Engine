@@ -1,5 +1,5 @@
 // File: mesh.cc
-// Date: Tue Jun 18 11:58:42 2013 +0800
+// Date: Tue Jun 18 14:59:06 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <algorithm>
@@ -27,11 +27,14 @@ void Mesh::transform_vtxs() {
 	bound_max = pivot + (bound_max + sum - pivot) * zfactor;
 }
 
-shared_ptr<Trace> Mesh::get_trace(const Ray& ray) const {
+shared_ptr<Trace> Mesh::get_trace(const Ray& ray, real_t dist) const {
 	if (use_tree)
-		return tree->get_trace(ray);
+		return tree->get_trace(ray, dist);
 	shared_ptr<Trace> ret(new MeshTrace(*this, ray));
-	if (ret->intersect()) return ret;
+	if (ret->intersect()) {
+		if (dist == -1 || ret->intersection_dist() < dist)
+			return ret;
+	}
 	return nullptr;
 }
 

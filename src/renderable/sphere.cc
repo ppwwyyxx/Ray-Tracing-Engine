@@ -1,5 +1,5 @@
 // File: sphere.cc
-// Date: Fri Jun 14 22:23:01 2013 +0800
+// Date: Tue Jun 18 14:43:45 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "renderable/sphere.hh"
@@ -7,10 +7,12 @@ using namespace std;
 
 const PureSphere PureSphere::TestSphere(Vec(0, 0, 3), 3);
 
-shared_ptr<Trace> Sphere::get_trace(const Ray& ray) const {
+shared_ptr<Trace> Sphere::get_trace(const Ray& ray, real_t dist) const {
 	shared_ptr<Trace> ret(new SphereTrace(*this, ray));
-	if (ret->intersect())
-		return  ret;
+	if (ret->intersect()) {
+		if (dist == -1 || ret->intersection_dist() < dist)
+			return  ret;
+	}
 	return nullptr;
 }
 

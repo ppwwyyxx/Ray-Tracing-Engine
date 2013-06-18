@@ -1,9 +1,8 @@
 // File: space.cc
-// Date: Mon Jun 17 23:54:45 2013 +0800
+// Date: Tue Jun 18 14:38:03 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <limits>
-
 #include "space.hh"
 
 using namespace std;
@@ -14,8 +13,6 @@ void Space::init() {		// called from View::View()
 	for (const auto &i : lights)
 		ambient += i->color * i->intensity;
 	ambient *= AMBIENT_FACTOR;
-
-//	KDTree tree(objs, AABB::get_inf());
 }
 
 Color Space::trace(const Ray& ray, real_t dist, int depth) {

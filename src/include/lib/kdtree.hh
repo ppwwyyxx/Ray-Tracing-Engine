@@ -1,5 +1,5 @@
 // File: kdtree.hh
-// Date: Tue Jun 18 11:59:01 2013 +0800
+// Date: Tue Jun 18 14:58:21 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -25,7 +25,7 @@ class KDTree {
 
 		KDTree(const vector<shared_ptr<RenderAble>>& objs, const AABB& space);
 
-		shared_ptr<Trace> get_trace(const Ray& ray) const;
+		shared_ptr<Trace> get_trace(const Ray& ray, real_t max_dist = -1) const;
 
 	private:
 		Node* build(const vector<RenderWrapper>& objs, const AABB& box, int depth);

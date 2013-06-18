@@ -1,5 +1,5 @@
 // File: aabb.hh
-// Date: Mon Jun 17 19:44:07 2013 +0800
+// Date: Tue Jun 18 14:14:03 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -70,7 +70,9 @@ class AABB {
 
 		std::pair<AABB, AABB> cut(const AAPlane& pl) const {
 			AABB l = *this, r = *this;
-			if (!BETW(pl.pos, min[pl.axis], max[pl.axis]))
+			if (!BETW(pl.pos, min[pl.axis] + 2 * EPS, max[pl.axis] - 2 * EPS))
+				// !! otherwise, l.max or r.min can be equal to *this.max / *this.min,
+				// resulting a same boundbox in child
 				throw "Outside";
 			l.max[pl.axis] = pl.pos + EPS;		// to loose
 			r.min[pl.axis] = pl.pos - EPS;

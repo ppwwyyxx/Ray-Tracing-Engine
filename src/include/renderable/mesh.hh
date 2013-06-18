@@ -1,5 +1,5 @@
 // File: mesh.hh
-// Date: Tue Jun 18 11:32:44 2013 +0800
+// Date: Tue Jun 18 14:40:20 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -54,7 +54,7 @@ class Mesh: public RenderAble {
 
 		void finish_add();
 
-		shared_ptr<Trace> get_trace(const Ray& ray) const;
+		shared_ptr<Trace> get_trace(const Ray& ray, real_t max_dist = -1) const;
 
 		AABB get_aabb() const;
 

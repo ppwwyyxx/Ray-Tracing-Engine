@@ -1,5 +1,5 @@
 // File: plane.hh
-// Date: Fri Jun 14 22:12:45 2013 +0800
+// Date: Tue Jun 18 14:39:40 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -31,7 +31,7 @@ class Plane : public RenderAble {
 
 		void set_finite(real_t radius, Vec center);
 
-		shared_ptr<Trace> get_trace(const Ray& ray) const;
+		shared_ptr<Trace> get_trace(const Ray& ray, real_t max_dist = -1) const;
 
 		AABB get_aabb() const;
 

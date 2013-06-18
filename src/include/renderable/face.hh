@@ -1,5 +1,5 @@
 // File: face.hh
-// Date: Tue Jun 18 10:54:48 2013 +0800
+// Date: Tue Jun 18 14:40:01 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -60,7 +60,7 @@ class Face : public RenderAble {
 			m_assert(!tri.e1.is_zero());
 		}
 
-		shared_ptr<Trace> get_trace(const Ray& ray) const;
+		shared_ptr<Trace> get_trace(const Ray& ray, real_t max_dist = -1) const;
 
 		Vec get_smooth_norm(real_t gx, real_t gy) const;
 
