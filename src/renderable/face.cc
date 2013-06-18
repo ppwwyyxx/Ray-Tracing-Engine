@@ -1,5 +1,5 @@
 // File: face.cc
-// Date: Tue Jun 18 10:54:47 2013 +0800
+// Date: Tue Jun 18 11:04:38 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "renderable/mesh.hh"
@@ -9,7 +9,7 @@ using namespace std;
 real_t Triangle::get_intersect(const Ray& ray, real_t& gx, real_t& gy) const {
 	// Ray-triangle intersection - Brian Curless
 	//  -1 means no intersect
-	// Return distance and barycentric coordinates
+	// Return distance and barycentric coordinates for smoothing
 	/*
 	 *print_debug("norm: %lf, %lf, %lf", norm.x, norm.y, norm.z);
 	 *cout << v << " " << e1 << " "    << e2 << endl;
@@ -31,8 +31,7 @@ real_t Triangle::get_intersect(const Ray& ray, real_t& gx, real_t& gy) const {
 	if (gy < -EPS || gx + gy > 1 + EPS) return -1;
 	// now definitely inside triangle
 
-	m_assert((ray.get_dist(dist) - (v * (1 - gx - gy) + (v + e1) * gx +
-			(v + e2) * gy)).sqr() < EPS);	 // check coordinates
+	m_assert((ray.get_dist(dist) - (v * (1 - gx - gy) + (v + e1) * gx + (v + e2) * gy)).sqr() < EPS);	 // check coordinates
 	return dist;
 }
 
@@ -47,10 +46,12 @@ AABB Face::get_aabb() const {
 	Vec eps(2 * EPS, 2 * EPS, 2 * EPS);		// TODO NEED BETTER METHOD
 	ret.update_min(tri.v - eps);
 	ret.update_max(tri.v + eps);
-	ret.update_min(tri.get(0) - eps);
-	ret.update_max(tri.get(0) + eps);
-	ret.update_min(tri.get(1) - eps);
-	ret.update_max(tri.get(1) + eps);
+	Vec now = tri.get(0);
+	ret.update_min(now - eps);
+	ret.update_max(now + eps);
+	now = tri.get(1);
+	ret.update_min(now - eps);
+	ret.update_max(now + eps);
 	return ret;
 }
 
@@ -84,6 +85,7 @@ Vec FaceTrace::normal() {		// norm to the ray side
 		ret = face.get_smooth_norm(gx, gy);
 	else
 		ret = face.norm.get_normalized();
+
 	if (Vec(face.tri.v, ray.orig).dot(ret) < 0)
 		return -ret;
 	return ret;

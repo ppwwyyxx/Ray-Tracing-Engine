@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Tue Jun 18 10:57:41 2013 +0800
+// Date: Tue Jun 18 11:48:55 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "viewer.hh"
 #include "space.hh"
@@ -26,9 +26,12 @@ int main(int argc, char* argv[]) {
 	int w, h;
 	w = h = 500;
 	Space s;
-	s.add_light(Light(Vec(0, -10, 8), Color::WHITE, 2.2));
+	s.add_light(Light(Vec(0, -10, 8), Color::WHITE, 2.0));
+	s.add_light(Light(Vec(0, 10, 8), Color::WHITE, 2.0));
+	s.add_light(Light(Vec(-10, 0, 8), Color::WHITE, 2.0));
+	s.add_light(Light(Vec(10, 0, 8), Color::WHITE, 2.0));
 	s.add_light(Light(Vec(0, 0, 9), Color::WHITE, 1.5));
-	s.add_light(Light(Vec(0, -3, 4), Color::WHITE, 1.5));
+	s.add_light(Light(Vec(0, -3, -4), Color::WHITE, 8));
 
 
 	shared_ptr<Texture> t1(new GridTexture(GridTexture::BLACK_WHITE));
@@ -36,9 +39,10 @@ int main(int argc, char* argv[]) {
 	shared_ptr<Texture> tred(new HomoTexture(Surface::RED));
 	Plane plane1(InfPlane::XYPLANE, t1);
 
-	Mesh mesh("../res/zyk/teapot.obj", Vec(0, 0, 2), 5);
+	//Mesh mesh("../res/models/Buddha.obj", Vec(0, 0, 2), 5);
+	Mesh mesh("sx.obj", Vec(0, 0, 2), 5);
 	mesh.set_texture(tred);
-	mesh.smooth = true;
+	cout << mesh.get_aabb() << endl;
 	mesh.finish_add();
 	cout << mesh.get_aabb() << endl;
 	s.add_obj(new Mesh(mesh));

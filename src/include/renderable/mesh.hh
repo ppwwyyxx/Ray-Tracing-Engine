@@ -1,5 +1,5 @@
 // File: mesh.hh
-// Date: Tue Jun 18 10:58:10 2013 +0800
+// Date: Tue Jun 18 11:32:44 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -29,6 +29,7 @@ class Mesh: public RenderAble {
 		Mesh(std::string fname, const Vec& _pivot, real_t _zsize, const shared_ptr<Texture>& _texture = nullptr);
 
 		void add_vertex(const Vec& p) {
+			//cout << p << endl;
 			int id = vtxs.size();
 			vtxs.push_back(Vertex(p, id));
 			bound_min.update_min(p), bound_max.update_max(p);
