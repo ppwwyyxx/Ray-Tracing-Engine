@@ -1,5 +1,5 @@
 // File: cvrender.cc
-// Date: Tue Jun 18 19:37:43 2013 +0800
+// Date: Wed Jun 19 00:12:29 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <opencv2/opencv.hpp>
@@ -29,10 +29,13 @@ using namespace cv;
 #define KEY_RIGHT 65363
 #define KEY_plus 61
 #define KEY_minus 45
+#define KEY_lbracket 91
+#define KEY_rbracket 93
 
 #define VIEWER_ANGLE 15
 #define ZOOMING 1.2
 #define SHIFT_DISTANCE 20
+#define SHIFT_SCREEN 3
 
 
 CVRender::CVRender(const Geometry &m_g):
@@ -145,7 +148,7 @@ void CVViewer::view() {
 					break;
 				case KEY_P:
 					cout << "viewpoint: " << v.view_point << endl;
-					cout << "middle: " << v.mid << endl;
+					cout << "middle: " << v.mid <<", size: " << v.size << endl;
 					rerender = false;
 					break;
 				case KEY_LEFT:
@@ -177,6 +180,12 @@ void CVViewer::view() {
 					break;
 				case KEY_minus:
 					v.zoom(1.0 / ZOOMING);
+					break;
+				case KEY_lbracket:
+					v.move_screen(-SHIFT_SCREEN);
+					break;
+				case KEY_rbracket:
+					v.move_screen(SHIFT_SCREEN);
 					break;
 				default:
 					rerender = false;

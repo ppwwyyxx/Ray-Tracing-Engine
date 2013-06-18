@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Tue Jun 18 23:38:46 2013 +0800
+// Date: Wed Jun 19 00:19:58 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "viewer.hh"
 #include "space.hh"
@@ -15,6 +15,7 @@ using namespace std;
 void test_shadow() {
 	int w = 500, h = 500;
 	Space s;
+	s.use_soft_shadow = true;
 	s.add_light(Light(Vec(0, -10, 12), Color::WHITE, 2.0));
 
 	shared_ptr<Texture> t2(new HomoTexture(HomoTexture::BLUE));
@@ -32,15 +33,18 @@ void ball_scene() {
 	Space s;
 	s.add_light(Light(Vec(0, -10, 12), Color::WHITE, 2.0));
 	//s.add_light(Light(Vec(0, 10, 8), Color::WHITE, 2.0));
-	s.add_light(Light(Vec(50, 10, 8), Color::WHITE, 2.0));
+	s.add_light(Light(Vec(9, 2, 50), Color::WHITE, 2.0));
+	s.add_light(Light(Vec(-9, 2, 50), Color::WHITE, 2.0));
+	s.add_light(Light(Vec(-9, -2, 50), Color::WHITE, 2.0));
+	s.add_light(Light(Vec(9, -2, 50), Color::WHITE, 2.0));
 
-	shared_ptr<Texture> tpic(new ImgTexture("../res/texture.jpg", 100, 0.6));
+	shared_ptr<Texture> tpic(new ImgTexture("../res/texture.jpg", 80, 1));
 	s.add_obj(new Plane(InfPlane::XYPLANE, tpic));
 
-	shared_ptr<Texture> tball(new HomoTexture(Surface(0, 40, 0.5, Color::BLUE, Color::WHITE * DEFAULT_SPECULAR)));
+	shared_ptr<Texture> tball(new HomoTexture(Surface(0, 40, 0.5, Color::CYAN * 0.9, Color::WHITE * DEFAULT_SPECULAR)));
 
-	REP(i, 10) REP(j, 2) s.add_obj(new Sphere(PureSphere(Vec(i * 3, j * 6, 3), 1), tball));
-	View v(make_shared<Space>(s), Vec(-8.5, -7.8, 4.75), Vec(3.0, -2, 3.6), 8, Geometry(w, h));
+	REP(i, 10) REP(j, 2) s.add_obj(new Sphere(PureSphere(Vec(j * 6, 1, i * 3), 1), tball));
+	View v(make_shared<Space>(s), Vec(11, -13.3, 39.75), Vec(2, 7.3, 10.8), 20, Geometry(w, h));
 	CVViewer viewer(v);
 	viewer.view();
 }

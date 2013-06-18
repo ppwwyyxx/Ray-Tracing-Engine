@@ -1,5 +1,5 @@
 // File: space.hh
-// Date: Tue Jun 18 17:50:06 2013 +0800
+// Date: Tue Jun 18 23:49:42 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -19,10 +19,6 @@ class Space {
 		vector<shared_ptr<Light>>  lights;
 		vector<rdptr> objs;
 
-		// config
-		bool use_tree = true;
-		bool use_soft_shadow = false;
-
 		int max_depth = MAX_RECURSIVE_DEPTH;
 		int now_ray_count;
 		Color ambient;		// ambient in this space
@@ -30,6 +26,10 @@ class Space {
 		Vec bound_min = Vec::max(), bound_max = -Vec::max();
 
 	public:
+		// config
+		bool use_tree = true;
+		bool use_soft_shadow = false;
+
 		Space(){ }
 
 		~Space(){}

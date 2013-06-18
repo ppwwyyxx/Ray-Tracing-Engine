@@ -1,5 +1,5 @@
 // File: view.cc
-// Date: Tue Jun 18 23:10:12 2013 +0800
+// Date: Wed Jun 19 00:14:09 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "view.hh"
@@ -14,7 +14,7 @@ View::View(const std::shared_ptr<Space> _sp, const Vec& _view_point,
 		tmp = Vec(-norm.y, norm.x, 0);
 	else
 		tmp = Vec(-norm.z, 0, norm.x);
-	dir_w = tmp.get_normalized();
+	dir_w = tmp;
 	dir_h = norm.cross(dir_w);
 	m_assert(fabs(dir_h.sqr()) - 1 < EPS);
 
@@ -25,10 +25,30 @@ View::View(const std::shared_ptr<Space> _sp, const Vec& _view_point,
 Color View::render(int i, int j, bool debug) const {
 	Vec corner = mid - dir_h * (geo.h / 2) - dir_w * (geo.w / 2);
 	Vec dest = corner + dir_h * (geo.h - 1 - i) + dir_w * j;
-	Ray ray(view_point, dest - view_point, 1, true);
-	if (debug) ray.debug = true;
-	m_assert(ray.orig.isfinite() && ray.dir.isfinite());
-	return sp->trace(ray);
+	if (!use_dof) {
+		Ray ray(view_point, dest - view_point, 1, true);
+		if (debug) ray.debug = true;
+		return sp->trace(ray);
+	} else {
+		// intersection point with camera screen
+		Vec intersec = view_point + (dest - view_point) * DOF_SCREEN_DIST_FACTOR;
+		real_t delta_theta = 2 * M_PI / DOF_SAMPLE_CNT,
+			   theta = 0;
+		Color ret;
+		REP(k, DOF_SAMPLE_CNT) {
+			Vec diff = dir_w * cos(theta) + dir_w * sin(theta);
+			diff.normalize();
+			diff = diff * DOF_SAMPLE_RADIUS;
+			theta += delta_theta;
+
+			Vec neworig = intersec + diff;
+//			cout << neworig << endl;
+			Ray ray(neworig, dest - neworig, 1, true);
+			ret = ret + sp->trace(ray);
+		}
+		ret = ret / DOF_SAMPLE_CNT;
+		return ret;
+	}
 }
 
 void View::twist(int angle) {
@@ -37,7 +57,7 @@ void View::twist(int angle) {
 	real_t alpha = M_PI * angle / 180;
 	dir_w = dir_w * cos(alpha) + dir_h * sin(alpha);
 	m_assert(fabs(dir_w.sqr() - 1) < EPS);
-	dir_h = norm.cross(dir_w).get_normalized();
+	dir_h = norm.cross(dir_w);
 	resume_dir_vector();
 }
 
@@ -46,8 +66,7 @@ void View::zoom(real_t ratio) {
 	size *= ratio;
 	Vec dir = (view_point - mid);
 	view_point = mid + dir * ratio;
-	dir_w = dir_w * ratio;
-	dir_h = dir_h * ratio;
+	resume_dir_vector();
 }
 
 void View::rotate(int angle) {
@@ -65,4 +84,12 @@ void View::shift(real_t dist, bool horiz) {
 	Vec diff = (horiz ? dir_w : dir_h) * dist;
 	view_point = view_point + diff;
 	mid = mid + diff;
+}
+
+void View::move_screen(real_t dist) {
+	real_t old_dist_to_screen = (mid - view_point).mod();
+	mid = view_point + (mid - view_point).get_normalized() * (old_dist_to_screen + dist);
+	size *= (old_dist_to_screen + dist) / old_dist_to_screen;
+	resume_dir_vector();
+	cout << "new mid" << mid << endl;
 }
