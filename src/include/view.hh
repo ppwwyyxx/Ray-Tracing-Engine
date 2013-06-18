@@ -1,5 +1,5 @@
 // File: view.hh
-// Date: Tue Jun 18 17:27:42 2013 +0800
+// Date: Tue Jun 18 23:09:18 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -20,11 +20,12 @@ class View {
 			dir_w = dir_w * (size / geo.w);
 			dir_h = dir_h * (size / geo.h);
 		}
+
 	public:
 		std::shared_ptr<Space> sp;
 		Vec view_point;
 		Vec mid;
-		real_t size;
+		real_t size;		// length the img cover in the scene
 		Vec dir_w, dir_h;
 
 		View(const std::shared_ptr<Space> m_sp, const Vec& m_view_point,

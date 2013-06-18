@@ -1,5 +1,5 @@
 // File: color.hh
-// Date: Tue Jun 18 17:20:44 2013 +0800
+// Date: Tue Jun 18 23:33:55 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -22,6 +22,8 @@ class Color: public Vector {
 		{ return is_zero(C_EPS); }
 
 		void check() const {
+			if (x < 0 || x > 1 || y < 0 || y > 1 || z < 0 || z > 1)
+				cout << (*this) << endl;
 			m_assert(x >= 0 && x <= 1);
 			m_assert(y >= 0 && y <= 1);
 			m_assert(z >= 0 && z <= 1);

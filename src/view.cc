@@ -1,5 +1,5 @@
 // File: view.cc
-// Date: Tue Jun 18 10:13:50 2013 +0800
+// Date: Tue Jun 18 23:10:12 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "view.hh"
@@ -23,7 +23,6 @@ View::View(const std::shared_ptr<Space> _sp, const Vec& _view_point,
 }
 
 Color View::render(int i, int j, bool debug) const {
-	// XXX pre-caculate to accelerate this!
 	Vec corner = mid - dir_h * (geo.h / 2) - dir_w * (geo.w / 2);
 	Vec dest = corner + dir_h * (geo.h - 1 - i) + dir_w * j;
 	Ray ray(view_point, dest - view_point, 1, true);

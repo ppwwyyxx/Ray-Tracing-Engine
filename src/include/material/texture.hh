@@ -1,5 +1,5 @@
 // File: texture.hh
-// Date: Tue Jun 18 16:46:29 2013 +0800
+// Date: Tue Jun 18 23:35:28 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -24,7 +24,7 @@ class Texture {
 
 class HomoTexture :public Texture {
 	private:
-		const Surface& pty;
+		Surface pty;
 	public:
 		HomoTexture(const Surface& m_pty):
 			pty(m_pty){}
