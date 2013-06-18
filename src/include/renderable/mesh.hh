@@ -1,5 +1,5 @@
 // File: mesh.hh
-// Date: Tue Jun 18 10:53:00 2013 +0800
+// Date: Tue Jun 18 10:58:10 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -12,7 +12,7 @@ class Mesh: public RenderAble {
 	public:
 		// config
 		bool have_inside = false;
-		bool smooth = false;
+		bool smooth = true;
 		bool mapped = false;
 		bool use_tree = false;
 		Vec pivot = Vec::infinity();

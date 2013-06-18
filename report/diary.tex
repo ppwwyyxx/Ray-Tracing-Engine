@@ -1,5 +1,5 @@
 % File: diary.tex
-% Date: Mon Jun 17 19:58:29 2013 +0800
+% Date: Tue Jun 18 10:57:30 2013 +0800
 % Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 \section{过程记录}
 \begin{enumerate}
@@ -88,7 +88,7 @@
 
 \item 按照\cite{kdtree}优化了KDTree的实现之后发现如下左图所示bug, 调试很久后发现两个原因.
   一是建树时选取候选切割平面未偏移\verb|EPS|, 二是包围盒求交存在小bug,少了一个绝对值运算.
-  其中第二个bug还严重影响了速度.
+  其中第二个bug还严重影响了速度,修复后的KDTree相比不用KDTree有了上百倍的速度提升.
 \begin{figure}[H]
   \centering
 \begin{minipage}[b]{0.46\linewidth}
@@ -102,6 +102,20 @@
   \caption{\label{fig:kdtree_bug}}
 \end{figure}
 
+\item 实现了法向量插值. 方法是: 用各面法向量平均得到顶点法向量,用顶点法向量插值得到面片上各点法向量.插值前后的效果如下所示:
+\begin{figure}[H]
+\begin{minipage}[b]{0.46\linewidth}
+  \centering
+  \includegraphics[width=\textwidth]{res/rough.png}
+\end{minipage}
+\begin{minipage}[b]{0.46\linewidth}
+  \centering
+  \includegraphics[width=\textwidth]{res/smooth.png}
+\end{minipage}
+
+
+  \caption{\label{fig:smooth}}
+\end{figure}
 
 
 \end{enumerate}

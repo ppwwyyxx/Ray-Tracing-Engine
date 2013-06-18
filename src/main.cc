@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Tue Jun 18 10:54:38 2013 +0800
+// Date: Tue Jun 18 10:57:41 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "viewer.hh"
 #include "space.hh"
@@ -38,7 +38,7 @@ int main(int argc, char* argv[]) {
 
 	Mesh mesh("../res/zyk/teapot.obj", Vec(0, 0, 2), 5);
 	mesh.set_texture(tred);
-	mesh.smooth = false;
+	mesh.smooth = true;
 	mesh.finish_add();
 	cout << mesh.get_aabb() << endl;
 	s.add_obj(new Mesh(mesh));
