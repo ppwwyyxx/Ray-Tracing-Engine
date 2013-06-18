@@ -1,8 +1,9 @@
 // File: space.cc
-// Date: Tue Jun 18 15:13:07 2013 +0800
+// Date: Tue Jun 18 15:43:02 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <limits>
+#include <algorithm>
 #include "space.hh"
 
 using namespace std;
@@ -13,6 +14,19 @@ void Space::init() {		// called from View::View()
 	for (const auto &i : lights)
 		ambient += i->color * i->intensity;
 	ambient *= AMBIENT_FACTOR;
+
+	if (use_tree) {
+		// the final objs contains a kdtree and all the infinite obj
+		vector<rdptr> infinite_obj;
+		for (auto &k : objs) if (k->infinity) infinite_obj.push_back(k);
+		objs.erase(remove_if(objs.begin(), objs.end(),
+					[](const rdptr& p) {
+						return p->infinity;
+					}), objs.end());
+
+		infinite_obj.push_back(rdptr(new KDTree(objs, AABB(bound_min, bound_max))));
+		objs = infinite_obj;
+	}
 }
 
 Color Space::trace(const Ray& ray, real_t dist, int depth) {

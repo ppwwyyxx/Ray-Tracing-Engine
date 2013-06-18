@@ -1,5 +1,5 @@
 // File: space.hh
-// Date: Tue Jun 18 14:28:05 2013 +0800
+// Date: Tue Jun 18 15:44:16 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -19,11 +19,12 @@ class Space {
 		vector<shared_ptr<Light>>  lights;
 		vector<rdptr> objs;
 
+		bool use_tree = true;
+
 		int max_depth = MAX_RECURSIVE_DEPTH;
 		int now_ray_count;
 		Color ambient;		// ambient in this space
 
-		shared_ptr<KDTree> tree;
 		Vec bound_min = Vec::max(), bound_max = -Vec::max();
 
 	public:
@@ -36,9 +37,11 @@ class Space {
 
 		void add_obj(const rdptr& objptr) {
 			objs.push_back(objptr);
-			auto k = objptr->get_aabb();
-			bound_min.update_min(k.min);
-			bound_max.update_max(k.max);
+			if (!objptr->infinity) {
+				auto k = objptr->get_aabb();
+				bound_min.update_min(k.min);
+				bound_max.update_max(k.max);
+			}
 		}
 
 		void add_obj(RenderAble* objptr)

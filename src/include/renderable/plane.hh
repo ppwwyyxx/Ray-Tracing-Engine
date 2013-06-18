@@ -1,5 +1,5 @@
 // File: plane.hh
-// Date: Tue Jun 18 14:39:40 2013 +0800
+// Date: Tue Jun 18 15:40:18 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -11,7 +11,6 @@ using std::shared_ptr;
 
 class Plane : public RenderAble {
 	public:
-		bool infinity = true;		// default is an infinity plane
 		real_t radius = 0;
 		Vec surfdir = Vec::infinity();
 		Vec center = Vec::infinity();
@@ -27,7 +26,7 @@ class Plane : public RenderAble {
 
 		Plane(const InfPlane& _plane, const shared_ptr<Texture>& _texture):
 			Plane(_plane)
-		{ texture = _texture; }
+		{ texture = _texture; infinity = true; }
 
 		void set_finite(real_t radius, Vec center);
 

@@ -1,5 +1,5 @@
 // File: mesh.cc
-// Date: Tue Jun 18 14:59:06 2013 +0800
+// Date: Tue Jun 18 15:21:30 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <algorithm>
@@ -37,9 +37,6 @@ shared_ptr<Trace> Mesh::get_trace(const Ray& ray, real_t dist) const {
 	}
 	return nullptr;
 }
-
-AABB Mesh::get_aabb() const
-{ return AABB(bound_min, bound_max); }
 
 void Mesh::finish_add() {
 	transform_vtxs();

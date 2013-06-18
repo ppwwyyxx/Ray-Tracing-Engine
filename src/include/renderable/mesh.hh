@@ -1,5 +1,5 @@
 // File: mesh.hh
-// Date: Tue Jun 18 14:40:20 2013 +0800
+// Date: Tue Jun 18 15:35:18 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -29,7 +29,6 @@ class Mesh: public RenderAble {
 		Mesh(std::string fname, const Vec& _pivot, real_t _zsize, const shared_ptr<Texture>& _texture = nullptr);
 
 		void add_vertex(const Vec& p) {
-			//cout << p << endl;
 			int id = vtxs.size();
 			vtxs.push_back(Vertex(p, id));
 			bound_min.update_min(p), bound_max.update_max(p);
@@ -56,7 +55,7 @@ class Mesh: public RenderAble {
 
 		shared_ptr<Trace> get_trace(const Ray& ray, real_t max_dist = -1) const;
 
-		AABB get_aabb() const;
+		AABB get_aabb() const { return AABB(bound_min, bound_max); }
 
 	protected:
 		friend class MeshTrace;

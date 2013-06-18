@@ -1,5 +1,5 @@
 // File: kdtree.cc
-// Date: Tue Jun 18 15:12:49 2013 +0800
+// Date: Tue Jun 18 15:21:22 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include <algorithm>
 #include <omp.h>
@@ -122,8 +122,13 @@ class KDTree::Node {
 
 KDTree::KDTree(const vector<rdptr>& objs, const AABB& space) {
 	vector<RenderWrapper> objlist;
-	for (auto & obj : objs)
-		objlist.push_back(RenderWrapper(obj, obj->get_aabb()));
+	for (auto & obj : objs) {
+		m_assert(!obj->infinity);
+		AABB aabb = obj->get_aabb();
+		objlist.push_back(RenderWrapper(obj, aabb));
+		bound_min.update_min(aabb.min), bound_max.update_max(aabb.max);
+	}
+	cout << "kdtree: " << get_aabb() << endl;
 	Timer timer;
 	root = build(move(objlist), space, 0);
 	print_debug("build tree takes %lf seconds\n", timer.get_time());
