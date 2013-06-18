@@ -1,5 +1,5 @@
 // File: space.hh
-// Date: Tue Jun 18 17:35:10 2013 +0800
+// Date: Tue Jun 18 17:50:06 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -21,7 +21,7 @@ class Space {
 
 		// config
 		bool use_tree = true;
-		bool use_soft_shadow = true;
+		bool use_soft_shadow = false;
 
 		int max_depth = MAX_RECURSIVE_DEPTH;
 		int now_ray_count;
