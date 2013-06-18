@@ -1,5 +1,5 @@
 // File: renderable.hh
-// Date: Tue Jun 18 15:21:29 2013 +0800
+// Date: Tue Jun 18 16:00:38 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 
@@ -26,7 +26,7 @@ class RenderAble {
 		shared_ptr<Texture> texture;
 
 		void set_texture(const shared_ptr<Texture>& _texture)
-		{ texture = _texture; }		// XXX is this ok?
+		{ texture = _texture; }
 
 		virtual shared_ptr<Trace> get_trace(const Ray& ray, real_t max_dist = -1) const = 0;
 		// judge visibility and return ptr if visible

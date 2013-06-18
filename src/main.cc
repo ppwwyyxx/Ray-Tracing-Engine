@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Tue Jun 18 15:44:45 2013 +0800
+// Date: Tue Jun 18 16:46:49 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "viewer.hh"
 #include "space.hh"
@@ -38,8 +38,9 @@ int main(int argc, char* argv[]) {
 
 	shared_ptr<Texture> t1(new GridTexture(GridTexture::BLACK_WHITE));
 	shared_ptr<Texture> t2(new HomoTexture(HomoTexture::BLUE));
+	shared_ptr<Texture> tpic(new ImgTexture("/tmp/tex.jpg", 100, 0.6));
 	shared_ptr<Texture> tred(new HomoTexture(Surface::RED));
-	Plane plane1(InfPlane::XYPLANE, t1);
+	Plane plane1(InfPlane::XYPLANE, tpic);
 
 	const char* fname = "../res/models/fixed.perfect.dragon.100K.0.07.obj";
 	//Mesh mesh("../res/models/Buddha.obj", Vec(0, 0, 2), 5);
@@ -70,7 +71,7 @@ int main(int argc, char* argv[]) {
 	 *s.add_obj(new Sphere(sphere));
 	 */
 
-	View v(make_shared<Space>(s), Vec(0.2, 0, 8), Vec(0, 0, 2), 8, Geometry(w, h));
+	View v(make_shared<Space>(s), Vec(0.2, 0, 12), Vec(0, 0, 2), 8, Geometry(w, h));
 	CVViewer viewer(v);
 	viewer.view();
 }

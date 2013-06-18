@@ -1,5 +1,5 @@
 // File: render.hh
-// Date: Thu Jun 13 13:23:41 2013 +0800
+// Date: Tue Jun 18 16:10:49 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 
@@ -28,33 +28,24 @@ class RenderBase {
 			c.check();
 
 			_write(x, y, c);
-			render_cnt ++;
 		}
 
 		void write(Matrix<Color>& m) {
-			for (int i = 0; i < geo.w; i ++)
-				for (int j = 0; j < geo.h; j ++)
-					write(i, j, m[j][i]);
+			REP(i, geo.w) REP(j, geo.h)
+				write(i, j, m[j][i]);
 		}
 
 		void write(ImageReader* r) {
-			m_assert((r->h == geo.h) && (r->w == geo.w));
+			m_assert((r->size.h == geo.h) && (r->size.w == geo.w));
 			Color *dest = r->pixel;
-			for (int i = 0; i < geo.h; i ++)
-				for (int j = 0; j < geo.w; j ++) {
-					write(j, i, *dest);
-					dest ++;
-				}
+			REP(i, geo.h) REP(j, geo.w) {
+				write(j, i, *dest);
+				dest ++;
+			}
 		}
 
 		const Geometry& get_geo() const
 		{ return geo; }
-
-		int get_cnt() const
-		{ return render_cnt; }
-
-	private:
-		int render_cnt = 0;
 
 	protected:
 		Geometry geo;

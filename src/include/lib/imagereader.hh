@@ -1,5 +1,5 @@
-// File: image.hh
-// Date: Wed Apr 10 13:05:49 2013 +0800
+// File: imagereader.hh
+// Date: Tue Jun 18 16:25:59 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -8,18 +8,21 @@
 
 class ImageReader {
 	protected:
-		void init(int m_w, int m_h) {
-			w = m_w, h = m_h;
-			pixel = new Color[w * h];
+		void init(int _w, int _h) {
+			size.w = _w, size.h = _h;
+			pixel = new Color[_w * _h];
 		}
 	public:
-		int w, h;
+		Geometry size;
 		Color* pixel;
 
 		ImageReader(){}
 
-		ImageReader(int m_w, int m_h)
-		{ init(m_w, m_h); }
+		ImageReader(int _w, int _h)
+		{ init(_w, _h); }
+
+		Color get(int x, int y) const
+		{ m_assert(x < size.h && y < size.w); return pixel[x * size.w + y]; }
 
 		~ImageReader()
 		{ delete[] pixel; }

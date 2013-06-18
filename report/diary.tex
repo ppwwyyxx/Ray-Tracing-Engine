@@ -1,5 +1,5 @@
 % File: diary.tex
-% Date: Tue Jun 18 10:57:30 2013 +0800
+% Date: Tue Jun 18 16:45:30 2013 +0800
 % Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 \section{过程记录}
 \begin{enumerate}
@@ -112,10 +112,25 @@
   \centering
   \includegraphics[width=\textwidth]{res/smooth.png}
 \end{minipage}
-
-
-  \caption{\label{fig:smooth}}
 \end{figure}
+
+\item 将KDTree扩展到了整个空间.
+  设计方法是将所有的有限大物体合成为一个``KDTree''物体(因为几何物体及KDTree都继承自\verb|RenderAble|基类),保留无限大物体,再在
+  空间中进行渲染.下图是一个20W面片的龙加上1万个球组成的场景,渲染此图只需1.4s.
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.4]{res/dragonball.png}
+  \caption{\label{fig:dragonball}}
+\end{figure}
+
+\item 加入了图片纹理,设置在平面上.(图中四个亮斑为四个电光源)
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.4]{res/pic_texture.png}
+  \caption{\label{fig:texture}}
+\end{figure}
+
+
 
 
 \end{enumerate}

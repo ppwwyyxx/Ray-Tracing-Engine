@@ -1,5 +1,5 @@
 // File: space.cc
-// Date: Tue Jun 18 15:43:02 2013 +0800
+// Date: Tue Jun 18 16:01:00 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <limits>
@@ -36,7 +36,6 @@ Color Space::trace(const Ray& ray, real_t dist, int depth) {
 		return Color::BLACK;
 
 	m_assert(fabs(ray.dir.sqr() - 1) < EPS);
-	// XXX delete later
 
 	auto first_trace = find_first(ray);
 	if (!first_trace) { return Color::BLACK; }

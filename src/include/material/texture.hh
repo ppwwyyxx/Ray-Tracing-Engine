@@ -1,11 +1,12 @@
 // File: texture.hh
-// Date: Fri Jun 14 10:57:52 2013 +0800
+// Date: Tue Jun 18 16:46:29 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
 
 #include <memory>
 #include "material/surface.hh"
+#include "lib/imagereader.hh"
 using std::shared_ptr;
 using std::make_shared;
 
@@ -57,4 +58,22 @@ class GridTexture : public Texture {
 		}
 
 		static const GridTexture BLACK_WHITE;
+};
+
+class ImgTexture : public Texture {
+	private:
+		MagickReader img;
+		Geometry size;
+		real_t zfactor, illu;
+
+	public:
+		ImgTexture(const char* fname, real_t _zoom, real_t _illu = 1):
+			// _zoom > 1
+			img(fname), size(img.size), zfactor(_zoom), illu(_illu) {}
+
+		shared_ptr<Surface> get_property(real_t x, real_t y) const {
+			int int_x = round(zfactor * x) - size.h / 2, int_y = (zfactor * y) - size.w / 2;
+			Color col = img.get((int_x % size.h + size.h) % size.h, (int_y % size.w + size.w) % size.w);
+			return shared_ptr<Surface>(new Surface(0, 20, 0.7, col, Color::WHITE));
+		}
 };
