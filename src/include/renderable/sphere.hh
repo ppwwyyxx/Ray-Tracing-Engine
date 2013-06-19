@@ -1,5 +1,5 @@
 // File: sphere.hh
-// Date: Thu Jun 20 02:10:19 2013 +0800
+// Date: Wed Jun 19 11:03:06 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -39,7 +39,7 @@ class SphereTrace : public Trace {
 		real_t sqrdiff = std::numeric_limits<real_t>::infinity();
 		bool inside = false;
 
-		Surface transform_get_property() const override;
+		std::shared_ptr<Surface> transform_get_property() const override;
 
 
 	public:

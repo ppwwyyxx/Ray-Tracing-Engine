@@ -1,5 +1,5 @@
 // File: face.cc
-// Date: Thu Jun 20 02:11:07 2013 +0800
+// Date: Wed Jun 19 19:34:07 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "renderable/mesh.hh"
@@ -66,10 +66,10 @@ Vec Face::get_smooth_norm(real_t gx, real_t gy) const {
 	return ret.get_normalized();
 }
 
-Surface FaceTrace::get_property() const
+shared_ptr<Surface> FaceTrace::get_property() const
 { return face.host->texture->get_property(); }
 
-Surface FaceTrace::transform_get_property() const {
+shared_ptr<Surface> FaceTrace::transform_get_property() const {
 	m_assert(false);		// XXX don't support texture on mesh
 	real_t x = gx / 0.1, y = gy / 0.1;
 	return face.texture->get_property(x, y);

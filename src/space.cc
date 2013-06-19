@@ -1,5 +1,5 @@
 // File: space.cc
-// Date: Thu Jun 20 02:14:02 2013 +0800
+// Date: Wed Jun 19 19:33:50 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <limits>
@@ -81,7 +81,7 @@ Color Space::trace(const Ray& ray, real_t dist, int depth) {
 	// phong model
 	// http://en.wikipedia.org/wiki/Phong_reflection_model
 	// ambient
-	Color ret = ambient * (surf.diffuse + Color::WHITE) * surf.ambient * 0.5;
+	Color ret = ambient * (surf->diffuse + Color::WHITE) * surf->ambient * 0.5;
 
 	for (auto &i : lights) {
 		Vec lm = (i->src - inter_point).get_normalized();
@@ -91,7 +91,7 @@ Color Space::trace(const Ray& ray, real_t dist, int depth) {
 		// shadow if not visible to this light
 		// go foward a little
 		if (find_any(Ray(inter_point + lm * (20 * EPS), lm), dist_to_light)) {
-			// if (lmn > 0) ret += surf.diffuse * ambient * REFL_DECAY;
+			// if (lmn > 0) ret += surf->diffuse * ambient * REFL_DECAY;
 			continue;
 		}
 
@@ -99,12 +99,12 @@ Color Space::trace(const Ray& ray, real_t dist, int depth) {
 
 		// diffuse
 		if (lmn > 0)
-			ret += surf.diffuse * i->color * (i->intensity * damping * lmn);		// add beer
+			ret += surf->diffuse * i->color * (i->intensity * damping * lmn);		// add beer
 
 		// specular
 		real_t rmv = -norm.reflection(lm).dot(ray.dir);
 		if (rmv > 0)
-			ret += surf.specular * pow(rmv, surf.shininess) * i->color * i->intensity * damping;
+			ret += surf->specular * pow(rmv, surf->shininess) * i->color * i->intensity * damping;
 	}
 
 	// Beer-Lambert's Law
@@ -113,26 +113,26 @@ Color Space::trace(const Ray& ray, real_t dist, int depth) {
 
 	// reflected ray : go back a little, same density
 	m_assert(fabs(ray.dir.sqr() - 1) < EPS);
-	if (surf.ambient < 1 - EPS) {		// do reflection if ambient is small
+	if (surf->ambient < 1 - EPS) {		// do reflection if ambient is small
 		Ray new_ray(inter_point - ray.dir * EPS, -norm.reflection(ray.dir), ray.density);
 		m_assert(fabs((-norm.reflection(ray.dir)).sqr() - 1) < EPS);
 
 		new_ray.debug = ray.debug;
 		real_t lmn = (new_ray.dir.dot(norm));
 		Color refl = trace(new_ray, dist, depth + 1);
-		ret += refl * surf.diffuse * (lmn * REFL_DECAY * (1 - surf.ambient) * surf.shininess);
+		ret += refl * surf->diffuse * (lmn * REFL_DECAY * (1 - surf->ambient) * surf->shininess);
 	}
 
 
 	// transmission
-	if (surf.transparency > EPS) {
+	if (surf->transparency > EPS) {
 		Vec tr_dir = norm.transmission(ray.dir, density / ray.density);
 		if (isnormal(tr_dir.x)) { // have transmission
 			// transmission ray : go forward a little
 			Ray new_ray(inter_point + ray.dir * EPS, tr_dir, density);
 			new_ray.debug = ray.debug;
 			Color transm = trace(new_ray, dist, depth + 1);
-			ret += (transm + surf.diffuse * 0.1) * surf.transparency;
+			ret += (transm + surf->diffuse * 0.1) * surf->transparency;
 		}
 	}
 

@@ -1,5 +1,5 @@
 // File: mesh_simplifier.cc
-// Date: Thu Jun 20 02:05:33 2013 +0800
+// Date: Thu Jun 20 02:20:05 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <list>
@@ -146,7 +146,7 @@ int MeshSimplifier::collapse(Vertex* u, Vertex* v) {
 void MeshSimplifier::do_simplify() {
 	int nowcnt = faces.size();
 	while (nowcnt > target_num && nowcnt > 4) {
-		/* // without heap
+		/*// without heap
 		 *real_t min = numeric_limits<real_t>::max();
 		 *Vertex* candidate_u = nullptr;
 		 *for (auto & u : vtxs) {
@@ -156,13 +156,12 @@ void MeshSimplifier::do_simplify() {
 		 *}
 		 */
 
-		// with heap
+		// use heap
 		auto & ele = heap.top();
 		heap.pop();
 		if (ele.outofdate()) continue;
 		if (ele.v->erased) continue;
 		Vertex* candidate_u = ele.v;
-		// end of the use of heap
 
 		m_assert(candidate_u != nullptr);
 		m_assert(candidate_u->candidate != nullptr);
