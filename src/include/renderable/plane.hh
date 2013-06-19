@@ -1,5 +1,5 @@
 // File: plane.hh
-// Date: Wed Jun 19 11:03:30 2013 +0800
+// Date: Thu Jun 20 02:10:42 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -50,7 +50,7 @@ class PlaneTrace : public Trace {
 		const Plane& plane;
 		real_t dist_to_plane = std::numeric_limits<real_t>::infinity();
 		real_t dir_dot_norm = std::numeric_limits<real_t>::infinity();
-		shared_ptr<Surface> transform_get_property() const;
+		Surface transform_get_property() const;
 
 	public:
 		PlaneTrace(const Plane& _plane, const Ray& _ray):

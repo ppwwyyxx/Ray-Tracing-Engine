@@ -1,5 +1,5 @@
 // File: mesh.hh
-// Date: Wed Jun 19 19:32:58 2013 +0800
+// Date: Thu Jun 20 02:11:15 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -84,7 +84,7 @@ class MeshTrace : public Trace {
 		const Mesh& mesh;
 		shared_ptr<Trace> nearest_trace = nullptr;
 
-		shared_ptr<Surface> transform_get_property() const;
+		Surface transform_get_property() const;
 
 	public:
 		MeshTrace(const Mesh& _mesh, const Ray& _ray):

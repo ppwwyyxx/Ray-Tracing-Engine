@@ -1,5 +1,5 @@
 // File: mesh.cc
-// Date: Wed Jun 19 20:42:36 2013 +0800
+// Date: Thu Jun 20 02:14:23 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <algorithm>
@@ -77,9 +77,9 @@ shared_ptr<Trace> Mesh::get_trace(const Ray& ray, real_t dist) const {
 	return nullptr;
 }
 
-shared_ptr<Surface> MeshTrace::transform_get_property() const {
+Surface MeshTrace::transform_get_property() const {
 	m_assert(mesh.mapped);
-	return nullptr;
+	return Surface();
 }
 
 bool MeshTrace::intersect() {

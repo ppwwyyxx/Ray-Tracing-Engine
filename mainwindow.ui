@@ -66,19 +66,6 @@
      <string>dist</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_5">
-    <property name="geometry">
-     <rect>
-      <x>820</x>
-      <y>130</y>
-      <width>111</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>angle X-Y</string>
-    </property>
-   </widget>
    <widget class="Line" name="line_3">
     <property name="geometry">
      <rect>
@@ -145,51 +132,6 @@
     </property>
     <property name="orientation">
      <enum>Qt::Horizontal</enum>
-    </property>
-   </widget>
-   <widget class="QDial" name="angle_xy">
-    <property name="geometry">
-     <rect>
-      <x>810</x>
-      <y>160</y>
-      <width>91</width>
-      <height>81</height>
-     </rect>
-    </property>
-    <property name="maximum">
-     <number>359</number>
-    </property>
-    <property name="value">
-     <number>0</number>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_7">
-    <property name="geometry">
-     <rect>
-      <x>950</x>
-      <y>130</y>
-      <width>111</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>angle Z</string>
-    </property>
-   </widget>
-   <widget class="QDial" name="angle_z">
-    <property name="geometry">
-     <rect>
-      <x>920</x>
-      <y>160</y>
-      <width>91</width>
-      <height>81</height>
-     </rect>
-    </property>
-    <property name="maximum">
-     <number>359</number>
-    </property>
-    <property name="value">
-     <number>0</number>
     </property>
    </widget>
    <widget class="QPushButton" name="open">
