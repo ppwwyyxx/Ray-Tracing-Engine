@@ -1,5 +1,5 @@
 // File: view.hh
-// Date: Wed Jun 19 09:41:05 2013 +0800
+// Date: Wed Jun 19 11:14:15 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -28,7 +28,7 @@ class View {
 		real_t size;		// length the img cover in the scene
 		Vec dir_w, dir_h;
 
-		bool use_dof = true;
+		bool use_dof = false;
 
 		View(const std::shared_ptr<Space> m_sp, const Vec& m_view_point,
 				const Vec& m_mid, real_t w, const Geometry& m_geo);

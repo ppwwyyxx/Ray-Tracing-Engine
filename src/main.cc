@@ -1,6 +1,7 @@
 // File: main.cc
-// Date: Wed Jun 19 11:06:19 2013 +0800
+// Date: Wed Jun 19 11:22:25 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
+#include <cstdarg>
 #include "viewer.hh"
 #include "space.hh"
 #include "renderable/plane.hh"
@@ -9,6 +10,25 @@
 #include "lib/imagereader.hh"
 #include "renderable/mesh.hh"
 #include "lib/objreader.hh"
+
+inline std::string format(const char* fmt, ...){
+    int size = 512;
+    char* buffer = 0;
+    buffer = new char[size];
+    va_list vl;
+    va_start(vl, fmt);
+    int nsize = vsnprintf(buffer, size, fmt, vl);
+    if(size<=nsize){ //fail delete buffer and try again
+        delete[] buffer;
+        buffer = 0;
+        buffer = new char[nsize+1]; //+1 for /0
+        nsize = vsnprintf(buffer, size, fmt, vl);
+    }
+    std::string ret(buffer);
+    va_end(vl);
+    delete[] buffer;
+    return ret;
+}
 
 using namespace std;
 
@@ -45,15 +65,40 @@ void ball_scene() {
 
 	REP(i, 10) REP(j, 2) s.add_obj(new Sphere(PureSphere(Vec(j * 6, 1, i * 3), 1), tball));
 	View v(make_shared<Space>(s), Vec(11, -13.3, 39.75), Vec(5.4, -1, 22.8), 16, Geometry(w, h));
+	v.use_dof = true;
 	CVViewer viewer(v);
 	viewer.view();
 }
 
+void generate_dof_video() {
+	int w = 500, h = 500;
+	Space s;
+	s.add_light(Light(Vec(0, -10, 12), Color::WHITE, 2.0));
+	s.add_light(Light(Vec(9, 2, 50), Color::WHITE, 2.0));
+	s.add_light(Light(Vec(-9, 2, 50), Color::WHITE, 2.0));
+	s.add_light(Light(Vec(-9, -2, 50), Color::WHITE, 2.0));
+	s.add_light(Light(Vec(9, -2, 50), Color::WHITE, 2.0));
+
+	shared_ptr<Texture> tpic(new ImgTexture("../res/texture.jpg", 80, 1));
+	s.add_obj(new Plane(InfPlane::XYPLANE, tpic));
+
+	shared_ptr<Texture> tball(new HomoTexture(Surface(0, 40, 0.5, Color::CYAN * 0.9, Color::WHITE * DEFAULT_SPECULAR)));
+
+	REP(i, 10) REP(j, 2) s.add_obj(new Sphere(PureSphere(Vec(j * 6, 1, i * 3), 1), tball));
+	View v(make_shared<Space>(s), Vec(11, -13.3, 39.75), Vec(5.4, -1, 22.8), 16, Geometry(w, h));
+	v.use_dof = true;
+
+
+
+	REP(k, 300) {
+		CVViewer viewer(v, "output/" + format("%03d", k) + ".png");
+		v.move_screen(0.05);
+	}
+}
+
 int main(int argc, char* argv[]) {
-	/*
-	 *ball_scene();
-	 *return 0;
-	 */
+	generate_dof_video();
+	return 0;
 	int w, h;
 	w = h = 500;
 	Space s;
