@@ -1,5 +1,5 @@
 % File: diary.tex
-% Date: Wed Jun 19 15:16:20 2013 +0800
+% Date: Wed Jun 19 22:12:36 2013 +0800
 % Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 \section{过程记录}
 \begin{enumerate}
@@ -163,6 +163,32 @@
 
   \item 利用C++11中的\verb|std::future|实现了KDTree树构建的多线程,建树提速30\%.
 
+    \newpage
+    \item 实现了网格简化,并利用堆加速. 对于如下的20万面片龙,简化掉80\%的面片需要2.37秒,比不使用堆时快了大约25倍.效果如下.
+\begin{figure}[H]
+\begin{minipage}[b]{0.46\linewidth}
+  \centering
+  \includegraphics[width=\textwidth]{res/unsimplified_nosmooth.png}
+  \caption*{未简化,无法向插值}
+\end{minipage}
+\begin{minipage}[b]{0.46\linewidth}
+  \centering
+  \includegraphics[width=\textwidth]{res/unsimplified_smooth.png}
+  \caption*{未简化,含法向插值}
+\end{minipage}
+
+\begin{minipage}[b]{0.46\linewidth}
+  \centering
+  \includegraphics[width=\textwidth]{res/simplified_nosmooth.png}
+  \caption*{简化至20\%, 无法向插值}
+\end{minipage}
+\begin{minipage}[b]{0.46\linewidth}
+  \centering
+  \includegraphics[width=\textwidth]{res/simplified_smooth.png}
+  \caption*{简化至20\%, 含法向插值}
+\end{minipage}
+
+\end{figure}
 
 
 \end{enumerate}

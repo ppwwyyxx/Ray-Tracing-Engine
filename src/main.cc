@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Wed Jun 19 21:51:21 2013 +0800
+// Date: Wed Jun 19 21:59:29 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "viewer.hh"
 #include "space.hh"
@@ -98,9 +98,9 @@ int main(int argc, char* argv[]) {
 
 	const char* fname = "../res/models/fixed.perfect.dragon.100K.0.07.obj";
 	Mesh mesh(fname, Vec(0, 0, 2), 5);
-	mesh.smooth = false;
+	mesh.smooth = true;
 	mesh.set_texture(tred);
-	mesh.simplify(0.2);
+	//mesh.simplify(0.2);
 	mesh.finish();
 	s.add_obj(make_shared<Mesh>(mesh));
 	//REP(i, 100) REP(j, 100) s.add_obj(new Sphere(PureSphere(Vec(i * 2, j * 2, 1), 0.5), t2));
