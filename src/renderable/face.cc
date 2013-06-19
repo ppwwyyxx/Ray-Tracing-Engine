@@ -1,5 +1,5 @@
 // File: face.cc
-// Date: Tue Jun 18 16:00:21 2013 +0800
+// Date: Wed Jun 19 13:16:56 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "renderable/mesh.hh"
@@ -37,7 +37,7 @@ real_t Triangle::get_intersect(const Ray& ray, real_t& gx, real_t& gy) const {
 }
 
 shared_ptr<Trace> Face::get_trace(const Ray& ray, real_t dist) const {
-	shared_ptr<Trace> ret(new FaceTrace(*this, ray));
+	shared_ptr<Trace> ret = make_shared<FaceTrace>(*this, ray);
 	if (ret->intersect()) {
 		if (dist == -1 || ret->intersection_dist() < dist)
 			return ret;

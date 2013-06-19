@@ -1,5 +1,5 @@
 // File: plane.cc
-// Date: Tue Jun 18 15:22:21 2013 +0800
+// Date: Wed Jun 19 13:17:24 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "renderable/plane.hh"
@@ -10,7 +10,7 @@ const InfPlane InfPlane::XYPLANE(Vec(0, 0, 1), 0),
 	  InfPlane::XZPLANE(Vec(0, 1, 0), 0);
 
 shared_ptr<Trace> Plane::get_trace(const Ray& ray, real_t dist) const {
-	shared_ptr<Trace> ret(new PlaneTrace(*this, ray));
+	shared_ptr<Trace> ret = make_shared<PlaneTrace>(*this, ray);
 	if (ret->intersect()) {
 		if (dist == -1 || ret->intersection_dist() < dist)
 			return ret;

@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Wed Jun 19 11:55:05 2013 +0800
+// Date: Wed Jun 19 13:35:44 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "viewer.hh"
 #include "space.hh"
@@ -77,8 +77,8 @@ void generate_dof_video() {
 
 int main(int argc, char* argv[]) {
 	//ball_scene();
-	generate_dof_video();
-	return 0;
+//	generate_dof_video();
+//	return 0;
 	int w, h;
 	w = h = 500;
 	Space s;
@@ -88,10 +88,10 @@ int main(int argc, char* argv[]) {
 	s.add_light(Light(Vec(0, 0, 9), Color::WHITE, 1.5));
 
 
-	shared_ptr<Texture> t1(new GridTexture(GridTexture::BLACK_WHITE));
-	shared_ptr<Texture> t2(new HomoTexture(HomoTexture::BLUE));
-	shared_ptr<Texture> tpic(new ImgTexture("../res/texture.jpg", 100, 0.6));
-	shared_ptr<Texture> tred(new HomoTexture(Surface::RED));
+	shared_ptr<Texture> t1 = make_shared<GridTexture>(GridTexture::BLACK_WHITE);
+	shared_ptr<Texture> t2 = make_shared<HomoTexture>(HomoTexture::BLUE);
+	shared_ptr<Texture> tpic = make_shared<ImgTexture>("../res/texture.jpg", 100, 0.6);
+	shared_ptr<Texture> tred = make_shared<HomoTexture>(Surface::RED);
 	Plane plane1(InfPlane::XYPLANE, tpic);
 
 	const char* fname = "../res/models/fixed.perfect.dragon.100K.0.07.obj";
@@ -99,10 +99,10 @@ int main(int argc, char* argv[]) {
 	mesh.smooth = false;
 	mesh.set_texture(tred);
 	mesh.finish_add();
-	s.add_obj(new Mesh(mesh));
-//	REP(i, 100) REP(j, 100) s.add_obj(new Sphere(PureSphere(Vec(i * 2, j * 2, 1), 0.5), t2));
+	s.add_obj(make_shared<Mesh>(mesh));
+	REP(i, 100) REP(j, 100) s.add_obj(new Sphere(PureSphere(Vec(i * 2, j * 2, 1), 0.5), t2));
 
-	s.add_obj(new Plane(plane1));
+	s.add_obj(make_shared<Plane>(plane1));
 //	Sphere sphere(PureSphere(Vec(1, 0, 1), 0.5), t2);
 //	Sphere sphere(PureSphere::TestSphere, t2);
 //	s.add_obj(new Sphere(sphere));

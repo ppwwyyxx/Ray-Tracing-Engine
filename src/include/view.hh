@@ -1,5 +1,5 @@
 // File: view.hh
-// Date: Wed Jun 19 11:14:15 2013 +0800
+// Date: Wed Jun 19 13:38:34 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -30,7 +30,7 @@ class View {
 
 		bool use_dof = false;
 
-		View(const std::shared_ptr<Space> m_sp, const Vec& m_view_point,
+		View(const std::shared_ptr<Space>& m_sp, const Vec& m_view_point,
 				const Vec& m_mid, real_t w, const Geometry& m_geo);
 
 		void zoom(real_t ratio);	// r > 1: zoom in

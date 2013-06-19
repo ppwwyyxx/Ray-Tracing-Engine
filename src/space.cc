@@ -1,5 +1,5 @@
 // File: space.cc
-// Date: Tue Jun 18 19:23:43 2013 +0800
+// Date: Wed Jun 19 13:42:32 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <limits>
@@ -25,12 +25,12 @@ void Space::add_light(const Light& light) {
 }
 
 void Space::add_obj(const rdptr& objptr) {
-	objs.push_back(objptr);
 	if (!objptr->infinity) {
 		auto k = objptr->get_aabb();
 		bound_min.update_min(k.min);
 		bound_max.update_max(k.max);
 	}
+	objs.push_back(move(objptr));
 }
 
 void Space::init() {		// called from View::View()
@@ -83,7 +83,7 @@ Color Space::trace(const Ray& ray, real_t dist, int depth) {
 	// ambient
 	Color ret = ambient * (surf->diffuse + Color::WHITE) * surf->ambient * 0.5;
 
-	for (const shared_ptr<Light> &i : lights) {
+	for (auto &i : lights) {
 		Vec lm = (i->src - inter_point).get_normalized();
 		real_t lmn = lm.dot(norm);
 		real_t dist_to_light = (i->src - inter_point).mod();
@@ -152,12 +152,12 @@ shared_ptr<Trace> Space::find_first(const Ray& ray) const {
 				ret = tmp;
 		}
 	}
-	return ret;
+	return move(ret);
 }
 
 bool Space::find_any(const Ray& ray, real_t max_dist) const {
 	for (auto & obj : objs) {
-		shared_ptr<Trace> tmp = obj->get_trace(ray, max_dist);
+		auto tmp = obj->get_trace(ray, max_dist);
 		if (tmp) return true;
 	}
 	return false;

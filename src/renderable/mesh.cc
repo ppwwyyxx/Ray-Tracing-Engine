@@ -1,5 +1,5 @@
 // File: mesh.cc
-// Date: Tue Jun 18 17:14:45 2013 +0800
+// Date: Wed Jun 19 13:18:53 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <algorithm>
@@ -30,7 +30,7 @@ void Mesh::transform_vtxs() {
 shared_ptr<Trace> Mesh::get_trace(const Ray& ray, real_t dist) const {
 	if (use_tree)
 		return tree->get_trace(ray, dist);
-	shared_ptr<Trace> ret(new MeshTrace(*this, ray));
+	shared_ptr<Trace> ret = make_shared<MeshTrace>(*this, ray);
 	if (ret->intersect()) {
 		if (dist == -1 || ret->intersection_dist() < dist)
 			return ret;
@@ -42,7 +42,7 @@ void Mesh::finish_add() {
 	transform_vtxs();
 	for (auto &ids : face_ids) add_face(ids);
 
-	tree = shared_ptr<KDTree>(new KDTree(faces, get_aabb()));
+	tree = make_shared<KDTree>(faces, get_aabb());
 
 	if (smooth) {		// calculate vtx norm
 		int nvtx = vtxs.size();

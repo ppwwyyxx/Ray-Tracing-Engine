@@ -1,5 +1,5 @@
 // File: renderable.hh
-// Date: Wed Jun 19 11:03:07 2013 +0800
+// Date: Wed Jun 19 13:39:35 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 
@@ -76,7 +76,7 @@ class Trace {
 
 		virtual shared_ptr<Surface> get_property() const {
 			shared_ptr<Surface> ret = obj->texture->get_property();
-			if (ret) return ret;
+			if (ret) return move(ret);
 			return transform_get_property();		// is this working?
 		}
 

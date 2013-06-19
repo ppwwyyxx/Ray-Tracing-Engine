@@ -1,12 +1,12 @@
 // File: view.cc
-// Date: Wed Jun 19 09:43:27 2013 +0800
+// Date: Wed Jun 19 13:42:13 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "view.hh"
 
 using namespace std;
 
-View::View(const std::shared_ptr<Space> _sp, const Vec& _view_point,
+View::View(const std::shared_ptr<Space>& _sp, const Vec& _view_point,
 				const Vec& _mid, real_t _size, const Geometry& m_geo):
 			geo(m_geo), sp(_sp), view_point(_view_point), mid(_mid), size(_size)
 { Vec norm = (view_point - mid).get_normalized(); Vec tmp;

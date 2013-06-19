@@ -1,5 +1,5 @@
 // File: kdtree.cc
-// Date: Tue Jun 18 15:21:22 2013 +0800
+// Date: Wed Jun 19 13:41:05 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include <algorithm>
 #include <omp.h>
@@ -46,7 +46,7 @@ class KDTree::Node {
 						if (update_min(min, d)) ret = tmp;
 					}
 				}
-				return ret;
+				return move(ret);
 			}
 
 			real_t mind = -1, mind2 = -1;

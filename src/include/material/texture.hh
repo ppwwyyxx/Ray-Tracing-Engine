@@ -1,5 +1,5 @@
 // File: texture.hh
-// Date: Tue Jun 18 23:35:28 2013 +0800
+// Date: Wed Jun 19 13:19:21 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -74,6 +74,6 @@ class ImgTexture : public Texture {
 		shared_ptr<Surface> get_property(real_t x, real_t y) const {
 			int int_x = round(zfactor * x) - size.h / 2, int_y = (zfactor * y) - size.w / 2;
 			Color col = img.get((int_x % size.h + size.h) % size.h, (int_y % size.w + size.w) % size.w);
-			return shared_ptr<Surface>(new Surface(0, 20, 0.7, col, Color::WHITE));
+			return make_shared<Surface>(0, 20, 0.7, col, Color::WHITE);
 		}
 };
