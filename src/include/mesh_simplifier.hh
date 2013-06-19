@@ -1,13 +1,15 @@
 // File: mesh_simplifier.hh
-// Date: Wed Jun 19 21:16:16 2013 +0800
+// Date: Wed Jun 19 21:54:03 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
 
 #include <set>
+#include <queue>
 #include "renderable/mesh.hh"
 using std::vector;
 using std::set;
+using std::priority_queue;
 
 class MeshSimplifier {
 	private:
@@ -44,6 +46,7 @@ class MeshSimplifier {
 			set<Vertex*> adj_vtx;
 			set<Face*> adj_face;
 
+			int cost_timestamp = 0;
 			real_t cost;
 			Vertex* candidate = nullptr;
 
@@ -58,9 +61,26 @@ class MeshSimplifier {
 			void change_to(Vertex* u, Vertex* v);
 		};
 
+		struct Elem {
+		// element type to use in the heap
+			Vertex* v;
+			int cost_timestamp;
+			real_t cost;
+
+			Elem(Vertex* _v) :
+				v(_v), cost_timestamp(v->cost_timestamp), cost(v->cost) {}
+
+			bool operator < (const Elem& r) const
+			{ return cost > r.cost; }
+
+			bool outofdate() const
+			{ return cost_timestamp < v->cost_timestamp; }
+		};
+
 		vector<Vertex> vtxs;
 		vector<Face> faces;
 		int target_num;			// shrink to this number
+		priority_queue<Elem> heap;
 
 		real_t cost(Vertex*, Vertex*) const;
 

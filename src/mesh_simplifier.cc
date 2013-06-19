@@ -1,5 +1,5 @@
 // File: mesh_simplifier.cc
-// Date: Wed Jun 19 21:17:58 2013 +0800
+// Date: Wed Jun 19 21:54:02 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <list>
@@ -55,6 +55,7 @@ MeshSimplifier::MeshSimplifier(Mesh& _mesh, real_t ratio): mesh(_mesh) {
 	}
 
 	for (auto & k : vtxs) update_cost(&k);
+	for (auto & k : vtxs) heap.push(Elem(&k));
 }
 
 real_t MeshSimplifier::cost(Vertex* u, Vertex* v) const {
@@ -92,6 +93,8 @@ void MeshSimplifier::update_cost(Vertex* u) {
 	}
 	m_assert(u->candidate != nullptr);
 	u->cost = min;
+	u->cost_timestamp ++;
+	heap.push(u);
 }
 
 int MeshSimplifier::collapse(Vertex* u, Vertex* v) {
@@ -126,13 +129,21 @@ int MeshSimplifier::collapse(Vertex* u, Vertex* v) {
 void MeshSimplifier::do_simplify() {
 	int nowcnt = faces.size();
 	while (nowcnt > target_num && nowcnt > 4) {
-		real_t min = numeric_limits<real_t>::max();
-		Vertex* candidate_u = nullptr;
-		for (auto & u : vtxs) {
-			if (u.erased) continue;
-			if (update_min(min, u.cost))
-				candidate_u = &u;
-		}
+		/*
+		 *real_t min = numeric_limits<real_t>::max();
+		 *Vertex* candidate_u = nullptr;
+		 *for (auto & u : vtxs) {
+		 *    if (u.erased) continue;
+		 *    if (update_min(min, u.cost))
+		 *        candidate_u = &u;
+		 *}
+		 */
+
+		auto & ele = heap.top(); heap.pop();
+		if (ele.outofdate()) continue;
+		if (ele.v->erased) continue;
+		Vertex* candidate_u = ele.v;
+
 		m_assert(candidate_u != nullptr);
 		m_assert(candidate_u->candidate != nullptr);
 		nowcnt -= collapse(candidate_u, candidate_u->candidate);
