@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Wed Jun 19 09:34:07 2013 +0800
+// Date: Wed Jun 19 11:06:19 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "viewer.hh"
 #include "space.hh"
@@ -44,24 +44,23 @@ void ball_scene() {
 	shared_ptr<Texture> tball(new HomoTexture(Surface(0, 40, 0.5, Color::CYAN * 0.9, Color::WHITE * DEFAULT_SPECULAR)));
 
 	REP(i, 10) REP(j, 2) s.add_obj(new Sphere(PureSphere(Vec(j * 6, 1, i * 3), 1), tball));
-	View v(make_shared<Space>(s), Vec(11, -13.3, 39.75), Vec(3.4, 3.9, 15.8), 16, Geometry(w, h));
+	View v(make_shared<Space>(s), Vec(11, -13.3, 39.75), Vec(5.4, -1, 22.8), 16, Geometry(w, h));
 	CVViewer viewer(v);
 	viewer.view();
 }
 
 int main(int argc, char* argv[]) {
-	ball_scene();
-	return 0;
+	/*
+	 *ball_scene();
+	 *return 0;
+	 */
 	int w, h;
 	w = h = 500;
 	Space s;
 	s.add_light(Light(Vec(0, -10, 12), Color::WHITE, 2.0));
 	s.add_light(Light(Vec(0, 10, 8), Color::WHITE, 2.0));
-	/*
-	 *s.add_light(Light(Vec(-10, 0, 8), Color::WHITE, 2.0));
-	 *s.add_light(Light(Vec(0, 0, 9), Color::WHITE, 1.5));
-	 *s.add_light(Light(Vec(0, -3, -4), Color::WHITE, 8));
-	 */
+	s.add_light(Light(Vec(-10, 0, 8), Color::WHITE, 2.0));
+	s.add_light(Light(Vec(0, 0, 9), Color::WHITE, 1.5));
 
 
 	shared_ptr<Texture> t1(new GridTexture(GridTexture::BLACK_WHITE));
@@ -71,19 +70,17 @@ int main(int argc, char* argv[]) {
 	Plane plane1(InfPlane::XYPLANE, tpic);
 
 	const char* fname = "../res/models/fixed.perfect.dragon.100K.0.07.obj";
-	/*
-	 *Mesh mesh(fname, Vec(0, 0, 2), 5);
-	 *mesh.smooth = false;
-	 *mesh.set_texture(tred);
-	 *mesh.finish_add();
-	 *s.add_obj(new Mesh(mesh));
-	 */
+	Mesh mesh(fname, Vec(0, 0, 2), 5);
+	mesh.smooth = false;
+	mesh.set_texture(tred);
+	mesh.finish_add();
+	s.add_obj(new Mesh(mesh));
 //	REP(i, 100) REP(j, 100) s.add_obj(new Sphere(PureSphere(Vec(i * 2, j * 2, 1), 0.5), t2));
 
 	s.add_obj(new Plane(plane1));
 //	Sphere sphere(PureSphere(Vec(1, 0, 1), 0.5), t2);
-	Sphere sphere(PureSphere::TestSphere, t2);
-	s.add_obj(new Sphere(sphere));
+//	Sphere sphere(PureSphere::TestSphere, t2);
+//	s.add_obj(new Sphere(sphere));
 
 //	View v(make_shared<Space>(s), Vec(0.2, 0, 12), Vec(0, 0, 2), 10, Geometry(w, h));
 	View v(make_shared<Space>(s), Vec(-10.3, -34, 7.37), Vec(-1.47, 0, 1.23), 10, Geometry(w, h));

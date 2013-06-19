@@ -1,5 +1,5 @@
 // File: face.hh
-// Date: Tue Jun 18 14:40:01 2013 +0800
+// Date: Wed Jun 19 11:08:00 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -32,13 +32,12 @@ class Triangle {
 class Vertex {
 	public:
 		Vec pos;
-		int id;
 
 		Vec norm = Vec::infinity();		// can be defined by obj
 		Vec2D mapcoor = Vec2D::infinity();
 
-		Vertex(const Vec& _pos, int _id):
-			pos(_pos), id(_id) {}
+		Vertex(const Vec& _pos):
+			pos(_pos) {}
 };
 
 class Mesh;
@@ -60,11 +59,11 @@ class Face : public RenderAble {
 			m_assert(!tri.e1.is_zero());
 		}
 
-		shared_ptr<Trace> get_trace(const Ray& ray, real_t max_dist = -1) const;
+		shared_ptr<Trace> get_trace(const Ray& ray, real_t max_dist = -1) const override;
 
 		Vec get_smooth_norm(real_t gx, real_t gy) const;
 
-		AABB get_aabb() const;
+		AABB get_aabb() const override;
 
 	protected:
 		friend class FaceTrace;
@@ -85,17 +84,17 @@ class FaceTrace : public Trace {
 		const Face& face;
 		real_t dist, gx, gy;
 
-		shared_ptr<Surface> transform_get_property() const;
+		shared_ptr<Surface> transform_get_property() const override;
 
 	public:
 		FaceTrace(const Face& _face, const Ray& _ray):
 			Trace(&_face, _ray), face(_face){};
 
-		bool intersect();
+		bool intersect() override;
 
-		real_t intersection_dist();
+		real_t intersection_dist() override;
 
-		Vec normal();
+		Vec normal() override;
 
-		shared_ptr<Surface> get_property() const;
+		shared_ptr<Surface> get_property() const override;
 };

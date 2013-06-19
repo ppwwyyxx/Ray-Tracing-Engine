@@ -1,5 +1,5 @@
 // File: common.hh
-// Date: Wed Jun 19 00:29:17 2013 +0800
+// Date: Wed Jun 19 09:43:25 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -24,8 +24,9 @@ const real_t DEFAULT_REFRACTIVE_INDEX = 1.05;
 const real_t AIR_REFRACTIVE_INDEX = 1;
 
 const int MAX_RECURSIVE_DEPTH = 2;
-const int DOF_SAMPLE_CNT = 20;
-const real_t DOF_SAMPLE_RADIUS = 0.1;
+
+const int DOF_SAMPLE_CNT = 15;
+const real_t DOF_SAMPLE_RADIUS = 0.4;
 
 const real_t DOF_SCREEN_DIST_FACTOR = 0.1;
 const int SOFT_SHADOW_LIGHT = 20;

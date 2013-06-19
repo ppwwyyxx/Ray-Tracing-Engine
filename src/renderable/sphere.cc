@@ -1,5 +1,5 @@
 // File: sphere.cc
-// Date: Tue Jun 18 22:31:25 2013 +0800
+// Date: Wed Jun 19 11:02:57 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "renderable/sphere.hh"
@@ -52,7 +52,7 @@ real_t SphereTrace::intersection_dist() {
 	return inter_dist;
 }
 
-Vec SphereTrace::intersection_point() {
+Vec SphereTrace::intersection_point() const {
 	m_assert(isfinite(inter_point.x));
 	return inter_point;
 }

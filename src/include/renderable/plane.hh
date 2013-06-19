@@ -1,5 +1,5 @@
 // File: plane.hh
-// Date: Tue Jun 18 17:14:29 2013 +0800
+// Date: Wed Jun 19 11:03:30 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -30,9 +30,9 @@ class Plane : public RenderAble {
 
 		void set_finite(real_t radius, Vec center);
 
-		shared_ptr<Trace> get_trace(const Ray& ray, real_t max_dist = -1) const;
+		shared_ptr<Trace> get_trace(const Ray& ray, real_t max_dist = -1) const override;
 
-		AABB get_aabb() const;
+		AABB get_aabb() const override;
 
 	protected:
 
@@ -56,10 +56,10 @@ class PlaneTrace : public Trace {
 		PlaneTrace(const Plane& _plane, const Ray& _ray):
 			Trace(&_plane, _ray), plane(_plane){};
 
-		bool intersect();
+		bool intersect() override;
 
-		real_t intersection_dist();
+		real_t intersection_dist() override;
 
-		Vec normal();
+		Vec normal() override;
 };
 

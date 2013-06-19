@@ -1,5 +1,5 @@
 // File: sphere.hh
-// Date: Tue Jun 18 14:39:51 2013 +0800
+// Date: Wed Jun 19 11:03:06 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -22,9 +22,9 @@ class Sphere : public RenderAble {
 			Sphere(m_sphere)
 		{ texture = m_texture;	}
 
-		std::shared_ptr<Trace> get_trace(const Ray& ray, real_t max_dist = -1) const;
+		std::shared_ptr<Trace> get_trace(const Ray& ray, real_t max_dist = -1) const override;
 
-		AABB get_aabb() const;
+		AABB get_aabb() const override;
 
 	protected:
 		friend class SphereTrace;
@@ -39,7 +39,7 @@ class SphereTrace : public Trace {
 		real_t sqrdiff = std::numeric_limits<real_t>::infinity();
 		bool inside = false;
 
-		std::shared_ptr<Surface> transform_get_property() const;
+		std::shared_ptr<Surface> transform_get_property() const override;
 
 
 	public:
@@ -49,17 +49,17 @@ class SphereTrace : public Trace {
 			inside = sphere.sphere.contain(ray.orig);
 		};
 
-		bool intersect();
+		bool intersect() override;
 
-		real_t intersection_dist();
+		real_t intersection_dist() override;
 
-		Vec intersection_point();
+		Vec intersection_point() const override;
 
-		Vec normal();
+		Vec normal() override;
 
-		real_t get_forward_density() const;
+		real_t get_forward_density() const override;
 
-		bool contain() const
+		bool contain() const override
 		{ return inside; }
 
 };
