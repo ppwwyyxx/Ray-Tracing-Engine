@@ -1,5 +1,5 @@
 % File: diary.tex
-% Date: Wed Jun 19 14:06:34 2013 +0800
+% Date: Wed Jun 19 15:16:20 2013 +0800
 % Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 \section{过程记录}
 \begin{enumerate}
@@ -161,6 +161,7 @@
 \item 由于\verb|std::shared_ptr<T>|的默认构造函数会对引用计数和指针对象进行两次内存分配,效率不够高.
   大量换用\verb|std::make_share<T>|后光线追踪时间缩短了40\%.
 
+  \item 利用C++11中的\verb|std::future|实现了KDTree树构建的多线程,建树提速30\%.
 
 
 
