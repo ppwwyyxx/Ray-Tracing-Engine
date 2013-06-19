@@ -1,5 +1,5 @@
 // File: utils.hh
-// Date: Wed Jun 19 16:51:14 2013 +0800
+// Date: Wed Jun 19 20:43:55 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 
@@ -76,4 +76,9 @@ inline std::string string_format(const char* fmt, ...) {
 	va_end(ap);
 	delete[] buffer;
 	return ret;
+}
+
+inline void print_progress(int percent) {
+	printf("progress: %d %%\r", percent);
+	fflush(stdout);
 }

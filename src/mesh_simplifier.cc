@@ -1,5 +1,5 @@
 // File: mesh_simplifier.cc
-// Date: Wed Jun 19 20:36:16 2013 +0800
+// Date: Wed Jun 19 21:09:17 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <list>
@@ -33,7 +33,6 @@ MeshSimplifier::MeshSimplifier(Mesh& _mesh, real_t ratio): mesh(_mesh) {
 	}
 
 	for (auto & k : vtxs) update_cost(&k);
-	print();
 }
 
 real_t MeshSimplifier::cost(Vertex* u, Vertex* v) const {
@@ -99,7 +98,6 @@ int MeshSimplifier::collapse(Vertex* u, Vertex* v) {
 		}
 	v->adj_vtx.erase(u);		// this must be put after the above line
 
-	print();
 	for (auto & uvtx : u->adj_vtx) update_cost(uvtx);
 	return ret;
 }
@@ -117,7 +115,8 @@ void MeshSimplifier::do_simplify() {
 		m_assert(candidate_u != nullptr);
 		m_assert(candidate_u->candidate != nullptr);
 		nowcnt -= collapse(candidate_u, candidate_u->candidate);
-//		print_debug("done\n");
+		if (nowcnt % 100 == 0)
+			print_progress((faces.size() - nowcnt) * 100 / (faces.size() - target_num));
 	}
 }
 

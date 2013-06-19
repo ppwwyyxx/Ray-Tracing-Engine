@@ -1,5 +1,5 @@
 // File: objreader.cc
-// Date: Wed Jun 19 19:25:01 2013 +0800
+// Date: Wed Jun 19 20:39:54 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <cstring>
@@ -49,7 +49,6 @@ void ObjReader::read_in(string fname, Mesh* mesh) {
 		}
 	}
 	fin.close();
-	cout << "nvtx: " << mesh->vtxs.size() << ", nface: " << mesh->face_ids.size() << endl;
 }
 
 

@@ -1,24 +1,29 @@
 // File: mesh.cc
-// Date: Wed Jun 19 19:29:24 2013 +0800
+// Date: Wed Jun 19 20:42:36 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <algorithm>
 #include "mesh_simplifier.hh"
 #include "renderable/mesh.hh"
 #include "lib/objreader.hh"
+#include "lib/Timer.hh"
 using namespace std;
 
 Mesh::Mesh(std::string fname, const Vec& _pivot, real_t _zsize, const shared_ptr<Texture>& _texture):
 	pivot(_pivot), zoom_size(_zsize) {
 	texture = _texture;
 	ObjReader::read_in(fname, this);
+	cout << "nvtx: " << vtxs.size() << ", nface: " << face_ids.size() << endl;
 	transform_vtxs();
 	for (auto &ids : face_ids) add_face(ids);
 }
 
 void Mesh::simplify(real_t ratio) {
+	Timer timer;
 	MeshSimplifier s(*this, ratio);
 	s.simplify();
+	printf("Simplification spends %lf seconds\n", timer.get_time());
+	cout << "after-- nvtx: " << vtxs.size() << ", nface: " << face_ids.size() << endl;
 }
 
 void Mesh::transform_vtxs() {

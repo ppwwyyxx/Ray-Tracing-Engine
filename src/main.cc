@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Wed Jun 19 20:35:48 2013 +0800
+// Date: Wed Jun 19 20:42:32 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "viewer.hh"
 #include "space.hh"
@@ -83,9 +83,11 @@ int main(int argc, char* argv[]) {
 	w = h = 500;
 	Space s;
 	s.add_light(Light(Vec(0, -10, 12), Color::WHITE, 2.0));
-	s.add_light(Light(Vec(0, 10, 8), Color::WHITE, 2.0));
-	s.add_light(Light(Vec(-10, 0, 8), Color::WHITE, 2.0));
-	s.add_light(Light(Vec(0, 0, 9), Color::WHITE, 1.5));
+	/*
+	 *s.add_light(Light(Vec(0, 10, 8), Color::WHITE, 2.0));
+	 *s.add_light(Light(Vec(-10, 0, 8), Color::WHITE, 2.0));
+	 *s.add_light(Light(Vec(0, 0, 9), Color::WHITE, 1.5));
+	 */
 
 
 	shared_ptr<Texture> t1 = make_shared<GridTexture>(GridTexture::BLACK_WHITE);
@@ -94,7 +96,7 @@ int main(int argc, char* argv[]) {
 	shared_ptr<Texture> tred = make_shared<HomoTexture>(Surface::RED);
 	Plane plane1(InfPlane::XYPLANE, t1);
 
-	const char* fname = "../res/models/sphere.obj";
+	const char* fname = "../res/models/fixed.perfect.dragon.100K.0.07.obj";
 	Mesh mesh(fname, Vec(0, 0, 2), 5);
 	mesh.smooth = false;
 	mesh.set_texture(tred);
