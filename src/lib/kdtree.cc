@@ -1,5 +1,5 @@
 // File: kdtree.cc
-// Date: Wed Jun 19 14:48:46 2013 +0800
+// Date: Wed Jun 19 15:15:09 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include <algorithm>
 #include <future>
@@ -31,9 +31,6 @@ class KDTree::Node {
 		{ objs.push_back(obj); }
 
 		shared_ptr<Trace> get_trace(const Ray& ray, real_t inter_dist, real_t max_dist = -1) const {
-			/*
-			 *print_debug("in get_trace\n");
-			 */
 			// call when know to intersect
 			if (leaf()) {
 				// find first obj
@@ -223,15 +220,36 @@ KDTree::Node* KDTree::build(const vector<RenderWrapper>& objs, const AABB& box, 
 	// end of O(n^2)
 
 	// start of O(n log^2(n)) build
+#define GEN_CAND_LIST \
+	do { \
+		for (auto & obj: objs) \
+			cand_list.push_back(make_pair(obj.box.min[dim] - EPS, true)), \
+				cand_list.push_back(make_pair(obj.box.max[dim] + EPS, false)); \
+		sort(cand_list.begin(), cand_list.end(), \
+				[](const pair<real_t, bool>& a, const pair<real_t, bool>& b) \
+					{return a.first < b.first;} \
+			); \
+	} while (0)
+
+	future<vector<pair<real_t, bool>>> task[3];
+	const int THREAD_DEPTH_THRES = 1;
+	if (depth < THREAD_DEPTH_THRES) {
+		REP(dim, 3)
+			task[dim] = async(launch::async,
+					[&objs, dim]() {
+						vector<pair<real_t, bool>> cand_list;
+						GEN_CAND_LIST;
+						return move(cand_list);
+					}
+			);
+	}
+
 	REP(dim, 3) {
 		vector<pair<real_t, bool>> cand_list;		//// true: min, false: max
-		for (auto & obj: objs)
-			cand_list.push_back(make_pair(obj.box.min[dim] - EPS, true)),
-				cand_list.push_back(make_pair(obj.box.max[dim] + EPS, false));
-
-		sort(cand_list.begin(), cand_list.end(),
-			[](const pair<real_t, bool>& a, const pair<real_t, bool>& b)
-			{return a.first < b.first;});
+		if (depth >= THREAD_DEPTH_THRES)
+			GEN_CAND_LIST;
+		else
+			cand_list = move(task[dim].get());
 
 		int lcnt = 0, rcnt = nobj;
 		auto ptr = cand_list.begin();
@@ -274,13 +292,13 @@ KDTree::Node* KDTree::build(const vector<RenderWrapper>& objs, const AABB& box, 
 	// end of algo 2
 
 
-//	print_debug("depth: %d, lsize: %d, rsize: %d\n", depth, (int)objl.size(), (int)objr.size());
+	//	print_debug("depth: %d, lsize: %d, rsize: %d\n", depth, (int)objl.size(), (int)objr.size());
 
 	if (depth < 1) { // parallel
 		future<Node*> lch_fut = async(launch::async, [&]() {
-					return build(move(objl), par.first, depth + 1); });
+				return build(move(objl), par.first, depth + 1); });
 		future<Node*> rch_fut = async(launch::async, [&]() {
-					return build(move(objr), par.second, depth + 1); });
+				return build(move(objr), par.second, depth + 1); });
 
 		ret->child[0] = lch_fut.get();
 		ret->child[1] = rch_fut.get();

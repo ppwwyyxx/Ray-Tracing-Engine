@@ -1,5 +1,5 @@
 # $File: Makefile
-# $Date: Wed Jun 19 14:43:20 2013 +0800
+# $Date: Wed Jun 19 15:03:47 2013 +0800
 
 OBJ_DIR = build
 TARGET = main
@@ -15,10 +15,10 @@ INCLUDE_DIR += $(shell pkg-config --cflags $(LIBS))
 
 CXXFLAGS = $(INCLUDE_DIR)
 CXXFLAGS += $(shell Magick++-config --cxxflags)
-CXXFLAGS += $(DEFINES) -std=c++11 $(OPTFLAGS) -fopenmp
+CXXFLAGS += $(DEFINES) -std=c++11 $(OPTFLAGS) -fopenmp -pthread
 LDFLAGS = $(shell pkg-config $(LIBS) --libs)
 LDFLAGS += $(OPTFLAGS)
-LDFLAGS += $(shell Magick++-config --ldflags --libs) -fopenmp
+LDFLAGS += $(shell Magick++-config --ldflags --libs) -fopenmp -pthread
 
 CC = g++
 SHELL = bash
