@@ -1,5 +1,5 @@
 // File: mesh.hh
-// Date: Wed Jun 19 16:14:29 2013 +0800
+// Date: Wed Jun 19 17:55:37 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -8,6 +8,9 @@
 #include "lib/kdtree.hh"
 
 #define INRANGE(x) (x) < (int)vtxs.size()
+
+class MeshSimplifier;
+
 class Mesh: public RenderAble {
 	public:
 		// config
@@ -48,9 +51,20 @@ class Mesh: public RenderAble {
 			face_ids.push_back(tuple<int, int, int>{a, b, c});
 		}
 
+		void add_face(const tuple<int, int, int>& t)
+		{ add_face(get<0>(t), get<1>(t), get<2>(t));}
+
 		void transform_vtxs();
 
 		void finish();
+
+		void clear() {
+			vtxs.clear();
+			faces.clear();
+			face_ids.clear();
+			bound_min = Vec::max(), bound_max = -Vec::max();
+			tree = nullptr;
+		}
 
 		shared_ptr<Trace> get_trace(const Ray& ray, real_t max_dist = -1) const override;
 
@@ -58,9 +72,6 @@ class Mesh: public RenderAble {
 
 	protected:
 		friend class MeshTrace;
-
-		void add_face(const tuple<int, int, int>& t)
-		{ add_face(get<0>(t), get<1>(t), get<2>(t));}
 
 		void add_face(int a, int b, int c) {
 			m_assert(INRANGE(max(a, max(b, c))));

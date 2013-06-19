@@ -1,5 +1,5 @@
 // File: mesh.cc
-// Date: Wed Jun 19 16:14:29 2013 +0800
+// Date: Wed Jun 19 17:52:33 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <algorithm>
@@ -41,8 +41,8 @@ shared_ptr<Trace> Mesh::get_trace(const Ray& ray, real_t dist) const {
 }
 
 void Mesh::finish() {		// build tree, calculate smooth norm
-
-	tree = make_shared<KDTree>(faces, get_aabb());
+	if (use_tree)
+		tree = make_shared<KDTree>(faces, get_aabb());
 
 	if (smooth) {		// calculate vtx norm
 		int nvtx = vtxs.size();
