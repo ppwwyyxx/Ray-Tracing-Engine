@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Wed Jun 19 13:35:44 2013 +0800
+// Date: Wed Jun 19 14:00:32 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "viewer.hh"
 #include "space.hh"
@@ -89,10 +89,10 @@ int main(int argc, char* argv[]) {
 
 
 	shared_ptr<Texture> t1 = make_shared<GridTexture>(GridTexture::BLACK_WHITE);
-	shared_ptr<Texture> t2 = make_shared<HomoTexture>(HomoTexture::BLUE);
+	shared_ptr<Texture> t2 = make_shared<HomoTexture>(Surface::BLUE_REFL);
 	shared_ptr<Texture> tpic = make_shared<ImgTexture>("../res/texture.jpg", 100, 0.6);
 	shared_ptr<Texture> tred = make_shared<HomoTexture>(Surface::RED);
-	Plane plane1(InfPlane::XYPLANE, tpic);
+	Plane plane1(InfPlane::XYPLANE, t1);
 
 	const char* fname = "../res/models/fixed.perfect.dragon.100K.0.07.obj";
 	Mesh mesh(fname, Vec(0, 0, 2), 5);
