@@ -1,5 +1,5 @@
 // File: face.cc
-// Date: Wed Jun 19 13:16:56 2013 +0800
+// Date: Wed Jun 19 19:34:07 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "renderable/mesh.hh"
@@ -47,7 +47,7 @@ shared_ptr<Trace> Face::get_trace(const Ray& ray, real_t dist) const {
 
 AABB Face::get_aabb() const {
 	AABB ret;
-	Vec eps(2 * EPS, 2 * EPS, 2 * EPS);
+	Vec eps = Vec::eps() * 2;		// * 2 two prevent cut on border
 	ret.update_min(tri.v - eps);
 	ret.update_max(tri.v + eps);
 	Vec now = tri.get(0);

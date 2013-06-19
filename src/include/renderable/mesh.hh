@@ -1,5 +1,5 @@
 // File: mesh.hh
-// Date: Wed Jun 19 17:55:37 2013 +0800
+// Date: Wed Jun 19 19:32:58 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -33,18 +33,15 @@ class Mesh: public RenderAble {
 
 		void add_vertex(const Vec& p) {
 			vtxs.push_back(Vertex(p));
-			bound_min.update_min(p), bound_max.update_max(p);
+			bound_min.update_min(p - Vec::eps()), bound_max.update_max(p + Vec::eps());
 		}
 
-		void set_mapcoor(int t, const Vec2D& mapped) {
-			m_assert(INRANGE(t));
-			vtxs[t].mapcoor = mapped;
-		}
-
-		void set_norm(int t, const Vec& norm) {
-			m_assert(INRANGE(t));
-			vtxs[t].norm = norm;
-		}
+		/*
+		 *void set_mapcoor(int t, const Vec2D& mapped) {
+		 *    m_assert(INRANGE(t));
+		 *    vtxs[t].mapcoor = mapped;
+		 *}
+		 */
 
 		void add_faceid(int a, int b, int c) {
 			m_assert(INRANGE(max(a, max(b, c))));
@@ -58,17 +55,18 @@ class Mesh: public RenderAble {
 
 		void finish();
 
+		void simplify(real_t ratio);
+
 		void clear() {
-			vtxs.clear();
-			faces.clear();
-			face_ids.clear();
+			vtxs.clear(); faces.clear(); face_ids.clear();
 			bound_min = Vec::max(), bound_max = -Vec::max();
 			tree = nullptr;
 		}
 
 		shared_ptr<Trace> get_trace(const Ray& ray, real_t max_dist = -1) const override;
 
-		AABB get_aabb() const override { return AABB(bound_min, bound_max); }
+		AABB get_aabb() const override
+		{ return AABB(bound_min, bound_max); }
 
 	protected:
 		friend class MeshTrace;

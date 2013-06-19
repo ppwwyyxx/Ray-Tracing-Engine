@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Wed Jun 19 17:51:34 2013 +0800
+// Date: Wed Jun 19 20:35:48 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "viewer.hh"
 #include "space.hh"
@@ -94,10 +94,11 @@ int main(int argc, char* argv[]) {
 	shared_ptr<Texture> tred = make_shared<HomoTexture>(Surface::RED);
 	Plane plane1(InfPlane::XYPLANE, t1);
 
-	const char* fname = "../res/models/fixed.perfect.dragon.100K.0.07.obj";
+	const char* fname = "../res/models/sphere.obj";
 	Mesh mesh(fname, Vec(0, 0, 2), 5);
 	mesh.smooth = false;
 	mesh.set_texture(tred);
+	mesh.simplify(0.8);
 	mesh.finish();
 	s.add_obj(make_shared<Mesh>(mesh));
 	//REP(i, 100) REP(j, 100) s.add_obj(new Sphere(PureSphere(Vec(i * 2, j * 2, 1), 0.5), t2));
@@ -108,7 +109,7 @@ int main(int argc, char* argv[]) {
 //	s.add_obj(new Sphere(sphere));
 
 //	View v(make_shared<Space>(s), Vec(0.2, 0, 12), Vec(0, 0, 2), 10, Geometry(w, h));
-	View v(make_shared<Space>(s), Vec(-10.3, -34, 7.37), Vec(-1.47, 0, 1.23), 10, Geometry(w, h));
+	View v(make_shared<Space>(s), Vec(0, 0, 10), Vec(0, 0, 1), 20, Geometry(w, h));
 	CVViewer viewer(v);
 	viewer.view();
 }

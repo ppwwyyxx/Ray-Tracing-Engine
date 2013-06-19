@@ -1,8 +1,9 @@
 // File: mesh.cc
-// Date: Wed Jun 19 17:52:33 2013 +0800
+// Date: Wed Jun 19 19:29:24 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <algorithm>
+#include "mesh_simplifier.hh"
 #include "renderable/mesh.hh"
 #include "lib/objreader.hh"
 using namespace std;
@@ -13,6 +14,11 @@ Mesh::Mesh(std::string fname, const Vec& _pivot, real_t _zsize, const shared_ptr
 	ObjReader::read_in(fname, this);
 	transform_vtxs();
 	for (auto &ids : face_ids) add_face(ids);
+}
+
+void Mesh::simplify(real_t ratio) {
+	MeshSimplifier s(*this, ratio);
+	s.simplify();
 }
 
 void Mesh::transform_vtxs() {
@@ -27,17 +33,6 @@ void Mesh::transform_vtxs() {
 	});
 	bound_min = pivot + (bound_min + sum - pivot) * zfactor;
 	bound_max = pivot + (bound_max + sum - pivot) * zfactor;
-}
-
-shared_ptr<Trace> Mesh::get_trace(const Ray& ray, real_t dist) const {
-	if (use_tree)
-		return tree->get_trace(ray, dist);
-	shared_ptr<Trace> ret = make_shared<MeshTrace>(*this, ray);
-	if (ret->intersect()) {
-		if (dist == -1 || ret->intersection_dist() < dist)
-			return ret;
-	}
-	return nullptr;
 }
 
 void Mesh::finish() {		// build tree, calculate smooth norm
@@ -64,6 +59,17 @@ void Mesh::finish() {		// build tree, calculate smooth norm
 			vtxs[k].norm = norm_sum[k].sum / norm_sum[k].cnt;
 		delete[] norm_sum;
 	}
+}
+
+shared_ptr<Trace> Mesh::get_trace(const Ray& ray, real_t dist) const {
+	if (use_tree)
+		return tree->get_trace(ray, dist);
+	shared_ptr<Trace> ret = make_shared<MeshTrace>(*this, ray);
+	if (ret->intersect()) {
+		if (dist == -1 || ret->intersection_dist() < dist)
+			return ret;
+	}
+	return nullptr;
 }
 
 shared_ptr<Surface> MeshTrace::transform_get_property() const {

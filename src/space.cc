@@ -1,5 +1,5 @@
 // File: space.cc
-// Date: Wed Jun 19 16:15:17 2013 +0800
+// Date: Wed Jun 19 19:33:50 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <limits>
@@ -27,8 +27,8 @@ void Space::add_light(const Light& light) {
 void Space::add_obj(const rdptr& objptr) {
 	if (!objptr->infinity) {
 		auto k = objptr->get_aabb();
-		bound_min.update_min(k.min);
-		bound_max.update_max(k.max);
+		bound_min.update_min(k.min - Vec::eps());
+		bound_max.update_max(k.max + Vec::eps());
 	}
 	objs.push_back(move(objptr));
 }
@@ -148,8 +148,7 @@ shared_ptr<Trace> Space::find_first(const Ray& ray) const {
 		auto tmp = obj->get_trace(ray, min == numeric_limits<real_t>::max() ? -1 : min);
 		if (tmp) {
 			real_t d = tmp->intersection_dist();
-			if (update_min(min, d))
-				ret = tmp;
+			if (update_min(min, d)) ret = tmp;
 		}
 	}
 	return move(ret);

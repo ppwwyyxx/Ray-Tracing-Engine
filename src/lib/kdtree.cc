@@ -1,5 +1,5 @@
 // File: kdtree.cc
-// Date: Wed Jun 19 15:15:09 2013 +0800
+// Date: Wed Jun 19 19:31:38 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include <algorithm>
 #include <future>
@@ -150,7 +150,6 @@ AAPlane KDTree::cut(const vector<RenderWrapper>& objs, int depth) const {
 	nth_element(min_list.begin(), min_list.begin() + min_list.size() / 2, min_list.end());
 	// partial sort
 	ret.pos = min_list[min_list.size() / 2] + 2 * EPS;		// SEE what happen
-
 	return ret;
 }
 
