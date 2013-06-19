@@ -1,5 +1,5 @@
 // File: viewer.hh
-// Date: Wed Jun 19 11:46:21 2013 +0800
+// Date: Wed Jun 19 11:57:20 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -31,8 +31,6 @@ class CVViewer : public Viewer {
 	private:
 		CVRender r;
 	public:
-		bool gaussian_blur = true;
-
 		CVViewer(View& _v):
 			Viewer(_v), r(_v.get_geo()) { }
 

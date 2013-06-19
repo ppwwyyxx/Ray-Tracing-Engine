@@ -1,5 +1,5 @@
 // File: cvrender.cc
-// Date: Wed Jun 19 11:45:55 2013 +0800
+// Date: Wed Jun 19 11:57:08 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <opencv2/opencv.hpp>
@@ -127,7 +127,7 @@ void CVViewer::render_all() {
 	}
 	printf("Spend %lf seconds\n", timer.get_time());
 //	r.antialias();
-	if (gaussian_blur) r.blur();
+	if (v.use_dof) r.blur();
 }
 
 void CVViewer::view() {
