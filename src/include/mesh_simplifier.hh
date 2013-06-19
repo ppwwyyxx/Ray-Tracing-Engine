@@ -1,5 +1,5 @@
 // File: mesh_simplifier.hh
-// Date: Wed Jun 19 21:09:12 2013 +0800
+// Date: Wed Jun 19 21:16:16 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -23,26 +23,10 @@ class MeshSimplifier {
 				norm = (c->pos - a->pos).cross((b->pos - a->pos)).get_normalized();
 			}
 
-			void delete_from(Vertex*& u, Vertex*& v) {
-				m_assert(contain(v));
-				REP(k, 3)
-					if (vtx[k] != u && vtx[k] != v) {
-						vtx[k]->adj_face.erase(this);
-						break;
-					}
-			//	u->adj_face.erase(this);		// XXX can't modify set when inside it
-				v->adj_face.erase(this);
-				vtx[0] = vtx[1] = vtx[2] = nullptr;
-			}
-
-			void change_to(Vertex*& u, Vertex*& v) {
-				m_assert(count(v) == 0);
-				m_assert(count(u) == 1);
-				REP(k, 3) if (vtx[k] == u) vtx[k] = v;
-				m_assert(vtx[0] != vtx[1] && vtx[1] != vtx[2] && vtx[2] != vtx[0]);
-				norm = (vtx[2]->pos - vtx[0]->pos).cross((vtx[1]->pos - vtx[0]->pos)).get_normalized();
-				v->adj_face.insert(this);
-			}
+			// delete this face (containing u, v) when collapsing from u to v
+			void delete_from(Vertex*& u, Vertex*& v);
+			// change vertex u to v when collapsing from u to v
+			void change_to(Vertex*& u, Vertex*& v);
 
 #ifdef DEBUG
 			bool contain(Vertex* v) const
@@ -70,12 +54,8 @@ class MeshSimplifier {
 				REP(k, 3) if (f->vtx[k] != this) adj_vtx.insert(f->vtx[k]);
 			}
 
-			void change_to(Vertex* u, Vertex* v) {
-				m_assert(this != v);
-				m_assert(adj_vtx.find(u) != adj_vtx.end());
-				adj_vtx.erase(u);
-				adj_vtx.insert(v);
-			}
+			// change adj_vtx, u to v
+			void change_to(Vertex* u, Vertex* v);
 		};
 
 		vector<Vertex> vtxs;

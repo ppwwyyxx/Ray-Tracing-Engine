@@ -1,5 +1,5 @@
 // File: mesh_simplifier.cc
-// Date: Wed Jun 19 21:09:17 2013 +0800
+// Date: Wed Jun 19 21:17:58 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <list>
@@ -7,6 +7,32 @@
 #include "mesh_simplifier.hh"
 using namespace std;
 
+void MeshSimplifier::Face::delete_from(Vertex*& u, Vertex*& v) {
+	m_assert(contain(v));
+	REP(k, 3)
+		if (vtx[k] != u && vtx[k] != v) {
+			vtx[k]->adj_face.erase(this);
+			break;
+		}
+	v->adj_face.erase(this);
+	vtx[0] = vtx[1] = vtx[2] = nullptr;
+}
+
+void MeshSimplifier::Face::change_to(Vertex*& u, Vertex*& v) {
+	m_assert(count(v) == 0);
+	m_assert(count(u) == 1);
+	REP(k, 3) if (vtx[k] == u) vtx[k] = v;
+	m_assert(vtx[0] != vtx[1] && vtx[1] != vtx[2] && vtx[2] != vtx[0]);
+	norm = (vtx[2]->pos - vtx[0]->pos).cross((vtx[1]->pos - vtx[0]->pos)).get_normalized();
+	v->adj_face.insert(this);
+}
+
+void MeshSimplifier::Vertex::change_to(Vertex* u, Vertex* v) {
+	m_assert(this != v);
+	m_assert(adj_vtx.find(u) != adj_vtx.end());
+	adj_vtx.erase(u);
+	adj_vtx.insert(v);
+}
 
 MeshSimplifier::MeshSimplifier(Mesh& _mesh, real_t ratio): mesh(_mesh) {
 	int nvtx = mesh.vtxs.size();
@@ -18,10 +44,6 @@ MeshSimplifier::MeshSimplifier(Mesh& _mesh, real_t ratio): mesh(_mesh) {
 
 	REP(k, nvtx)
 		vtxs.push_back(Vertex(mesh.vtxs[k].pos, k));
-	/*
-	 *for (auto & v : mesh.vtxs)
-	 *    vtxs.push_back(Vertex(v.pos));
-	 */
 
 	REP(k, nface) {
 		int a, b, c;
@@ -74,11 +96,11 @@ void MeshSimplifier::update_cost(Vertex* u) {
 
 int MeshSimplifier::collapse(Vertex* u, Vertex* v) {
 	// move u onto v
-//	print_debug("collapse from %d to %d\n", u->id, v->id);
+	//	print_debug("collapse from %d to %d\n", u->id, v->id);
 	u->erased = true;
 	int ret = 0;
 
-	vector<Face*> to_delete;
+	list<Face*> to_delete;		// can't modify u inside loop
 	for (auto & uface : u->adj_face) {
 		m_assert(uface->contain(u));
 		if (v->adj_face.find(uface) != v->adj_face.end()) {
@@ -88,8 +110,7 @@ int MeshSimplifier::collapse(Vertex* u, Vertex* v) {
 		} else
 			uface->change_to(u, v);
 	}
-	for (auto & f : to_delete)
-		u->adj_face.erase(f);
+	for (auto & f : to_delete) u->adj_face.erase(f);
 
 	for (auto & uvtx : u->adj_vtx)
 		if (!uvtx->erased && uvtx != v) {
@@ -104,7 +125,7 @@ int MeshSimplifier::collapse(Vertex* u, Vertex* v) {
 
 void MeshSimplifier::do_simplify() {
 	int nowcnt = faces.size();
-	while (nowcnt > target_num) {
+	while (nowcnt > target_num && nowcnt > 4) {
 		real_t min = numeric_limits<real_t>::max();
 		Vertex* candidate_u = nullptr;
 		for (auto & u : vtxs) {
