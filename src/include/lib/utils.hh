@@ -1,5 +1,5 @@
 // File: utils.hh
-// Date: Tue Jun 18 14:52:54 2013 +0800
+// Date: Wed Jun 19 11:29:32 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 
@@ -59,3 +59,21 @@ void c_printf(const char* col, const char* fmt, ...);
 
 void c_fprintf(const char* col, FILE* fp, const char* fmt, ...);
 
+inline std::string string_format(const char* fmt, ...) {
+	int size = 512;
+	char* buffer = 0;
+	buffer = new char[size];
+	va_list ap;
+	va_start(ap, fmt);
+	int nsize = vsnprintf(buffer, size, fmt, ap);
+	if(size <= nsize){ //fail delete buffer and try again
+		delete[] buffer;
+		buffer = 0;
+		buffer = new char[nsize + 1]; //+1 for /0
+		nsize = vsnprintf(buffer, size, fmt, ap);
+	}
+	std::string ret(buffer);
+	va_end(ap);
+	delete[] buffer;
+	return ret;
+}

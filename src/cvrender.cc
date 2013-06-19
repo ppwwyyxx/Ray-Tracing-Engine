@@ -1,5 +1,5 @@
 // File: cvrender.cc
-// Date: Wed Jun 19 00:12:29 2013 +0800
+// Date: Wed Jun 19 11:45:55 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <opencv2/opencv.hpp>
@@ -105,7 +105,11 @@ void CVRender::antialias() {
 			newcol += get(dst, k.x + di, k.y + dj) * kernel[(di + 1) * 3 + dj + 1];
 		_write(k.x, k.y, newcol);
 	}
+}
 
+void CVRender::blur() {
+	Mat dst = img;
+	GaussianBlur(dst, img, Size(3, 3), 4);
 }
 
 void CVViewer::render_all() {
@@ -123,6 +127,7 @@ void CVViewer::render_all() {
 	}
 	printf("Spend %lf seconds\n", timer.get_time());
 //	r.antialias();
+	if (gaussian_blur) r.blur();
 }
 
 void CVViewer::view() {

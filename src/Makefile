@@ -1,7 +1,7 @@
 # $File: Makefile
-# $Date: Wed Jun 19 11:22:32 2013 +0800
+# $Date: Wed Jun 19 11:37:38 2013 +0800
 
-OBJ_DIR = obj
+OBJ_DIR = build
 TARGET = main
 
 INCLUDE_DIR = -Iinclude

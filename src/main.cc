@@ -1,34 +1,13 @@
 // File: main.cc
-// Date: Wed Jun 19 11:22:25 2013 +0800
+// Date: Wed Jun 19 11:46:40 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
-#include <cstdarg>
 #include "viewer.hh"
 #include "space.hh"
 #include "renderable/plane.hh"
 #include "renderable/sphere.hh"
 #include "view.hh"
-#include "lib/imagereader.hh"
 #include "renderable/mesh.hh"
-#include "lib/objreader.hh"
 
-inline std::string format(const char* fmt, ...){
-    int size = 512;
-    char* buffer = 0;
-    buffer = new char[size];
-    va_list vl;
-    va_start(vl, fmt);
-    int nsize = vsnprintf(buffer, size, fmt, vl);
-    if(size<=nsize){ //fail delete buffer and try again
-        delete[] buffer;
-        buffer = 0;
-        buffer = new char[nsize+1]; //+1 for /0
-        nsize = vsnprintf(buffer, size, fmt, vl);
-    }
-    std::string ret(buffer);
-    va_end(vl);
-    delete[] buffer;
-    return ret;
-}
 
 using namespace std;
 
@@ -91,13 +70,16 @@ void generate_dof_video() {
 
 
 	REP(k, 300) {
-		CVViewer viewer(v, "output/" + format("%03d", k) + ".png");
+		CVViewer viewer(v, "output/" + string_format("%03d", k) + ".png");
 		v.move_screen(0.05);
 	}
 }
 
 int main(int argc, char* argv[]) {
-	generate_dof_video();
+	ball_scene();
+	/*
+	 *generate_dof_video();
+	 */
 	return 0;
 	int w, h;
 	w = h = 500;

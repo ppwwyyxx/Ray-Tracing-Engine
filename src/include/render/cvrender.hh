@@ -1,5 +1,5 @@
 // File: cvrender.hh
-// Date: Wed Jun 19 11:07:26 2013 +0800
+// Date: Wed Jun 19 11:44:28 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 
@@ -24,6 +24,8 @@ class CVRender: public RenderBase {
 		~CVRender() {}
 
 		void antialias();
+
+		void blur();
 
 		Color get(const cv::Mat& img, int x, int y) const;
 
