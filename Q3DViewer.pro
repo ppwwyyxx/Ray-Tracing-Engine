@@ -11,15 +11,16 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = Q3DViewer
 TEMPLATE = app
 
-QMAKE_CXXFLAGS += -O3 -std=c++11 -Isrc/include -DDEBUG
+QMAKE_CXXFLAGS += -O3 -std=c++11 -Isrc/include -DDEBUG -fopenmp `Magick++-config --cppflags`
+LIBS += `Magick++-config --libs` -fopenmp
 
 
 SOURCES += Qt.cpp\
         mainwindow.cpp\
 		src/color.cc\
-		src/debugutils.cc src/light.cc src/plane.cc src/space.cc\
-		src/sphere.cc src/surface.cc src/texture.cc src/utils.cc\
-		src/view.cc
+		src/lib/*.cc src/renderable/*.cc src/space.cc\
+		src/surface.cc src/texture.cc\
+		src/view.cc src/mesh_simplifier.cc
 
 HEADERS  += mainwindow.h src/include/geometry/*.hh src/include/material/*.hh\
 	src/include/renderable/*.hh src/include/*.hh

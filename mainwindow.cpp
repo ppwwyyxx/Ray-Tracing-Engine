@@ -29,7 +29,7 @@ MainWindow::MainWindow(QWidget *parent) :
     pic->setScene(scene);
 
 
-    connect(begin_tracing, SIGNAL(clicked()), this, SLOT(trace()));
+    connect(cb_trace, SIGNAL(clicked()), this, SLOT(trace()));
 
 	update_value();
 }

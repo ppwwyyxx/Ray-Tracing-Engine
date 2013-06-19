@@ -1,5 +1,5 @@
 // File: view.cc
-// Date: Wed Jun 19 16:15:17 2013 +0800
+// Date: Thu Jun 20 01:55:05 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "view.hh"
@@ -68,7 +68,7 @@ void View::zoom(real_t ratio) {
 	resume_dir_vector();
 }
 
-void View::rotate(int angle) {
+void View::orbit(int angle) {
 	normalize_dir_vector();
 	real_t alpha = M_PI * angle / 180;
 	Vec norm = (view_point - mid).get_normalized();
@@ -90,5 +90,15 @@ void View::move_screen(real_t dist) {
 	mid = view_point + (mid - view_point).get_normalized() * (old_dist_to_screen + dist);
 	size *= (old_dist_to_screen + dist) / old_dist_to_screen;
 	resume_dir_vector();
-	cout << "new mid" << mid << endl;
+}
+
+void View::rotate(int angle) {
+	normalize_dir_vector();
+	real_t alpha = M_PI * angle / 180;
+	Vec norm = (mid - view_point).get_normalized();
+	norm = norm * cos(alpha) + dir_w * sin(alpha);
+	mid = view_point + norm * (mid - view_point).mod();
+	m_assert(fabs(dir_w.sqr()) - 1 < EPS);
+	dir_w = -norm.cross(dir_h);
+	resume_dir_vector();
 }

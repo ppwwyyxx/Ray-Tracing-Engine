@@ -1,5 +1,5 @@
 // File: cvrender.cc
-// Date: Wed Jun 19 22:56:19 2013 +0800
+// Date: Thu Jun 20 01:55:34 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <opencv2/opencv.hpp>
@@ -31,6 +31,8 @@ using namespace cv;
 #define KEY_minus 45
 #define KEY_lbracket 91
 #define KEY_rbracket 93
+#define KEY_greater 46
+#define KEY_smaller 44
 
 #define VIEWER_ANGLE 15
 #define ZOOMING 1.2
@@ -155,10 +157,10 @@ void CVViewer::view() {
 					rerender = false;
 					break;
 				case KEY_LEFT:
-					v.rotate(VIEWER_ANGLE);
+					v.orbit(VIEWER_ANGLE);
 					break;
 				case KEY_RIGHT:
-					v.rotate(-VIEWER_ANGLE);
+					v.orbit(-VIEWER_ANGLE);
 					break;
 				case KEY_UP:
 					v.twist(VIEWER_ANGLE);
@@ -189,6 +191,12 @@ void CVViewer::view() {
 					break;
 				case KEY_rbracket:
 					v.move_screen(SHIFT_SCREEN);
+					break;
+				case KEY_greater:
+					v.rotate(VIEWER_ANGLE);
+					break;
+				case KEY_smaller:
+					v.rotate(-VIEWER_ANGLE);
 					break;
 				default:
 					rerender = false;

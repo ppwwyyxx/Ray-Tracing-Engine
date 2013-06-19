@@ -1,5 +1,5 @@
 // File: view.hh
-// Date: Wed Jun 19 13:38:34 2013 +0800
+// Date: Thu Jun 20 01:50:40 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -38,6 +38,8 @@ class View {
 		void twist(int angle); // -180 ~ 180
 
 		void rotate(int angle); // -180 ~ 180
+
+		void orbit(int angle); // -180 ~ 180
 
 		void shift(real_t dist, bool horiz);
 
