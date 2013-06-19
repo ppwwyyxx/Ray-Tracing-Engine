@@ -1,5 +1,5 @@
 // File: mesh_simplifier.cc
-// Date: Wed Jun 19 22:42:15 2013 +0800
+// Date: Wed Jun 19 22:58:06 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <list>
@@ -104,7 +104,6 @@ void MeshSimplifier::update_cost(Vertex* u) {
 
 int MeshSimplifier::collapse(Vertex* u, Vertex* v) {
 	// move u onto v
-	//	print_debug("collapse from %d to %d\n", u->id, v->id);
 	u->erased = true;
 	int ret = 0;
 
@@ -127,14 +126,20 @@ int MeshSimplifier::collapse(Vertex* u, Vertex* v) {
 		}
 	v->adj_vtx.erase(u);		// this must be put after the above line
 
-#pragma omp parallel
-#pragma omp single
-	{
-		for (auto itr = u->adj_vtx.begin(); itr != u->adj_vtx.end(); ++itr)
-	#pragma omp task firstprivate(itr)
-			update_cost(*itr);
-	#pragma omp taskwait
-	}
+/*
+ *#pragma omp parallel
+ *#pragma omp single
+ *    {
+ *        for (auto itr = u->adj_vtx.begin(); itr != u->adj_vtx.end(); ++itr)
+ *    #pragma omp task firstprivate(itr)
+ *            update_cost(*itr);
+ *    #pragma omp taskwait
+ *    }
+ */
+	for_each(u->adj_vtx.begin(), u->adj_vtx.end(),
+			[&](Vertex* n) {
+				update_cost(n);
+			});
 	return ret;
 }
 
@@ -151,7 +156,8 @@ void MeshSimplifier::do_simplify() {
 		 *}
 		 */
 
-		auto & ele = heap.top(); heap.pop();
+		auto & ele = heap.top();
+		heap.pop();
 		if (ele.outofdate()) continue;
 		if (ele.v->erased) continue;
 		Vertex* candidate_u = ele.v;
@@ -159,7 +165,7 @@ void MeshSimplifier::do_simplify() {
 		m_assert(candidate_u != nullptr);
 		m_assert(candidate_u->candidate != nullptr);
 		nowcnt -= collapse(candidate_u, candidate_u->candidate);
-		if (nowcnt % 100 == 0)
+		if (nowcnt % 1000 == 0)
 			print_progress((faces.size() - nowcnt) * 100 / (faces.size() - target_num));
 	}
 }

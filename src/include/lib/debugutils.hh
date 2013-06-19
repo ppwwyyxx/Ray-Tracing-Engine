@@ -1,5 +1,5 @@
 // File: debugutils.hh
-// Date: Sun Apr 07 16:20:54 2013 +0800
+// Date: Wed Jun 19 22:58:38 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 
@@ -9,9 +9,6 @@ void __m_assert_check__(bool val, const char *expr,
 		const char *file, const char *func, int line);
 
 
-#define m_assert(expr) \
-	__m_assert_check__((expr), # expr, __FILE__, __PRETTY_FUNCTION__, __LINE__)
-
 void error_exit(const char *msg) __attribute__((noreturn));
 
 
@@ -20,6 +17,9 @@ void error_exit(const char *msg) __attribute__((noreturn));
 #define print_debug(fmt, ...) \
 			__print_debug__(__FILE__, __func__, __LINE__, fmt, ## __VA_ARGS__)
 
+#define m_assert(expr) \
+	__m_assert_check__((expr), # expr, __FILE__, __PRETTY_FUNCTION__, __LINE__)
+
 
 void __print_debug__(const char *file, const char *func, int line, const char *fmt, ...)
 	__attribute__((format(printf, 4, 5)));
@@ -27,6 +27,8 @@ void __print_debug__(const char *file, const char *func, int line, const char *f
 #else
 
 #define print_debug(fmt, ...)
+
+#define m_assert(expr)
 
 
 #endif

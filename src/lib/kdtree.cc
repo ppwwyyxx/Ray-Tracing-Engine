@@ -1,5 +1,5 @@
 // File: kdtree.cc
-// Date: Wed Jun 19 19:31:38 2013 +0800
+// Date: Wed Jun 19 22:57:20 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include <algorithm>
 #include <future>
@@ -126,10 +126,9 @@ KDTree::KDTree(const vector<rdptr>& objs, const AABB& space) {
 		objlist.push_back(RenderWrapper(obj, aabb));
 		bound_min.update_min(aabb.min), bound_max.update_max(aabb.max);
 	}
-	cout << "kdtree: " << get_aabb() << endl;
 	Timer timer;
 	root = build(move(objlist), space, 0);
-	print_debug("build tree takes %lf seconds\n", timer.get_time());
+	printf("Build tree spends %lf seconds\n", timer.get_time());
 }
 
 shared_ptr<Trace> KDTree::get_trace(const Ray& ray, real_t max_dist) const {

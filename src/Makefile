@@ -1,11 +1,11 @@
 # $File: Makefile
-# $Date: Wed Jun 19 22:34:28 2013 +0800
+# $Date: Wed Jun 19 22:59:53 2013 +0800
 
 OBJ_DIR = build
 TARGET = main
 
 INCLUDE_DIR = -Iinclude
-DEFINES = -DDEBUG -D_GLIBCXX_PARALLEL
+DEFINES = -DDEBUG
 
 OPTFLAGS = -Wall -Wextra -O3
 #OPTFLAGS = -O3
