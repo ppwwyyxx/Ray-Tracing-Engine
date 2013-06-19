@@ -1,5 +1,5 @@
 // File: space.hh
-// Date: Tue Jun 18 23:49:42 2013 +0800
+// Date: Wed Jun 19 16:14:48 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -45,7 +45,7 @@ class Space {
 		void clean_obj()
 		{ objs.clear(); }
 
-		void init();
+		void finish();
 
 		Color trace(const Ray& ray, real_t dist = 0, int depth = 0);
 

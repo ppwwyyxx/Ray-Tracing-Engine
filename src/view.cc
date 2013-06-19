@@ -1,5 +1,5 @@
 // File: view.cc
-// Date: Wed Jun 19 13:42:13 2013 +0800
+// Date: Wed Jun 19 16:15:17 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "view.hh"
@@ -19,7 +19,7 @@ View::View(const std::shared_ptr<Space>& _sp, const Vec& _view_point,
 	m_assert(fabs(dir_h.sqr()) - 1 < EPS);
 
 	resume_dir_vector();
-	sp->init();
+	sp->finish();
 }
 
 Color View::render(int i, int j, bool debug) const {

@@ -1,5 +1,5 @@
 // File: space.cc
-// Date: Wed Jun 19 13:42:32 2013 +0800
+// Date: Wed Jun 19 16:15:17 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <limits>
@@ -33,7 +33,7 @@ void Space::add_obj(const rdptr& objptr) {
 	objs.push_back(move(objptr));
 }
 
-void Space::init() {		// called from View::View()
+void Space::finish() {		// called from View::View()
 	ambient = Color::BLACK;
 	m_assert(lights.size());
 	for (const auto &i : lights)

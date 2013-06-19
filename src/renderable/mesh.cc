@@ -1,5 +1,5 @@
 // File: mesh.cc
-// Date: Wed Jun 19 13:18:53 2013 +0800
+// Date: Wed Jun 19 16:14:29 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <algorithm>
@@ -11,6 +11,8 @@ Mesh::Mesh(std::string fname, const Vec& _pivot, real_t _zsize, const shared_ptr
 	pivot(_pivot), zoom_size(_zsize) {
 	texture = _texture;
 	ObjReader::read_in(fname, this);
+	transform_vtxs();
+	for (auto &ids : face_ids) add_face(ids);
 }
 
 void Mesh::transform_vtxs() {
@@ -38,9 +40,7 @@ shared_ptr<Trace> Mesh::get_trace(const Ray& ray, real_t dist) const {
 	return nullptr;
 }
 
-void Mesh::finish_add() {
-	transform_vtxs();
-	for (auto &ids : face_ids) add_face(ids);
+void Mesh::finish() {		// build tree, calculate smooth norm
 
 	tree = make_shared<KDTree>(faces, get_aabb());
 
@@ -62,7 +62,6 @@ void Mesh::finish_add() {
 		}
 		REP(k, nvtx)
 			vtxs[k].norm = norm_sum[k].sum / norm_sum[k].cnt;
-		face_ids.clear();
 		delete[] norm_sum;
 	}
 }

@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Wed Jun 19 14:08:54 2013 +0800
+// Date: Wed Jun 19 16:14:02 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "viewer.hh"
 #include "space.hh"
@@ -98,9 +98,9 @@ int main(int argc, char* argv[]) {
 	Mesh mesh(fname, Vec(0, 0, 2), 5);
 	mesh.smooth = false;
 	mesh.set_texture(tred);
-	mesh.finish_add();
+	mesh.finish();
 	s.add_obj(make_shared<Mesh>(mesh));
-	REP(i, 100) REP(j, 100) s.add_obj(new Sphere(PureSphere(Vec(i * 2, j * 2, 1), 0.5), t2));
+	//REP(i, 100) REP(j, 100) s.add_obj(new Sphere(PureSphere(Vec(i * 2, j * 2, 1), 0.5), t2));
 
 	s.add_obj(make_shared<Plane>(plane1));
 //	Sphere sphere(PureSphere(Vec(1, 0, 1), 0.5), t2);

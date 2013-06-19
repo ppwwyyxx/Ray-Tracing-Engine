@@ -1,5 +1,5 @@
 // File: mesh.hh
-// Date: Wed Jun 19 11:08:27 2013 +0800
+// Date: Wed Jun 19 16:14:29 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -50,7 +50,7 @@ class Mesh: public RenderAble {
 
 		void transform_vtxs();
 
-		void finish_add();
+		void finish();
 
 		shared_ptr<Trace> get_trace(const Ray& ray, real_t max_dist = -1) const override;
 
