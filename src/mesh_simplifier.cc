@@ -1,9 +1,12 @@
 // File: mesh_simplifier.cc
-// Date: Wed Jun 19 21:54:02 2013 +0800
+// Date: Wed Jun 19 22:42:15 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <list>
 #include <limits>
+#include <algorithm>
+#include <omp.h>
+#include "lib/Timer.hh"
 #include "mesh_simplifier.hh"
 using namespace std;
 
@@ -54,8 +57,8 @@ MeshSimplifier::MeshSimplifier(Mesh& _mesh, real_t ratio): mesh(_mesh) {
 		vtxs[c].add_face(&faces[k]);
 	}
 
-	for (auto & k : vtxs) update_cost(&k);
-	for (auto & k : vtxs) heap.push(Elem(&k));
+#pragma omp parallel for schedule(dynamic)
+	REP(k, nvtx) update_cost(&vtxs[k]);
 }
 
 real_t MeshSimplifier::cost(Vertex* u, Vertex* v) const {
@@ -79,12 +82,13 @@ real_t MeshSimplifier::cost(Vertex* u, Vertex* v) const {
 
 void MeshSimplifier::update_cost(Vertex* u) {
 	// cost of `I collapse to other`
-	real_t min = numeric_limits<real_t>::max();
-	u->candidate = nullptr;
 	if (u->adj_vtx.size() == 0) {
 		u->erased = true;
 		return;
 	}
+
+	real_t min = numeric_limits<real_t>::max();
+	u->candidate = nullptr;
 
 	for (auto & uvtx : u->adj_vtx) {
 		if (uvtx->erased) m_assert(false);
@@ -94,6 +98,7 @@ void MeshSimplifier::update_cost(Vertex* u) {
 	m_assert(u->candidate != nullptr);
 	u->cost = min;
 	u->cost_timestamp ++;
+#pragma omp critical
 	heap.push(u);
 }
 
@@ -122,7 +127,14 @@ int MeshSimplifier::collapse(Vertex* u, Vertex* v) {
 		}
 	v->adj_vtx.erase(u);		// this must be put after the above line
 
-	for (auto & uvtx : u->adj_vtx) update_cost(uvtx);
+#pragma omp parallel
+#pragma omp single
+	{
+		for (auto itr = u->adj_vtx.begin(); itr != u->adj_vtx.end(); ++itr)
+	#pragma omp task firstprivate(itr)
+			update_cost(*itr);
+	#pragma omp taskwait
+	}
 	return ret;
 }
 
