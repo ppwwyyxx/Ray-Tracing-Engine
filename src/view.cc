@@ -1,5 +1,5 @@
 // File: view.cc
-// Date: Wed Jun 19 00:27:44 2013 +0800
+// Date: Wed Jun 19 09:32:07 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "view.hh"
@@ -39,7 +39,7 @@ Color View::render(int i, int j, bool debug) const {
 			theta = (double)rand() / RAND_MAX * 2 * M_PI;
 			Vec diff = dir_w * cos(theta) + dir_w * sin(theta);
 			diff.normalize();
-			diff = diff * DOF_SAMPLE_RADIUS;
+			diff = diff * ((double)rand() / RAND_MAX * DOF_SAMPLE_RADIUS * 2);
 			/*
 			 *theta += delta_theta;
 			 */

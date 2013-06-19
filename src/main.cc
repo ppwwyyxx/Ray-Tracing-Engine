@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Wed Jun 19 00:19:58 2013 +0800
+// Date: Wed Jun 19 09:34:07 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "viewer.hh"
 #include "space.hh"
@@ -44,7 +44,7 @@ void ball_scene() {
 	shared_ptr<Texture> tball(new HomoTexture(Surface(0, 40, 0.5, Color::CYAN * 0.9, Color::WHITE * DEFAULT_SPECULAR)));
 
 	REP(i, 10) REP(j, 2) s.add_obj(new Sphere(PureSphere(Vec(j * 6, 1, i * 3), 1), tball));
-	View v(make_shared<Space>(s), Vec(11, -13.3, 39.75), Vec(2, 7.3, 10.8), 20, Geometry(w, h));
+	View v(make_shared<Space>(s), Vec(11, -13.3, 39.75), Vec(3.4, 3.9, 15.8), 16, Geometry(w, h));
 	CVViewer viewer(v);
 	viewer.view();
 }
