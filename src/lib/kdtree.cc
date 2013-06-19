@@ -1,7 +1,8 @@
 // File: kdtree.cc
-// Date: Wed Jun 19 13:41:05 2013 +0800
+// Date: Wed Jun 19 14:48:46 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include <algorithm>
+#include <future>
 #include <omp.h>
 #include "lib/kdtree.hh"
 #include "lib/utils.hh"
@@ -163,7 +164,7 @@ KDTree::Node* KDTree::build(const vector<RenderWrapper>& objs, const AABB& box, 
 
 	Node* ret = new Node(box);
 
-//	if (depth > KDTREE_MAX_DEPTH) return nullptr;
+	if (depth > KDTREE_MAX_DEPTH) return nullptr;
 	if (objs.size() <= KDTREE_TERMINATE_OBJ_CNT) {
 		ADDOBJ;
 		return ret;
@@ -222,7 +223,6 @@ KDTree::Node* KDTree::build(const vector<RenderWrapper>& objs, const AABB& box, 
 	// end of O(n^2)
 
 	// start of O(n log^2(n)) build
-#pragma omp parallel for schedule(dynamic)
 	REP(dim, 3) {
 		vector<pair<real_t, bool>> cand_list;		//// true: min, false: max
 		for (auto & obj: objs)
@@ -243,7 +243,6 @@ KDTree::Node* KDTree::build(const vector<RenderWrapper>& objs, const AABB& box, 
 				real_t cost = par.first.area() * lcnt + par.second.area() * rcnt;
 				if (lcnt == 0 || rcnt == 0 || (lcnt + rcnt == nobj - 1 && rcnt == 1))
 					cost *= 0.8;		// this is a hack
-#pragma omp critical
 				if (update_min(min_cost, cost)) best_pl = pl;
 			} catch (...) {}
 
@@ -276,9 +275,21 @@ KDTree::Node* KDTree::build(const vector<RenderWrapper>& objs, const AABB& box, 
 
 
 //	print_debug("depth: %d, lsize: %d, rsize: %d\n", depth, (int)objl.size(), (int)objr.size());
-	Node *lch = build(move(objl), par.first, depth + 1),
-		 *rch = build(move(objr), par.second, depth + 1);
-	ret->child[0] = lch, ret->child[1] = rch;
+
+	if (depth < 1) { // parallel
+		future<Node*> lch_fut = async(launch::async, [&]() {
+					return build(move(objl), par.first, depth + 1); });
+		future<Node*> rch_fut = async(launch::async, [&]() {
+					return build(move(objr), par.second, depth + 1); });
+
+		ret->child[0] = lch_fut.get();
+		ret->child[1] = rch_fut.get();
+	} else {
+		ret->child[0] = build(move(objl), par.first, depth + 1);
+		ret->child[1] = build(move(objr), par.second, depth + 1);
+	}
+
+
 	if (ret->leaf()) ADDOBJ;		// add obj to leaf node
 
 	return ret;
