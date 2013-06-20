@@ -1,5 +1,5 @@
 // File: cvrender.cc
-// Date: Thu Jun 20 16:52:50 2013 +0800
+// Date: Fri Jun 21 00:33:28 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <opencv2/opencv.hpp>
@@ -37,7 +37,7 @@ using namespace cv;
 #define VIEWER_ANGLE 15
 #define ZOOMING 1.2
 #define SHIFT_DISTANCE 20
-#define SHIFT_SCREEN 3
+#define SHIFT_SCREEN 8
 
 
 CVRender::CVRender(const Geometry &m_g):

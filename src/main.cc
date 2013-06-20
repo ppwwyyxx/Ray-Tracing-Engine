@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Fri Jun 21 00:30:24 2013 +0800
+// Date: Fri Jun 21 01:12:42 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "viewer.hh"
 #include "space.hh"
@@ -103,12 +103,20 @@ void test_kdtree() {
 	viewer.view();
 }
 
+void test_simplify() {
+	int w, h;
+	w = h = 500;
+	const char* fname = "../resource/models/fixed.perfect.dragon.100K.0.07.obj";
+	Mesh mesh(fname, Vec(0, 0, 2), 5);
+	mesh.smooth = true;
+	mesh.set_texture(make_shared<HomoTexture>(HomoTexture::CYAN));
+	mesh.simplify(0.2);
+	mesh.finish();
+}
+
 int main() {
-	test_kdtree();
+	test_simplify();
 	return 0;
-	//ball_scene();
-//	generate_dof_video();
-//	return 0;
 	int w, h;
 	w = h = 500;
 	Space s;

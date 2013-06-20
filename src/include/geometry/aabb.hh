@@ -1,5 +1,5 @@
 // File: aabb.hh
-// Date: Thu Jun 20 11:09:23 2013 +0800
+// Date: Fri Jun 21 00:47:23 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -61,8 +61,8 @@ class AABB {
 				// !! otherwise, l.max or r.min can be equal to *this.max / *this.min,
 				// resulting a same boundbox in child
 				throw "Outside";
-			l.max[pl.axis] = pl.pos + EPS;		// to loose
-			r.min[pl.axis] = pl.pos - EPS;
+			l.max[pl.axis] = pl.pos;		// to loose
+			r.min[pl.axis] = pl.pos;
 			return std::make_pair(l, r);
 		}
 
