@@ -130,9 +130,6 @@ void MainWindow::trace() {
         return;
     }
 
-	delete view; delete viewer;
-	view = new View(space, Vec(0, 0, 12), Vec(0, 0, 2), 15, Geometry(pixmap->width(), pixmap->height()));
-	viewer = new CVViewer(*view, "output.png");
 
 	viewer->render_all();
 	int w = pixmap->width(), h = pixmap->height();

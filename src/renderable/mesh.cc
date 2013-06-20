@@ -1,5 +1,5 @@
 // File: mesh.cc
-// Date: Thu Jun 20 13:51:07 2013 +0800
+// Date: Thu Jun 20 14:16:38 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <algorithm>
@@ -44,25 +44,25 @@ void Mesh::finish() {		// build tree, calculate smooth norm
 		if (face_ids.size() < 30) {
 			printf("Number of faces is too small, cannot use smooth!\n");
 			smooth = false;
-			return;
-		}
-		int nvtx = vtxs.size();
+		} else {
+			int nvtx = vtxs.size();
 
-		struct NormSum {
-			Vec sum = Vec(0, 0, 0);
-			int cnt = 0;
-			void add(const Vec& v) { sum = sum + v, cnt ++; }
-		};
+			struct NormSum {
+				Vec sum = Vec(0, 0, 0);
+				int cnt = 0;
+				void add(const Vec& v) { sum = sum + v, cnt ++; }
+			};
 
-		NormSum* norm_sum = new NormSum[nvtx];
-		for (auto & t : face_ids) {
-			Vec tmp_norm = Triangle(vtxs[get<0>(t)].pos, vtxs[get<1>(t)].pos, vtxs[get<2>(t)].pos).norm;
-			norm_sum[get<0>(t)].add(tmp_norm);
-			norm_sum[get<1>(t)].add(tmp_norm);
-			norm_sum[get<2>(t)].add(tmp_norm);
+			NormSum* norm_sum = new NormSum[nvtx];
+			for (auto & t : face_ids) {
+				Vec tmp_norm = Triangle(vtxs[get<0>(t)].pos, vtxs[get<1>(t)].pos, vtxs[get<2>(t)].pos).norm;
+				norm_sum[get<0>(t)].add(tmp_norm);
+				norm_sum[get<1>(t)].add(tmp_norm);
+				norm_sum[get<2>(t)].add(tmp_norm);
+			}
+			REP(k, nvtx) vtxs[k].norm = norm_sum[k].sum / norm_sum[k].cnt;
+			delete[] norm_sum;
 		}
-		REP(k, nvtx) vtxs[k].norm = norm_sum[k].sum / norm_sum[k].cnt;
-		delete[] norm_sum;
 	}
 
 	for (auto &ids : face_ids) add_face(ids);
