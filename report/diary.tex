@@ -1,5 +1,5 @@
 % File: diary.tex
-% Date: Thu Jun 20 16:49:57 2013 +0800
+% Date: Thu Jun 20 17:45:57 2013 +0800
 % Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 \section{过程记录}
 \begin{enumerate}
@@ -10,8 +10,8 @@
 另外,远处的黑白纹理误差较大,不知是不可改进的浮点误差还是我的处理有误。
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=0.4]{res/first_pic.png}
-  \caption{\label{fig:first}}
+  \includegraphics[scale=0.4]{img/first_pic.png}
+  \caption*{\label{fig:first}}
 \end{figure}
 
 \item
@@ -20,8 +20,8 @@
 使得远处的纹理更自然.
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=0.4]{res/plane_with_beer.png}
-  \caption{\label{fig:beer}}
+  \includegraphics[scale=0.4]{img/plane_with_beer.png}
+  \caption*{\label{fig:beer}}
 \end{figure}
 
 \item
@@ -30,8 +30,8 @@
 左下部分能够看到高光.打开\verb|-O3|编译开关时,在我的机器上渲染一张$600 \times 600$的图片需要0.39s.
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=0.4]{res/specular.png}
-  \caption{\label{fig:specular}}
+  \includegraphics[scale=0.4]{img/specular.png}
+  \caption*{\label{fig:specular}}
 \end{figure}
 
 \item
@@ -39,51 +39,51 @@
   使用球模型,可以看到明显的高光效果。同时由于球面\verb|specular|参数高,使得球下部反射了平面。
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=0.4]{res/ball.png}
-  \caption{\label{fig:ball}}
+  \includegraphics[scale=0.4]{img/ball.png}
+  \caption*{\label{fig:ball}}
 \end{figure}
 
 \item
   对于找到的交点,判断它与光源之间是否被挡住,若被挡住就不计算漫反射和高光. 这样实现了阴影效果.
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=0.4]{res/shadow.png}
-  \caption{\label{fig:shadow}}
+  \includegraphics[scale=0.4]{img/shadow.png}
+  \caption*{\label{fig:shadow}}
 \end{figure}
 
 \item 对根据视点及对象生成视图(View)的方案进行修改,以支持视图的旋转,缩放.并利用opencv的key event实现了gui的旋转,缩放控制.
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=0.4]{res/rotate.png}
-  \caption{\label{fig:rotate}}
+  \includegraphics[scale=0.4]{img/rotate.png}
+  \caption*{\label{fig:rotate}}
 \end{figure}
 
 \item 加入了透射功能,依照预定义的介质密度及折射定律计算出射光方向.
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=0.4]{res/transmission.png}
-  \caption{\label{fig:transmission}}
+  \includegraphics[scale=0.4]{img/transmission.png}
+  \caption*{\label{fig:transmission}}
 \end{figure}
 
 \item 实现了三角面片的渲染,在求交时计算齐次重心坐标,为网格中的法向插值做准备.
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=0.4]{res/face.png}
-  \caption{\label{fig:face}}
+  \includegraphics[scale=0.4]{img/face.png}
+  \caption*{\label{fig:face}}
 \end{figure}
 
 \item 实现了obj格式读取及基本的渲染,绘制出了一个红色小人.
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=0.4]{res/human.png}
-  \caption{\label{fig:human}}
+  \includegraphics[scale=0.4]{img/human.png}
+  \caption*{\label{fig:human}}
 \end{figure}
 
 \item 实现了KDTree, 可以开始渲染更大的obj.
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=0.4]{res/flower.png}
-  \caption{\label{fig:flower}}
+  \includegraphics[scale=0.4]{img/flower.png}
+  \caption*{\label{fig:flower}}
 \end{figure}
 
 \item 按照\cite{kdtree}优化了KDTree的实现之后发现如下左图所示bug, 调试很久后发现两个原因.
@@ -93,24 +93,24 @@
   \centering
 \begin{minipage}[b]{0.46\linewidth}
   \centering
-  \includegraphics[width=\textwidth]{res/bug_teapot.png}
+  \includegraphics[width=\textwidth]{img/bug_teapot.png}
 \end{minipage}
 \begin{minipage}[b]{0.46\linewidth}
   \centering
-  \includegraphics[width=\textwidth]{res/fixed_teapot.png}
+  \includegraphics[width=\textwidth]{img/fixed_teapot.png}
 \end{minipage}
-  \caption{\label{fig:kdtree_bug}}
+  \caption*{\label{fig:kdtree_bug}}
 \end{figure}
 
 \item 实现了法向量插值. 方法是: 用各面法向量平均得到顶点法向量,用顶点法向量插值得到面片上各点法向量.插值前后的效果如下所示:
 \begin{figure}[H]
 \begin{minipage}[b]{0.46\linewidth}
   \centering
-  \includegraphics[width=\textwidth]{res/rough.png}
+  \includegraphics[width=\textwidth]{img/rough.png}
 \end{minipage}
 \begin{minipage}[b]{0.46\linewidth}
   \centering
-  \includegraphics[width=\textwidth]{res/smooth.png}
+  \includegraphics[width=\textwidth]{img/smooth.png}
 \end{minipage}
 \end{figure}
 
@@ -119,28 +119,28 @@
   空间中进行渲染.下图是一个20W面片的龙加上1万个球组成的场景,渲染此图只需1.4s.
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=0.4]{res/dragonball.png}
-  \caption{\label{fig:dragonball}}
+  \includegraphics[scale=0.4]{img/dragonball.png}
+  \caption*{\label{fig:dragonball}}
 \end{figure}
 
 \item 加入了图片纹理,设置在平面上.(图中四个亮斑为四个电光源)
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=0.4]{res/pic_texture.png}
-  \caption{\label{fig:texture}}
+  \includegraphics[scale=0.4]{img/pic_texture.png}
+  \caption*{\label{fig:texture}}
 \end{figure}
 
 \item 加入了软阴影效果如下所示,左图渲染时间为0.15s, 右图为1.06s,此图将每个点光源变为20个密集点光源.
 \begin{figure}[H]
 \begin{minipage}[b]{0.46\linewidth}
   \centering
-  \includegraphics[width=\textwidth]{res/no_soft.png}
+  \includegraphics[width=\textwidth]{img/no_soft.png}
 \end{minipage}
 \begin{minipage}[b]{0.46\linewidth}
   \centering
-  \includegraphics[width=\textwidth]{res/soft.png}
+  \includegraphics[width=\textwidth]{img/soft.png}
 \end{minipage}
-  \caption{\label{fig:soft}}
+  \caption*{\label{fig:soft}}
 \end{figure}
 
 \item 加入了抗锯齿效果,分别用FSAA与CFAA,能看出变化但效果不明显。
@@ -148,14 +148,14 @@
 \item 发现球与地面接触处有密集的小斑点,调试后发现是由于球底部与平面略微重合,求交时有时会出错.
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=0.4]{res/smallpoint.png}
+  \includegraphics[scale=0.4]{img/smallpoint.png}
 \end{figure}
 
 \item 加入了景深效果,在感光器处随机取了20个伪视点,效率也相应降低了20倍,效果如图所示
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=0.4]{res/dof.png}
-  \caption{\label{fig:dof}}
+  \includegraphics[scale=0.4]{img/dof.png}
+  \caption*{\label{fig:dof}}
 \end{figure}
 
 \item 由于\verb|std::shared_ptr<T>|的默认构造函数会对引用计数和指针对象进行两次内存分配,效率不够高.
@@ -168,25 +168,27 @@
 \begin{figure}[H]
 \begin{minipage}[b]{0.46\linewidth}
   \centering
-  \includegraphics[width=\textwidth]{res/unsimplified_nosmooth.png}
+  \includegraphics[width=\textwidth]{img/unsimplified_nosmooth.png}
   \caption*{未简化,无法向插值}
 \end{minipage}
 \begin{minipage}[b]{0.46\linewidth}
   \centering
-  \includegraphics[width=\textwidth]{res/unsimplified_smooth.png}
+  \includegraphics[width=\textwidth]{img/unsimplified_smooth.png}
   \caption*{未简化,含法向插值}
 \end{minipage}
 
 \begin{minipage}[b]{0.46\linewidth}
   \centering
-  \includegraphics[width=\textwidth]{res/simplified_nosmooth.png}
+  \includegraphics[width=\textwidth]{img/simplified_nosmooth.png}
   \caption*{简化至20\%, 无法向插值}
 \end{minipage}
 \begin{minipage}[b]{0.46\linewidth}
   \centering
-  \includegraphics[width=\textwidth]{res/simplified_smooth.png}
+  \includegraphics[width=\textwidth]{img/simplified_smooth.png}
   \caption*{简化至20\%, 含法向插值}
 \end{minipage}
+
+\end{figure}
 
 \item 发现对于某些模型,简化时会触发\verb|assert|,调试后发现是由于网格坍缩时可能会导致一个面片中三点共线从而无法正确计算出法向.
   将其修正为:若坍缩后面片三点共线,则保留原法向.
@@ -194,8 +196,13 @@
   \item 发现若在调用\verb|Space::add_obj(const shared_ptr<Mesh>&)|后,若在调用栈中将\verb|Mesh|析构,则会发生段错误.调试后发现是由于
     \verb|Face|类中存储了指向其宿主的指针\verb|Mesh* host|,用于获取插值及纹理信息用,此指针在\verb|Mesh|复制时位被正确更新.
 
+
     \item 利用Qt4实现了一个简单的GUI,支持单个obj的预览,视点移动,网格简化.
 
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.4]{img/gui.png}
+  \caption*{\label{fig:gui}}
 \end{figure}
 
 

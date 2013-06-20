@@ -12,7 +12,7 @@ rebuild output/$(TARGET).pdf: *.tex *.bib output
 
 output:
 	mkdir output -p
-	cd output && rm -f res && ln -s ../res .
+	cd output && rm -f res img && ln -s ../res ../img .
 
 view: output/$(TARGET).pdf
 	$(READER) output/$(TARGET).pdf &

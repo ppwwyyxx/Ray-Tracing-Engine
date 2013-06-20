@@ -1,5 +1,5 @@
 # $File: Makefile
-# $Date: Thu Jun 20 16:42:48 2013 +0800
+# $Date: Thu Jun 20 17:25:41 2013 +0800
 
 OBJ_DIR = build
 TARGET = main
@@ -50,7 +50,7 @@ gui:
 	cd gui && qmake && make
 
 clean:
-	@rm -rf $(OBJ_DIR)
+	@rm -rf $(OBJ_DIR) gui/Makefile
 
 run: $(TARGET)
 	./$(TARGET)

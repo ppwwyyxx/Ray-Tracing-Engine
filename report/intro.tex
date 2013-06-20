@@ -1,6 +1,40 @@
 % File: intro.tex
-% Date: Thu Jun 20 01:34:44 2013 +0800
+% Date: Thu Jun 20 17:46:50 2013 +0800
 % Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 \section{简介}
+本程序是一个3D渲染程序.
+选用Phong模型\cite{phong}作为局部光照模型,渲染3D场景. 支持平面、球、三角面片、三角网格(可从obj文件读入)几种几何对象,并可方便的扩展.
+渲染支持软阴影,抗锯齿,景深等功能, 并可对三角网格进行自定义简化.
+三角网格,全局渲染,网格简化均采用数据结构(KD树及堆)与多线程加速,效率很高.
+同时,将渲染功能嵌入了图形界面,可以支持obj文件的预览及简化.
+
+\subsection{依赖}
+\begin{enumerate}
+  \item 本程序用C++11编写,需要编译器支持C++11中的ranged loop, initializer list, type inference等语法,且标准库包含\verb|std::shared_ptr, std::future|
+    类.建议使用 g++$ \ge$ 4.8 编译.
+
+  \item OpenCV2 \footnote{\url{http://opencv.org}}
+
+  \item ImageMagick \footnote{\url{http://www.imagemagick.org/script/index.php}}
+
+\item Qt4  \footnote{\url{http://qt-project.org/}} (可选)
+\end{enumerate}
+
+
+\subsection{编译}
+在\verb|src|目录中,使用\verb|make|命令和\verb|make gui|命令分别编译命令行程序与图形界面程序.
+
+\subsection{使用}
+
+\begin{enumerate}
+    \item 命令行程序:
+      直接运行,渲染一个演示场景. 可在\verb|main()|函数中选择不同的场景.
+      程序调用opencv进行图像显示,显示时可通过键盘进行导航,导航方法见\secref{navigate}
+
+      \item 图形界面程序:
+        运行界面如\figref{gui}所示,
+        运行后,通过open按钮选择obj文件,trace按钮渲染. 其余按钮用于更改视角、渲染方式等参数.
+        simplify按钮将obj模型按照给定的简化率进行简化.
+\end{enumerate}
 
