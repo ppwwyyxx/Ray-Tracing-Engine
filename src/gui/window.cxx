@@ -1,5 +1,5 @@
-// File: window.cc
-// Date: Thu Jun 20 16:40:56 2013 +0800
+// File: window.cxx
+// Date: Thu Jun 20 16:50:33 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <sstream>
@@ -64,8 +64,6 @@ MainWindow::MainWindow(QWidget *parent) :
 	space.add_light(Light(Vec(10, -10, 12), Color::WHITE, 1.0));
 	space.add_light(Light(Vec(9, 2, 30), Color::WHITE, 1.0));
 	space.add_light(Light(Vec(-9, 2, 30), Color::WHITE, 1.0));
-	shared_ptr<Texture> tpic(new ImgTexture("res/texture.jpg", 80, 1));
-	space.add_obj(new Plane(InfPlane::XYPLANE, tpic));
 	space.finish();
 	view = new View(space, Vec(0, 0, 12), Vec(0, 0, 2), 15, Geometry(pixmap->width(), pixmap->height()));
 	viewer = new CVViewer(*view);

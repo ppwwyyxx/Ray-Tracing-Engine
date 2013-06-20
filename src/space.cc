@@ -1,5 +1,5 @@
 // File: space.cc
-// Date: Thu Jun 20 15:19:05 2013 +0800
+// Date: Thu Jun 20 16:50:00 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <limits>

@@ -1,5 +1,5 @@
 % File: diary.tex
-% Date: Thu Jun 20 14:10:23 2013 +0800
+% Date: Thu Jun 20 16:49:57 2013 +0800
 % Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 \section{过程记录}
 \begin{enumerate}
@@ -190,6 +190,11 @@
 
 \item 发现对于某些模型,简化时会触发\verb|assert|,调试后发现是由于网格坍缩时可能会导致一个面片中三点共线从而无法正确计算出法向.
   将其修正为:若坍缩后面片三点共线,则保留原法向.
+
+  \item 发现若在调用\verb|Space::add_obj(const shared_ptr<Mesh>&)|后,若在调用栈中将\verb|Mesh|析构,则会发生段错误.调试后发现是由于
+    \verb|Face|类中存储了指向其宿主的指针\verb|Mesh* host|,用于获取插值及纹理信息用,此指针在\verb|Mesh|复制时位被正确更新.
+
+    \item 利用Qt4实现了一个简单的GUI,支持单个obj的预览,视点移动,网格简化.
 
 \end{figure}
 

@@ -1,5 +1,5 @@
 // File: cvrender.cc
-// Date: Thu Jun 20 14:21:00 2013 +0800
+// Date: Thu Jun 20 16:52:50 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <opencv2/opencv.hpp>
@@ -62,9 +62,9 @@ void CVRender::_write(int x, int y, const Color& c) {
 }
 
 Color CVRender::get(const Mat& img, int i, int j) const
-{ return Color(img.ptr<uchar>(j)[i * 3 + 1] / 255.0,
-		img.ptr<uchar>(j)[i * 3] / 255.0,
-		img.ptr<uchar>(j)[i * 3 + 2] / 255.0); }
+{ return Color(img.ptr<uchar>(j)[i * 3 + 2] / 255.0,
+		img.ptr<uchar>(j)[i * 3 + 1] / 255.0,
+		img.ptr<uchar>(j)[i * 3] / 255.0); }
 
 /*
  *void CVRender::antialias() {
