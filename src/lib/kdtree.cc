@@ -1,5 +1,5 @@
 // File: kdtree.cc
-// Date: Thu Jun 20 12:55:14 2013 +0800
+// Date: Thu Jun 20 20:37:35 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include <algorithm>
 #include <future>
@@ -72,17 +72,6 @@ class KDTree::Node {
 			}
 
 			if (!ch1 || !ch1->box.intersect(ray, mind2, inside)) ch1 = nullptr;
-
-
-			// slower one
-			/*
-			 *if (ray.debug) {
-			 *    cout << mind << mind2 << endl;
-			 *}
-			 *if (ch0 && ((!ch1) || (mind < mind2))) return ch0->get_trace(ray, mind);
-			 *else if (ch1) return ch1->get_trace(ray, mind2);
-			 *else return nullptr;
-			 */
 
 			m_assert(!(ch0 && ch1 && mind == -1 && mind2 == -1));
 			/*
@@ -171,9 +160,9 @@ KDTree::Node* KDTree::build(const vector<RenderWrapper>& objs, const AABB& box, 
 	AAPlane best_pl;
 	real_t min_cost = numeric_limits<real_t>::max();
 
-	// algo 1 (naive kdtree)
-/*
- *    best_pl = cut(objs, box, depth);
+
+/*	// algo 1 (naive kdtree)
+ *    best_pl = cut(objs, depth);
  *    try {
  *        par = box.cut(best_pl);
  *    } catch (...) {
@@ -187,39 +176,12 @@ KDTree::Node* KDTree::build(const vector<RenderWrapper>& objs, const AABB& box, 
  *        if (obj.box.max[best_pl.axis] >= best_pl.pos - EPS) objr.push_back(obj);
  *        if (obj.box.min[best_pl.axis] <= best_pl.pos + EPS) objl.push_back(obj);
  *    }
- */
+ */ // end of algo 1
 
 	// algo 2 (SAH kdtree)
 	// On building fast kd-trees for ray tracing, and on doing that in O (N log N)
 	// Wald, Ingo and Havran, Vlastimil
-	//
-	// start of O(n^2) build
-/*
- *#pragma omp parallel for schedule(dynamic)
- *    REP(k, nobj) {
- *        auto &obj = objs[k];
- *        auto & bbox = obj.box;
- *        REP(dim, 3) {
- *            real_t cand_pos = bbox.min[dim] - EPS;
- *            if (cand_pos < box.min[dim] + EPS) continue;
- *            AAPlane pl(dim, cand_pos);
- *            auto par = box.cut(pl);
- *            int lcnt = 0, rcnt = 0;
- *            for (auto & obj : objs) {
- *                if (obj.box.min[dim] <= cand_pos) lcnt ++;
- *                if (obj.box.max[dim] >= cand_pos) rcnt ++;
- *            }
- *            real_t cost = par.first.area() * lcnt + par.second.area() * rcnt;
- *            if (!lcnt || !rcnt) cost *= 0.8;
- *#pragma omp critical
- *            if (update_min(min_cost, cost))
- *                best_pl = pl;
- *        }
- *    }
- */
-	// end of O(n^2)
-
-	// start of O(n log^2(n)) build
+	// O(n log^2(n)) build
 #define GEN_CAND_LIST \
 	do { \
 		for (auto & obj: objs) \
@@ -274,7 +236,6 @@ KDTree::Node* KDTree::build(const vector<RenderWrapper>& objs, const AABB& box, 
 			}
 		} while (ptr != cand_list.end());
 	}
-	// end of O(n log^2(n))
 
 	if (best_pl.axis == ERROR) {
 		ADDOBJ;
@@ -283,18 +244,16 @@ KDTree::Node* KDTree::build(const vector<RenderWrapper>& objs, const AABB& box, 
 
 	ret->pl = best_pl;
 	par = box.cut(best_pl);
-	vector<RenderWrapper> objl, objr;
+    vector<RenderWrapper> objl, objr;
 	for (auto & obj : objs) {
 		if (obj.box.max[best_pl.axis] >= best_pl.pos) objr.push_back(obj);
 		if (obj.box.min[best_pl.axis] <= best_pl.pos) objl.push_back(obj);
 	}
-	// what if no plane is found?
 	// end of algo 2
 
 
-	//	print_debug("depth: %d, lsize: %d, rsize: %d\n", depth, (int)objl.size(), (int)objr.size());
 
-	if (depth < 1) { // parallel
+	if (depth < 0) { // parallel
 		future<Node*> lch_fut = async(launch::async, [&]() {
 				return build(move(objl), par.first, depth + 1); });
 		future<Node*> rch_fut = async(launch::async, [&]() {
@@ -312,5 +271,6 @@ KDTree::Node* KDTree::build(const vector<RenderWrapper>& objs, const AABB& box, 
 
 	return ret;
 #undef ADDOBJ
+#undef GET_CAND_LIST
 }
 

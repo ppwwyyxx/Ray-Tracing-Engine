@@ -1,5 +1,5 @@
 // File: face.cc
-// Date: Thu Jun 20 13:44:13 2013 +0800
+// Date: Thu Jun 20 19:11:24 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "renderable/mesh.hh"

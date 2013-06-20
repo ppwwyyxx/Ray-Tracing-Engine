@@ -1,5 +1,5 @@
 // File: sphere.cc
-// Date: Wed Jun 19 13:18:24 2013 +0800
+// Date: Thu Jun 20 19:10:11 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "renderable/sphere.hh"

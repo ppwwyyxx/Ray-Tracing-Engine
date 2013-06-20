@@ -1,5 +1,5 @@
 // File: common.hh
-// Date: Wed Jun 19 15:30:14 2013 +0800
+// Date: Thu Jun 20 20:18:57 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -33,5 +33,5 @@ const int SOFT_SHADOW_LIGHT = 20;
 const real_t SOFT_SHADOW_RADIUS = 0.8;
 
 const int KDTREE_MAX_DEPTH = 100;
-const int KDTREE_TERMINATE_OBJ_CNT = 15;
+const int KDTREE_TERMINATE_OBJ_CNT = 20;
 

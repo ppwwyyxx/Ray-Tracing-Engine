@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Thu Jun 20 16:43:44 2013 +0800
+// Date: Thu Jun 20 20:33:16 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "viewer.hh"
 #include "space.hh"
@@ -78,7 +78,32 @@ void generate_dof_video() {
 	}
 }
 
+void test_kdtree() {
+	int w, h;
+	w = h = 500;
+	Space s;
+	s.add_light(Light(Vec(0, -10, 12), Color::WHITE, 2.0));
+	s.add_light(Light(Vec(0, 10, 8), Color::WHITE, 2.0));
+	const char* fname = "../res/models/fixed.perfect.dragon.100K.0.07.obj";
+	Mesh mesh(fname, Vec(0, 0, 2), 5);
+	shared_ptr<Texture> tred = make_shared<HomoTexture>(Surface::RED);
+
+	mesh.smooth = true;
+	mesh.set_texture(tred);
+	mesh.finish();
+	s.add_obj(make_shared<Mesh>(mesh));
+	shared_ptr<Texture> t1 = make_shared<GridTexture>(GridTexture::BLACK_WHITE);
+	Plane plane1(InfPlane::XYPLANE, t1);
+	s.add_obj(make_shared<Plane>(plane1));
+	s.finish();
+	View v(s, Vec(0, 0, 12), Vec(0, 0, 2), 15, Geometry(w, h));
+	CVViewer viewer(v);
+	viewer.view();
+}
+
 int main() {
+	test_kdtree();
+	return 0;
 	//ball_scene();
 //	generate_dof_video();
 //	return 0;
@@ -91,7 +116,7 @@ int main() {
 	 *s.add_light(Light(Vec(-10, 0, 8), Color::WHITE, 2.0));
 	 *s.add_light(Light(Vec(0, 0, 9), Color::WHITE, 1.5));
 	 */
-	const char* fname = "../res/models/Arma.obj";
+	const char* fname = "../res/models/fixed.perfect.dragon.100K.0.07.obj";
 	Mesh mesh(fname, Vec(0, 0, 2), 5);
 	shared_ptr<Texture> tred = make_shared<HomoTexture>(Surface::RED);
 	shared_ptr<Texture> t2 = make_shared<HomoTexture>(Surface::BLUE_REFL);
@@ -99,7 +124,7 @@ int main() {
 
 	mesh.smooth = true;
 	mesh.set_texture(tred);
-	mesh.simplify(0.8);
+//	mesh.simplify(0.8);
 	mesh.finish();
 	s.add_obj(make_shared<Mesh>(mesh));
 
