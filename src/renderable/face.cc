@@ -1,5 +1,5 @@
 // File: face.cc
-// Date: Wed Jun 19 19:34:07 2013 +0800
+// Date: Thu Jun 20 12:16:16 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "renderable/mesh.hh"
@@ -77,7 +77,7 @@ shared_ptr<Surface> FaceTrace::transform_get_property() const {
 
 bool FaceTrace::intersect() {
 	inter_dist = face.tri.get_intersect(ray, gx, gy);
-	if (inter_dist < 0) return false;
+	if (inter_dist <= 0) return false;
 	return true;
 }
 

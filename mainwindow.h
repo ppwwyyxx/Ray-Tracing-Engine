@@ -29,41 +29,90 @@
 #include <QSlider>
 #include <QPlainTextEdit>
 
+#include "viewer.hh"
+#include "renderable/plane.hh"
+#include "renderable/sphere.hh"
+#include "renderable/mesh.hh"
+#include "view.hh"
+#include "space.hh"
+
 
 using namespace std;
 
 namespace Ui {
-class MainWindow;
+	class MainWindow;
 }
 
 class MainWindow : public QMainWindow {
-    Q_OBJECT
+	Q_OBJECT
 
-public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
+	public:
+		explicit MainWindow(QWidget *parent = 0);
 
-private:
-    Ui::MainWindow *ui;
-    QPushButton *cb_open, *cb_quit;
-    QPushButton *cb_trace;
-    QGraphicsView *pic;
-    QGraphicsScene *scene;
-    QPixmap *pixmap;
-    QImage *image;
+		~MainWindow();
 
-    // for ray tracing parameter
-    QSlider *dist;
-    QPlainTextEdit *lights;
-    QDial *twist, *rotate;
-    QPushButton* fx, *fy, *fz, *sxy, *syz, *sxz;
+	private:
+		Ui::MainWindow *ui;
+		QPushButton *open_action, *save_action;
+		QPushButton *quit_action;
+		QPushButton *start_trace, *start_simplify;
+		QGraphicsView *pic;
+		QGraphicsScene *scene;
+		QPixmap *pixmap;
+		QImage *image;
+
+		// for ray tracing parameter
+		QCheckBox *interpolation;
+		QCheckBox *kd_tree;
+		QSlider *dist;
+		QLineEdit *target_rate;
+		QPlainTextEdit *lights;
+
+		QDial *angle_z;
+		QDial *angle_xy;
+
+		QPushButton* fx, *fy, *fz, *sxy, *syz, *sxz;
+
+		QPushButton * fill;
+		QPushButton * antia, *mos;
+		QComboBox *combo;
+
+		bool done_load = false;
+		// for ray tracing
+		/*
+		 *    para_tool para;
+		 *    static int maxN;
+		 *    static int maxM;
+		 *    bool done_load;
+		 *    face *f;
+		 *    int m;
+		 *    point *p, *norm_v;
+		 *    int n;
+		 *
+		 *    ray_tracing *tracer;
+		 */
+		Space space;
+		View* view = nullptr;
+		CVViewer* viewer = nullptr;
 
 
-public slots:
-    void quit();
-    void trace();
-	void update_value();
-	void update_scene();
+		public slots:
+			void open();
+			void quit();
+			void save();
+			void trace();
+			void simplify();
+			void flood_fill();
+			void anti_alias();
+			void mosaic();
+			void update_scene();
+			void update_model_fx();
+			void update_model_fy();
+			void update_model_fz();
+			void update_model_sxy();
+			void update_model_sxz();
+			void update_model_syz();
+			void change_texture();
 };
 
 #endif // MAINWINDOW_H

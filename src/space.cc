@@ -1,5 +1,5 @@
 // File: space.cc
-// Date: Wed Jun 19 19:33:50 2013 +0800
+// Date: Thu Jun 20 12:17:08 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <limits>
@@ -55,7 +55,7 @@ void Space::finish() {		// called from View::View()
 	}
 }
 
-Color Space::trace(const Ray& ray, real_t dist, int depth) {
+Color Space::trace(const Ray& ray, real_t dist, int depth) const {
 	static int now_max_depth = 0;
 	update_max(now_max_depth, depth);
 	if (depth > max_depth)

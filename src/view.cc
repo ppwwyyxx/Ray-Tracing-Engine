@@ -1,12 +1,12 @@
 // File: view.cc
-// Date: Thu Jun 20 01:55:05 2013 +0800
+// Date: Thu Jun 20 11:17:37 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "view.hh"
 
 using namespace std;
 
-View::View(const std::shared_ptr<Space>& _sp, const Vec& _view_point,
+View::View(const Space& _sp, const Vec& _view_point,
 				const Vec& _mid, real_t _size, const Geometry& m_geo):
 			geo(m_geo), sp(_sp), view_point(_view_point), mid(_mid), size(_size)
 { Vec norm = (view_point - mid).get_normalized(); Vec tmp;
@@ -19,7 +19,6 @@ View::View(const std::shared_ptr<Space>& _sp, const Vec& _view_point,
 	m_assert(fabs(dir_h.sqr()) - 1 < EPS);
 
 	resume_dir_vector();
-	sp->finish();
 }
 
 Color View::render(int i, int j, bool debug) const {
@@ -28,7 +27,7 @@ Color View::render(int i, int j, bool debug) const {
 	if (!use_dof) {
 		Ray ray(view_point, dest - view_point, 1, true);
 		if (debug) ray.debug = true;
-		return sp->trace(ray);
+		return sp.trace(ray);
 	} else {
 		// intersection point with camera screen
 		Vec intersec = view_point + (dest - view_point) * DOF_SCREEN_DIST_FACTOR;
@@ -43,7 +42,7 @@ Color View::render(int i, int j, bool debug) const {
 			Vec neworig = intersec + diff;
 //			cout << neworig << endl;
 			Ray ray(neworig, dest - neworig, 1, true);
-			ret = ret + sp->trace(ray);
+			ret = ret + sp.trace(ray);
 		}
 		ret = ret / DOF_SAMPLE_CNT;
 		return ret;

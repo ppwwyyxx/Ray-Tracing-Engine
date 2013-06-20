@@ -1,5 +1,5 @@
 // File: viewer.hh
-// Date: Wed Jun 19 11:57:20 2013 +0800
+// Date: Thu Jun 20 11:26:04 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -28,9 +28,9 @@ class Viewer {
 };
 
 class CVViewer : public Viewer {
-	private:
-		CVRender r;
 	public:
+		CVRender r;
+
 		CVViewer(View& _v):
 			Viewer(_v), r(_v.get_geo()) { }
 

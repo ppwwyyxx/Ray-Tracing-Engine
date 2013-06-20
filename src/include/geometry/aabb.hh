@@ -1,5 +1,5 @@
 // File: aabb.hh
-// Date: Wed Jun 19 19:33:50 2013 +0800
+// Date: Thu Jun 20 11:09:23 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -42,19 +42,6 @@ class AABB {
 		friend std::ostream& operator << (std::ostream & os, const AABB& b)
 		{ return os << "min: " << b.min << " , max:" << b.max; }
 
-		bool intersect(const AABB& b) const {
-			Vec mid2 = (min + max),
-				bmid2 = (b.min + b.max);
-			if ((mid2 - bmid2).abs() < (max - min + b.max - b.min)) return true;
-			return false;
-		}
-
-		static AABB get_inf() {
-			AABB ret;
-			swap(ret.min, ret.max);
-			return ret;
-		}
-
 		void update(const AABB& b) {
 			min.update_min(b.min);
 			max.update_max(b.max);
@@ -65,8 +52,8 @@ class AABB {
 			update_max(v);
 		}
 
-		inline void update_min(const Vec& v) {min.update_min(v); }
-		inline void update_max(const Vec& v) {max.update_max(v); }
+		inline void update_min(const Vec& v) { min.update_min(v); }
+		inline void update_max(const Vec& v) { max.update_max(v); }
 
 		std::pair<AABB, AABB> cut(const AAPlane& pl) const {
 			AABB l = *this, r = *this;
@@ -81,7 +68,6 @@ class AABB {
 
 		// An efficient and robust ray-box intersection algorithm
 		// Williams, etc. SIGGRAPH 2005
-		// loose
 		bool intersect(const Ray& ray, real_t &mind, bool &inside) {
 			if (empty())
 				return false;
@@ -107,9 +93,8 @@ class AABB {
 
 			if (t_min < 0) mind = t_max, inside = true;
 			else mind = t_min, inside = false;
-			if (ray.debug) {
+			if (ray.debug)
 				cout << "intersect with box " << (*this) << " at " << mind << ", inside: " << inside << endl;
-			}
 			return true;
 		}
 

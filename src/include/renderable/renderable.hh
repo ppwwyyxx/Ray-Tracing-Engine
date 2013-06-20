@@ -1,5 +1,5 @@
 // File: renderable.hh
-// Date: Wed Jun 19 13:39:35 2013 +0800
+// Date: Thu Jun 20 11:44:27 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 
@@ -59,7 +59,7 @@ class Trace {
 		{ return obj; }
 
 		virtual Vec intersection_point() const {
-			m_assert(isfinite(inter_dist) && inter_dist > 0);
+			m_assert(isfinite(inter_dist) && inter_dist >= 0);
 			return ray.get_dist(inter_dist);
 		}
 

@@ -1,5 +1,5 @@
 # $File: Makefile
-# $Date: Wed Jun 19 22:59:53 2013 +0800
+# $Date: Thu Jun 20 11:43:30 2013 +0800
 
 OBJ_DIR = build
 TARGET = main
@@ -7,7 +7,7 @@ TARGET = main
 INCLUDE_DIR = -Iinclude
 DEFINES = -DDEBUG
 
-OPTFLAGS = -Wall -Wextra -O3
+OPTFLAGS = -Wall -Wextra -g
 #OPTFLAGS = -O3
 
 LIBS = opencv

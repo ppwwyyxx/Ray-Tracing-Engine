@@ -8,11 +8,12 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = Q3DViewer
+TARGET = objviewer
 TEMPLATE = app
 
-QMAKE_CXXFLAGS += -O3 -std=c++11 -Isrc/include -DDEBUG -fopenmp `Magick++-config --cppflags`
-LIBS += `Magick++-config --libs` -fopenmp
+QMAKE_CXXFLAGS += -std=c++11 -DDEBUG -fopenmp -Isrc/include
+QMAKE_CXXFLAGS += `Magick++-config --cppflags` `pkg-config --cflags opencv`
+LIBS += `Magick++-config --libs` `pkg-config --libs opencv` -fopenmp
 
 
 SOURCES += Qt.cpp\
@@ -20,14 +21,14 @@ SOURCES += Qt.cpp\
 		src/color.cc\
 		src/lib/*.cc src/renderable/*.cc src/space.cc\
 		src/surface.cc src/texture.cc\
-		src/view.cc src/mesh_simplifier.cc
+		src/view.cc src/mesh_simplifier.cc src/cvrender.cc
 
 HEADERS  += mainwindow.h src/include/geometry/*.hh src/include/material/*.hh\
 	src/include/renderable/*.hh src/include/*.hh
 
 FORMS    += mainwindow.ui
 
-DESTDIR = build
+DESTDIR = ./
 OBJECTS_DIR = build/obj
 MOC_DIR = build/moc
 RCC_DIR = build/rcc

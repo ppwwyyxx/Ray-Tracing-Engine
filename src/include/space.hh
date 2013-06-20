@@ -1,5 +1,5 @@
 // File: space.hh
-// Date: Wed Jun 19 16:14:48 2013 +0800
+// Date: Thu Jun 20 11:41:01 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -42,12 +42,12 @@ class Space {
 		{ add_obj(rdptr(objptr)); }
 
 		// useful, keep lights
-		void clean_obj()
-		{ objs.clear(); }
+		void clear()
+		{ objs.clear(); bound_min = Vec::max(), bound_max = -Vec::max(); }
 
 		void finish();
 
-		Color trace(const Ray& ray, real_t dist = 0, int depth = 0);
+		Color trace(const Ray& ray, real_t dist = 0, int depth = 0) const;
 
 		real_t weight_threshold = DEFAULT_TRACING_WEIGHT_THRESHOLD;
 

@@ -1,5 +1,5 @@
 // File: mesh.cc
-// Date: Wed Jun 19 20:42:36 2013 +0800
+// Date: Thu Jun 20 12:18:31 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <algorithm>
@@ -45,6 +45,8 @@ void Mesh::finish() {		// build tree, calculate smooth norm
 		tree = make_shared<KDTree>(faces, get_aabb());
 
 	if (smooth) {		// calculate vtx norm
+		if (faecs.size() < 30)
+			printf("Number of faces is too small, using smooth might have problems\n");
 		int nvtx = vtxs.size();
 
 		struct NormSum {

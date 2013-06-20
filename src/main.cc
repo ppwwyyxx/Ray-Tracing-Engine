@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Thu Jun 20 00:45:57 2013 +0800
+// Date: Thu Jun 20 12:15:11 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "viewer.hh"
 #include "space.hh"
@@ -22,7 +22,8 @@ void test_shadow() {
 	s.add_obj(new Plane(InfPlane::XYPLANE, tpic));
 	Sphere sphere(PureSphere::TestSphere, t2);
 	s.add_obj(new Sphere(sphere));
-	View v(make_shared<Space>(s), Vec(-8.7, 4.58, 3.75), Vec(-0.30, -0.31, 1.5), 8, Geometry(w, h));
+	s.finish();
+	View v(s, Vec(-8.7, 4.58, 3.75), Vec(-0.30, -0.31, 1.5), 8, Geometry(w, h));
 	CVViewer viewer(v);
 	viewer.view();
 }
@@ -43,7 +44,8 @@ void ball_scene() {
 	shared_ptr<Texture> tball(new HomoTexture(Surface(0, 40, 0.5, Color::CYAN * 0.9, Color::WHITE * DEFAULT_SPECULAR)));
 
 	REP(i, 10) REP(j, 2) s.add_obj(new Sphere(PureSphere(Vec(j * 6, 1, i * 3), 1), tball));
-	View v(make_shared<Space>(s), Vec(11, -13.3, 39.75), Vec(5.4, -1, 22.8), 16, Geometry(w, h));
+	s.finish();
+	View v(s, Vec(11, -13.3, 39.75), Vec(5.4, -1, 22.8), 16, Geometry(w, h));
 	v.use_dof = true;
 	CVViewer viewer(v);
 	viewer.view();
@@ -64,7 +66,8 @@ void generate_dof_video() {
 	shared_ptr<Texture> tball(new HomoTexture(Surface(0, 40, 0.5, Color::CYAN * 0.9, Color::WHITE * DEFAULT_SPECULAR)));
 
 	REP(i, 10) REP(j, 2) s.add_obj(new Sphere(PureSphere(Vec(j * 6, 1, i * 3), 1), tball));
-	View v(make_shared<Space>(s), Vec(11, -13.3, 39.75), Vec(5.4, -1, 22.8), 16, Geometry(w, h));
+	s.finish();
+	View v(s, Vec(11, -13.3, 39.75), Vec(5.4, -1, 22.8), 16, Geometry(w, h));
 	v.use_dof = true;
 
 
@@ -96,11 +99,11 @@ int main(int argc, char* argv[]) {
 	shared_ptr<Texture> tred = make_shared<HomoTexture>(Surface::RED);
 	Plane plane1(InfPlane::XYPLANE, t1);
 
-	const char* fname = "../res/models/dinosaur.2k.obj";
+	const char* fname = "../res/diamond.obj";
 	Mesh mesh(fname, Vec(0, 0, 2), 5);
-	mesh.smooth = true;
+	mesh.smooth = false;
 	mesh.set_texture(tred);
-	mesh.simplify(0.1);
+//	mesh.simplify(0.1);
 	mesh.finish();
 	s.add_obj(make_shared<Mesh>(mesh));
 	//REP(i, 100) REP(j, 100) s.add_obj(new Sphere(PureSphere(Vec(i * 2, j * 2, 1), 0.5), t2));
@@ -111,7 +114,8 @@ int main(int argc, char* argv[]) {
 //	s.add_obj(new Sphere(sphere));
 
 //	View v(make_shared<Space>(s), Vec(0.2, 0, 12), Vec(0, 0, 2), 10, Geometry(w, h));
-	View v(make_shared<Space>(s), Vec(0, 0, 10), Vec(0, 0, 1), 20, Geometry(w, h));
+	s.finish();
+	View v(s, Vec(0, 0.2, 10), Vec(0, 0, 1), 20, Geometry(w, h));
 	CVViewer viewer(v);
 	viewer.view();
 }
