@@ -3,3 +3,4 @@ main
 objviewer
 *.png
 *.jpg
+gui/Makefile
