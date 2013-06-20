@@ -1,4 +1,5 @@
-obj
+build
 main
+objviewer
 *.png
 *.jpg

@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Thu Jun 20 15:18:29 2013 +0800
+// Date: Thu Jun 20 16:43:44 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "viewer.hh"
 #include "space.hh"
@@ -78,7 +78,7 @@ void generate_dof_video() {
 	}
 }
 
-int main(int argc, char* argv[]) {
+int main() {
 	//ball_scene();
 //	generate_dof_video();
 //	return 0;

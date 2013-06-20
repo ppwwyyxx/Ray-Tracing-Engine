@@ -1,8 +1,8 @@
-// File: Qt.cpp
-// Date: Thu Jun 20 16:31:32 2013 +0800
+// File: main.cc
+// Date: Thu Jun 20 16:40:33 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
-#include "mainwindow.h"
+#include "window.hh"
 #include <QApplication>
 #include <iostream>
 

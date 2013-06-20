@@ -1,5 +1,5 @@
 # $File: Makefile
-# $Date: Thu Jun 20 14:17:27 2013 +0800
+# $Date: Thu Jun 20 16:42:48 2013 +0800
 
 OBJ_DIR = build
 TARGET = main
@@ -8,7 +8,6 @@ INCLUDE_DIR = -Iinclude
 DEFINES = -DDEBUG
 
 OPTFLAGS = -Wall -Wextra -O3
-#OPTFLAGS = -O3
 
 LIBS = opencv
 INCLUDE_DIR += $(shell pkg-config --cflags $(LIBS))
@@ -26,7 +25,7 @@ ccSOURCES = $(shell find -name "*.cc" | sed 's/^\.\///g')
 OBJS = $(addprefix $(OBJ_DIR)/,$(ccSOURCES:.cc=.o))
 DEPFILES = $(OBJS:.o=.dep)
 
-.PHONY: all clean run
+.PHONY: all clean run gui
 
 all: $(TARGET)
 
@@ -47,9 +46,11 @@ $(TARGET): $(OBJS)
 	@$(CC) $(OBJS) -o $@ $(LDFLAGS)
 	@echo "done."
 
+gui:
+	cd gui && qmake && make
 
 clean:
-	@rm -rf $(OBJ_DIR) $(TARGET)
+	@rm -rf $(OBJ_DIR)
 
 run: $(TARGET)
 	./$(TARGET)

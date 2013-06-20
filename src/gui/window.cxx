@@ -1,10 +1,10 @@
-// File: mainwindow.cpp
-// Date: Thu Jun 20 16:27:44 2013 +0800
+// File: window.cc
+// Date: Thu Jun 20 16:40:56 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <sstream>
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
+#include "window.hh"
+#include "ui_window.h"
 
 #define VIEWER_ANGLE 15
 #define ZOOMING 1.2
