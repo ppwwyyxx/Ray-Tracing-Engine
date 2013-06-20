@@ -11,7 +11,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = objviewer
 TEMPLATE = app
 
-QMAKE_CXXFLAGS += -std=c++11 -DDEBUG -fopenmp -Isrc/include
+QMAKE_CXXFLAGS += -std=c++11 -DDEBUG -fopenmp -Isrc/include -g
 QMAKE_CXXFLAGS += `Magick++-config --cppflags` `pkg-config --cflags opencv`
 LIBS += `Magick++-config --libs` `pkg-config --libs opencv` -fopenmp
 

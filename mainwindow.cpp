@@ -98,7 +98,7 @@ void MainWindow::open() {
 		mesh.set_texture(tred);
 		mesh.finish();
 		space.clear();
-		space.add_obj(make_shared<Mesh>(mesh));
+		space.add_obj(shared_ptr<RenderAble>(new Mesh(mesh)));
 		space.finish();
     }
 	done_load = true;
@@ -129,6 +129,10 @@ void MainWindow::trace() {
         QMessageBox::critical(this, tr("Error"), tr("Haven't open any obj file"));
         return;
     }
+
+	delete view; delete viewer;
+	view = new View(space, Vec(0, 0, 12), Vec(0, 0, 2), 15, Geometry(pixmap->width(), pixmap->height()));
+	viewer = new CVViewer(*view, "output.png");
 
 	viewer->render_all();
 	int w = pixmap->width(), h = pixmap->height();
