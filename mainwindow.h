@@ -1,6 +1,4 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
-
+#pragma once
 #include <iostream>
 #include <cstdio>
 #include <cstdlib>
@@ -78,22 +76,11 @@ class MainWindow : public QMainWindow {
 		QComboBox *combo;
 
 		bool done_load = false;
-		// for ray tracing
-		/*
-		 *    para_tool para;
-		 *    static int maxN;
-		 *    static int maxM;
-		 *    bool done_load;
-		 *    face *f;
-		 *    int m;
-		 *    point *p, *norm_v;
-		 *    int n;
-		 *
-		 *    ray_tracing *tracer;
-		 */
 		Space space;
 		View* view = nullptr;
 		CVViewer* viewer = nullptr;
+
+		string now_fname;
 
 
 		public slots:
@@ -102,6 +89,7 @@ class MainWindow : public QMainWindow {
 			void save();
 			void trace();
 			void simplify();
+
 			void flood_fill();
 			void anti_alias();
 			void mosaic();
@@ -115,4 +103,3 @@ class MainWindow : public QMainWindow {
 			void change_texture();
 };
 
-#endif // MAINWINDOW_H

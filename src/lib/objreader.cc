@@ -1,5 +1,5 @@
 // File: objreader.cc
-// Date: Wed Jun 19 20:39:54 2013 +0800
+// Date: Thu Jun 20 14:58:12 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <cstring>
@@ -44,7 +44,7 @@ void ObjReader::read_in(string fname, Mesh* mesh) {
 			case 'm':
 				break;
 			default:
-				cout << input << endl;
+//				cout << input << endl;
 				break;
 		}
 	}
