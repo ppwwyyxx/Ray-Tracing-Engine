@@ -1,5 +1,5 @@
 // File: view.cc
-// Date: Thu Jun 20 15:54:23 2013 +0800
+// Date: Thu Jun 20 23:51:34 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "view.hh"
@@ -34,7 +34,7 @@ Color View::render(int i, int j, bool debug) const {
 		// intersection point with camera screen
 		Vec intersec = view_point + (dest - view_point) * DOF_SCREEN_DIST_FACTOR;
 		real_t theta;
-		Color ret;
+		Color ret = Color::BLACK;
 		REP(k, DOF_SAMPLE_CNT) {
 			theta = (double)rand() / RAND_MAX * 2 * M_PI;
 			Vec diff = dir_w * cos(theta) + dir_w * sin(theta);

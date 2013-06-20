@@ -1,5 +1,5 @@
 // File: objreader.cc
-// Date: Thu Jun 20 14:58:12 2013 +0800
+// Date: Fri Jun 21 00:21:10 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <cstring>
@@ -10,6 +10,7 @@ const int LINE_MAX_LEN = 1000;
 // assume that all vertex appears before face
 void ObjReader::read_in(string fname, Mesh* mesh) {
 	ifstream fin(fname);
+	if (!fin.is_open()) { error_exit("obj file not found"); }
 	static char input[LINE_MAX_LEN];
 	while (fin.getline(input, LINE_MAX_LEN, '\n')) {
 		if (input[0] == '#' || strlen(input) <= 1)

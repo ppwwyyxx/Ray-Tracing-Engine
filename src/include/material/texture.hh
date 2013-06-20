@@ -1,5 +1,5 @@
 // File: texture.hh
-// Date: Wed Jun 19 14:08:05 2013 +0800
+// Date: Fri Jun 21 00:26:47 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -37,13 +37,13 @@ class HomoTexture :public Texture {
 		shared_ptr<Surface> get_property() const
 		{ return make_shared<Surface>(pty); }
 
-		static const HomoTexture BLUE;
+		static const HomoTexture BLUE, CYAN;
 };
 
 class GridTexture : public Texture {
 	private:
 		int size;
-		const Surface& pty1, &pty2;
+		const Surface &pty1, &pty2;
 	public:
 		GridTexture(int m_size, const Surface& m_pty1, const Surface& m_pty2):
 			size(m_size), pty1(m_pty1), pty2(m_pty2){}

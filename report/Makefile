@@ -7,7 +7,7 @@ all: view
 
 rebuild output/$(TARGET).pdf: *.tex *.bib output
 	cd output && rm -f *.tex *.bib && ln -s ../*.tex ../*.bib .
-	cd output && $(TEX) $(TARGET).tex $(BIBTEX) $(TARGET).aux
+	cd output &&  $(TEX) $(TARGET).tex && $(BIBTEX) $(TARGET).aux
 
 
 output:

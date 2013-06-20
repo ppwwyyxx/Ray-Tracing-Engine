@@ -1,5 +1,5 @@
 // File: space.cc
-// Date: Thu Jun 20 16:50:00 2013 +0800
+// Date: Fri Jun 21 00:23:08 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <limits>
@@ -118,9 +118,12 @@ Color Space::trace(const Ray& ray, real_t dist, int depth) const {
 		m_assert(fabs((-norm.reflection(ray.dir)).sqr() - 1) < EPS);
 
 		new_ray.debug = ray.debug;
-		real_t lmn = (new_ray.dir.dot(norm));
+		/*
+		 *real_t lmn = (new_ray.dir.dot(norm));
+		 *if (lmn < 0) cout << lmn << endl;
+		 */
 		Color refl = trace(new_ray, dist, depth + 1);
-		ret += refl * surf->diffuse * (lmn * REFL_DECAY * (1 - surf->ambient) * surf->shininess);
+		ret += refl * surf->diffuse * (REFL_DECAY * (1 - surf->ambient) * surf->shininess);
 	}
 
 

@@ -1,5 +1,5 @@
 % File: algo.tex
-% Date: Thu Jun 20 21:21:07 2013 +0800
+% Date: Fri Jun 21 00:24:09 2013 +0800
 % Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 \section{算法说明}
 \subsection{光线追踪及光照模型}
@@ -67,7 +67,7 @@ KD树是一种空间划分树,原本用于在K维空间中快速查找点,可利
 在光线追踪中,一般采用面积启发式的平面选取方式\cite{kdtree},选取切平面使得
 两个子节点的包围盒表面积与包含物体个数的积之和尽量大,这样可以使KD树在查询时效率更高.
 但启发式的建树需要枚举切分平面,计算包含物体个数,复杂度较高.
-直接的枚举为$ O(n^2)$复杂度,本程序实现了\cite{kdtree}中提供的$ O(n \log^2(n))$算法.
+直接的枚举为$ O(n^2)$复杂度,本程序实现了\cite{kdtree}中提供的$ O(n \log^2 n)$算法.
 对于20W面片的龙模型\footnote{models/fixed.perfect.dragon.100K.0.07.obj},
 采用不同方法单线程建树的用时及在几个固定视角渲染耗时如下(单位: 秒):
 
@@ -83,9 +83,9 @@ KD树是一种空间划分树,原本用于在K维空间中快速查找点,可利
     \end{tabular}
     \begin{tablenotes}
       \footnotesize
-    \item 注: 建树时,以树深度及当前节点所管理的物体个数作为建树结束的判定条件.
-    \item 此实验的视角1为\verb|main.cc|中\verb|test_kdtree()|提供视角,其余视角由视角1 zoom in依次得到.
-    \item 可在\verb|lib/kdtree.cc|中通过注释\verb|KDTree::build()|函数中相应代码切换两种建树算法.
+    \item 注: 1.建树时,以树深度及当前节点所管理的物体个数作为建树结束的判定条件.
+    \item 2.此实验的视角1为\verb|main.cc|中\verb|test_kdtree()|提供的视角,其余视角由视角1 zoom in依次得到.
+    \item 3.可在\verb|lib/kdtree.cc|中通过注释\verb|KDTree::build()|函数中相应代码切换两种建树算法.
     \end{tablenotes}
   \end{threeparttable}
 \end{table}
@@ -101,6 +101,14 @@ KD树是一种空间划分树,原本用于在K维空间中快速查找点,可利
 因为若不包含,则光线首先打到的物体可能并不是此物体,而是第二个包围盒管理的物体.
 
 \subsection{纹理}
+一种纹理相当于一个二维坐标到表面属性的映射.
+表面属性除Phong模型参数外,还包括了透明度,用于折射判定.
+程序实现了均匀纹理、网格纹理、图片纹理三类纹理,并可通过继承\verb|Texture|类进行扩展.
+
+对于一个物体,由其自己管理三维坐标到二维坐标的映射.
+对于平面,采用平面上的二维欧式坐标. 球体采用其极坐标.
+网格未支持二维纹理,仅可以使用均匀纹理.
+
 \subsection{抗锯齿}
 \begin{enumerate}
   \item 使用Beer-Lambert定律,使得光想亮度按传播距离指数衰减,可以有效消除远处纹理密集处的畸形.
@@ -118,6 +126,9 @@ KD树是一种空间划分树,原本用于在K维空间中快速查找点,可利
 效果如\figref{soft}所示. 实现见\verb|Space::add_light()|.
 
 \subsection{景深}
+程序中景深的实现方法为,以焦平面作为屏幕,取焦平面与视点之间某处建一感光器平面.
+对视点到焦平面的每条光线,取其与感光器的交点,在交点周围随机采多个样本点向
+屏幕同一位置发射光线并执行光线追踪
 
 
 \subsection{小量处理}

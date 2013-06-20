@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Thu Jun 20 20:33:16 2013 +0800
+// Date: Fri Jun 21 00:30:24 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "viewer.hh"
 #include "space.hh"
@@ -28,7 +28,7 @@ void test_shadow() {
 	viewer.view();
 }
 
-void ball_scene() {
+void dof_ball_scene() {
 	int w = 500, h = 500;
 	Space s;
 	s.add_light(Light(Vec(0, -10, 12), Color::WHITE, 2.0));
@@ -38,10 +38,12 @@ void ball_scene() {
 	s.add_light(Light(Vec(-9, -2, 50), Color::WHITE, 2.0));
 	s.add_light(Light(Vec(9, -2, 50), Color::WHITE, 2.0));
 
-	shared_ptr<Texture> tpic(new ImgTexture("../res/texture.jpg", 80, 1));
-	s.add_obj(new Plane(InfPlane::XYPLANE, tpic));
+	Surface surf(0, 40, 0.5, Color::CYAN * 0.9, Color::WHITE * DEFAULT_SPECULAR);
 
-	shared_ptr<Texture> tball(new HomoTexture(Surface(0, 40, 0.5, Color::CYAN * 0.9, Color::WHITE * DEFAULT_SPECULAR)));
+	shared_ptr<Texture> tpic(new ImgTexture("../resource/texture.jpg", 80, 1));
+	shared_ptr<Texture> tball(new HomoTexture(surf));
+
+	s.add_obj(new Plane(InfPlane::XYPLANE, tpic));
 
 	REP(i, 10) REP(j, 2) s.add_obj(new Sphere(PureSphere(Vec(j * 6, 1, i * 3), 1), tball));
 	s.finish();
@@ -62,8 +64,9 @@ void generate_dof_video() {
 
 	shared_ptr<Texture> tpic(new ImgTexture("../res/texture.jpg", 80, 1));
 	s.add_obj(new Plane(InfPlane::XYPLANE, tpic));
+	Surface surf(0, 40, 0.5, Color::CYAN * 0.9, Color::WHITE * DEFAULT_SPECULAR);
 
-	shared_ptr<Texture> tball(new HomoTexture(Surface(0, 40, 0.5, Color::CYAN * 0.9, Color::WHITE * DEFAULT_SPECULAR)));
+	shared_ptr<Texture> tball(new HomoTexture(surf));
 
 	REP(i, 10) REP(j, 2) s.add_obj(new Sphere(PureSphere(Vec(j * 6, 1, i * 3), 1), tball));
 	s.finish();
@@ -84,12 +87,11 @@ void test_kdtree() {
 	Space s;
 	s.add_light(Light(Vec(0, -10, 12), Color::WHITE, 2.0));
 	s.add_light(Light(Vec(0, 10, 8), Color::WHITE, 2.0));
-	const char* fname = "../res/models/fixed.perfect.dragon.100K.0.07.obj";
+	const char* fname = "../resource/models/fixed.perfect.dragon.100K.0.07.obj";
 	Mesh mesh(fname, Vec(0, 0, 2), 5);
-	shared_ptr<Texture> tred = make_shared<HomoTexture>(Surface::RED);
 
 	mesh.smooth = true;
-	mesh.set_texture(tred);
+	mesh.set_texture(make_shared<HomoTexture>(HomoTexture::CYAN));
 	mesh.finish();
 	s.add_obj(make_shared<Mesh>(mesh));
 	shared_ptr<Texture> t1 = make_shared<GridTexture>(GridTexture::BLACK_WHITE);
@@ -116,14 +118,13 @@ int main() {
 	 *s.add_light(Light(Vec(-10, 0, 8), Color::WHITE, 2.0));
 	 *s.add_light(Light(Vec(0, 0, 9), Color::WHITE, 1.5));
 	 */
-	const char* fname = "../res/models/fixed.perfect.dragon.100K.0.07.obj";
+	const char* fname = "../resource/models/fixed.perfect.dragon.100K.0.07.obj";
 	Mesh mesh(fname, Vec(0, 0, 2), 5);
-	shared_ptr<Texture> tred = make_shared<HomoTexture>(Surface::RED);
 	shared_ptr<Texture> t2 = make_shared<HomoTexture>(Surface::BLUE_REFL);
 	shared_ptr<Texture> tpic = make_shared<ImgTexture>("../res/texture.jpg", 100, 0.6);
 
 	mesh.smooth = true;
-	mesh.set_texture(tred);
+	mesh.set_texture(make_shared<HomoTexture>(HomoTexture::CYAN));
 //	mesh.simplify(0.8);
 	mesh.finish();
 	s.add_obj(make_shared<Mesh>(mesh));
