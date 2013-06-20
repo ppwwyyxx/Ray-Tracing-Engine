@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Thu Jun 20 13:58:20 2013 +0800
+// Date: Thu Jun 20 14:08:43 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "viewer.hh"
 #include "space.hh"
@@ -91,7 +91,7 @@ int main(int argc, char* argv[]) {
 	 *s.add_light(Light(Vec(-10, 0, 8), Color::WHITE, 2.0));
 	 *s.add_light(Light(Vec(0, 0, 9), Color::WHITE, 1.5));
 	 */
-	const char* fname = "../res/models/fixed.perfect.dragon.100K.0.07.obj";
+	const char* fname = "../res/models/fandisk.18k.obj";
 	Mesh mesh(fname, Vec(0, 0, 2), 5);
 	shared_ptr<Texture> tred = make_shared<HomoTexture>(Surface::RED);
 	shared_ptr<Texture> t2 = make_shared<HomoTexture>(Surface::BLUE_REFL);
@@ -99,7 +99,7 @@ int main(int argc, char* argv[]) {
 
 	mesh.smooth = true;
 	mesh.set_texture(tred);
-	mesh.simplify(0.8);
+//	mesh.simplify(0.8);
 	mesh.finish();
 	s.add_obj(make_shared<Mesh>(mesh));
 

@@ -1,5 +1,5 @@
 // File: mesh_simplifier.cc
-// Date: Thu Jun 20 13:24:22 2013 +0800
+// Date: Thu Jun 20 14:08:41 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <list>
@@ -26,7 +26,9 @@ void MeshSimplifier::Face::change_to(Vertex*& u, Vertex*& v) {
 	m_assert(count(u) == 1);
 	REP(k, 3) if (vtx[k] == u) vtx[k] = v;
 	m_assert(vtx[0] != vtx[1] && vtx[1] != vtx[2] && vtx[2] != vtx[0]);
-	norm = (vtx[2]->pos - vtx[0]->pos).cross((vtx[1]->pos - vtx[0]->pos)).get_normalized();
+	Vec newnorm = (vtx[2]->pos - vtx[0]->pos).cross((vtx[1]->pos - vtx[0]->pos));
+	if (newnorm.sqr() > 0)		// sometimes three vertex will be on the same line
+		norm = newnorm.get_normalized();
 	v->adj_face.insert(this);
 }
 

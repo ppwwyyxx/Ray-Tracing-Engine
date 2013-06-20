@@ -1,5 +1,5 @@
 % File: diary.tex
-% Date: Wed Jun 19 22:12:36 2013 +0800
+% Date: Thu Jun 20 14:10:23 2013 +0800
 % Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 \section{过程记录}
 \begin{enumerate}
@@ -187,6 +187,9 @@
   \includegraphics[width=\textwidth]{res/simplified_smooth.png}
   \caption*{简化至20\%, 含法向插值}
 \end{minipage}
+
+\item 发现对于某些模型,简化时会触发\verb|assert|,调试后发现是由于网格坍缩时可能会导致一个面片中三点共线从而无法正确计算出法向.
+  将其修正为:若坍缩后面片三点共线,则保留原法向.
 
 \end{figure}
 
