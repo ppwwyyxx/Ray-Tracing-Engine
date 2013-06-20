@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Fri Jun 21 01:43:16 2013 +0800
+// Date: Fri Jun 21 02:18:52 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "viewer.hh"
 #include "space.hh"
@@ -18,7 +18,7 @@ void test_shadow() {
 	s.add_light(Light(Vec(0, -10, 12), Color::WHITE, 2.0));
 
 	shared_ptr<Texture> t2(new HomoTexture(HomoTexture::BLUE));
-	shared_ptr<Texture> tpic(new ImgTexture("../res/texture.jpg", 100, 0.6));
+	shared_ptr<Texture> tpic(new ImgTexture("../resource/texture.jpg", 100, 0.6));
 	s.add_obj(new Plane(InfPlane::XYPLANE, tpic));
 	Sphere sphere(PureSphere::TestSphere, t2);
 	s.add_obj(new Sphere(sphere));
@@ -54,7 +54,7 @@ void dof_ball_scene() {
 }
 
 void generate_dof_video() {
-	int w = 500, h = 500;
+	int w = 1024, h = 768;
 	Space s;
 	s.add_light(Light(Vec(0, -10, 12), Color::WHITE, 2.0));
 	s.add_light(Light(Vec(9, 2, 50), Color::WHITE, 2.0));
@@ -62,7 +62,7 @@ void generate_dof_video() {
 	s.add_light(Light(Vec(-9, -2, 50), Color::WHITE, 2.0));
 	s.add_light(Light(Vec(9, -2, 50), Color::WHITE, 2.0));
 
-	shared_ptr<Texture> tpic(new ImgTexture("../res/texture.jpg", 80, 1));
+	shared_ptr<Texture> tpic(new ImgTexture("../resource/texture.jpg", 80, 1));
 	s.add_obj(new Plane(InfPlane::XYPLANE, tpic));
 	Surface surf(0, 40, 0.5, Color::CYAN * 0.9, Color::WHITE * DEFAULT_SPECULAR);
 
@@ -74,8 +74,8 @@ void generate_dof_video() {
 	v.use_dof = true;
 
 
-
-	REP(k, 300) {
+	v.move_screen(-5);
+	REP(k, 400) {
 		CVViewer viewer(v, "output/" + string_format("%03d", k) + ".png");
 		v.move_screen(0.05);
 	}
@@ -83,7 +83,7 @@ void generate_dof_video() {
 
 void test_kdtree() {
 	int w, h;
-	w = h = 1000;
+	w = h = 500;
 	Space s;
 	s.add_light(Light(Vec(0, -10, 12), Color::WHITE, 2.0));
 	s.add_light(Light(Vec(0, 10, 8), Color::WHITE, 2.0));
@@ -115,7 +115,7 @@ void test_simplify() {
 }
 
 int main() {
-	test_kdtree();
+	generate_dof_video();
 	return 0;
 	int w, h;
 	w = h = 500;
@@ -129,7 +129,7 @@ int main() {
 	const char* fname = "../resource/models/fixed.perfect.dragon.100K.0.07.obj";
 	Mesh mesh(fname, Vec(0, 0, 2), 5);
 	shared_ptr<Texture> t2 = make_shared<HomoTexture>(Surface::BLUE_REFL);
-	shared_ptr<Texture> tpic = make_shared<ImgTexture>("../res/texture.jpg", 100, 0.6);
+	shared_ptr<Texture> tpic = make_shared<ImgTexture>("../resource/texture.jpg", 100, 0.6);
 
 	mesh.smooth = true;
 	mesh.set_texture(make_shared<HomoTexture>(HomoTexture::CYAN));
