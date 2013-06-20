@@ -1,5 +1,5 @@
 // File: view.hh
-// Date: Thu Jun 20 11:17:38 2013 +0800
+// Date: Thu Jun 20 15:42:21 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -27,6 +27,8 @@ class View {
 		Vec mid;
 		real_t size;		// length the img cover in the scene
 		Vec dir_w, dir_h;
+
+		Vec origin_norm;		// the initial view
 
 		bool use_dof = false;
 

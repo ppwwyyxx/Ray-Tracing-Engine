@@ -1,5 +1,5 @@
 // File: view.cc
-// Date: Thu Jun 20 11:17:37 2013 +0800
+// Date: Thu Jun 20 15:42:21 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "view.hh"
@@ -8,8 +8,10 @@ using namespace std;
 
 View::View(const Space& _sp, const Vec& _view_point,
 				const Vec& _mid, real_t _size, const Geometry& m_geo):
-			geo(m_geo), sp(_sp), view_point(_view_point), mid(_mid), size(_size)
-{ Vec norm = (view_point - mid).get_normalized(); Vec tmp;
+			geo(m_geo), sp(_sp), view_point(_view_point), mid(_mid), size(_size) {
+	Vec norm = (view_point - mid).get_normalized();
+	origin_norm = norm;
+	Vec tmp;
 	if ((fabs(norm.y) > EPS) || (fabs(norm.x) > EPS))
 		tmp = Vec(-norm.y, norm.x, 0);
 	else
@@ -70,7 +72,9 @@ void View::zoom(real_t ratio) {
 void View::orbit(int angle) {
 	normalize_dir_vector();
 	real_t alpha = M_PI * angle / 180;
+
 	Vec norm = (view_point - mid).get_normalized();
+	if (origin) norm = origin_norm.get_normalized();
 	norm = norm * cos(alpha) + dir_w * sin(alpha);
 	view_point = mid + norm * (view_point - mid).mod();
 	m_assert(fabs(dir_w.sqr()) - 1 < EPS);

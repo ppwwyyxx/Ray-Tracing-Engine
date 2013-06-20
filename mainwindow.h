@@ -60,14 +60,14 @@ class MainWindow : public QMainWindow {
 		QImage *image;
 
 		// for ray tracing parameter
-		QCheckBox *interpolation;
+		QCheckBox *smooth;
 		QCheckBox *kd_tree;
 		QSlider *dist;
 		QLineEdit *target_rate;
 		QPlainTextEdit *lights;
 
-		QDial *angle_z;
-		QDial *angle_xy;
+		QDial *orbit;
+		QDial *rotate;
 
 		QPushButton* fx, *fy, *fz, *sxy, *syz, *sxz;
 
@@ -88,7 +88,8 @@ class MainWindow : public QMainWindow {
 			void quit();
 			void save();
 			void trace();
-			void simplify();
+
+			void update_mesh();
 
 			void flood_fill();
 			void anti_alias();

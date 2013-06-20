@@ -53,7 +53,7 @@
      <string>simplifying</string>
     </property>
    </widget>
-   <widget class="QCheckBox" name="interpolation">
+   <widget class="QCheckBox" name="smooth">
     <property name="geometry">
      <rect>
       <x>830</x>
@@ -63,23 +63,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>interpolation</string>
-    </property>
-    <property name="checked">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QCheckBox" name="kd_tree">
-    <property name="geometry">
-     <rect>
-      <x>830</x>
-      <y>130</y>
-      <width>87</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>kd tree</string>
+     <string>smooth</string>
     </property>
     <property name="checked">
      <bool>true</bool>
@@ -116,25 +100,25 @@
      <rect>
       <x>830</x>
       <y>170</y>
-      <width>62</width>
+      <width>101</width>
       <height>16</height>
      </rect>
     </property>
     <property name="text">
-     <string>dist</string>
+     <string>distance to obj</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_5">
     <property name="geometry">
      <rect>
-      <x>830</x>
+      <x>840</x>
       <y>240</y>
       <width>111</width>
       <height>16</height>
      </rect>
     </property>
     <property name="text">
-     <string>angle X-Y</string>
+     <string>orbit</string>
     </property>
    </widget>
    <widget class="Line" name="line_2">
@@ -218,7 +202,7 @@
      <enum>Qt::Horizontal</enum>
     </property>
    </widget>
-   <widget class="QDial" name="angle_xy">
+   <widget class="QDial" name="orbit">
     <property name="geometry">
      <rect>
       <x>820</x>
@@ -237,17 +221,17 @@
    <widget class="QLabel" name="label_7">
     <property name="geometry">
      <rect>
-      <x>960</x>
+      <x>950</x>
       <y>240</y>
-      <width>111</width>
+      <width>61</width>
       <height>16</height>
      </rect>
     </property>
     <property name="text">
-     <string>angle Z</string>
+     <string>rotate</string>
     </property>
    </widget>
-   <widget class="QDial" name="angle_z">
+   <widget class="QDial" name="rotate">
     <property name="geometry">
      <rect>
       <x>930</x>
@@ -380,7 +364,7 @@
      <enum>Qt::Vertical</enum>
     </property>
    </widget>
-   <widget class="QPushButton" name="sxy">
+   <widget class="QPushButton" name="pushButton">
     <property name="geometry">
      <rect>
       <x>1050</x>
@@ -573,7 +557,7 @@
      <x>0</x>
      <y>0</y>
      <width>1174</width>
-     <height>22</height>
+     <height>25</height>
     </rect>
    </property>
   </widget>

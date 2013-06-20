@@ -26,11 +26,12 @@ MainWindow::MainWindow(QWidget *parent) :
     pic->setScene(scene);
 
 
-    interpolation = findChild<QCheckBox*>("interpolation");
-    kd_tree = findChild<QCheckBox*>("kd_tree");
+    smooth = findChild<QCheckBox*>("smooth");
+
     dist = findChild<QSlider*>("dist");
-    angle_z = findChild<QDial*>("angle_z");
-    angle_xy = findChild<QDial*>("angle_xy");
+    orbit = findChild<QDial*>("orbit");
+    rotate = findChild<QDial*>("rotate");
+
     lights = findChild<QPlainTextEdit*>("lights");
     fx = findChild<QPushButton*>("fx");
     fy = findChild<QPushButton*>("fy");
@@ -48,7 +49,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(save_action, SIGNAL(clicked()), this, SLOT(save()));
     connect(quit_action, SIGNAL(clicked()), this, SLOT(quit()));
     connect(start_trace, SIGNAL(clicked()), this, SLOT(trace()));
-    connect(start_simplify, SIGNAL(clicked()), this, SLOT(simplify()));
+    connect(start_simplify, SIGNAL(clicked()), this, SLOT(update_mesh()));
+
+	connect(smooth, SIGNAL(toggled(bool)), this, SLOT(update_mesh()));
 
     connect(fx, SIGNAL(clicked()), this, SLOT(update_model_fx()));
     connect(fy, SIGNAL(clicked()), this, SLOT(update_model_fy()));
@@ -67,8 +70,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	done_load = true;
 	space.add_light(Light(Vec(0, -10, 12), Color::WHITE, 2.0));
-	space.add_light(Light(Vec(9, 2, 50), Color::WHITE, 2.0));
-	space.add_light(Light(Vec(-9, 2, 50), Color::WHITE, 2.0));
+	space.add_light(Light(Vec(10, 10, 12), Color::WHITE, 2.0));
+	space.add_light(Light(Vec(10, -10, 12), Color::WHITE, 2.0));
+	space.add_light(Light(Vec(9, 2, 30), Color::WHITE, 2.0));
+	space.add_light(Light(Vec(-9, 2, 30), Color::WHITE, 2.0));
 	shared_ptr<Texture> tpic(new ImgTexture("res/texture.jpg", 80, 1));
 	space.add_obj(new Plane(InfPlane::XYPLANE, tpic));
 	space.finish();
@@ -83,6 +88,9 @@ void MainWindow::trace() {
         QMessageBox::critical(this, tr("Error"), tr("Please open a obj file"));
         return;
     }
+	int orbit_ang = orbit->value();
+	view->orbit(orbit_ang, true);
+	cout << "angle: " << orbit_ang << endl;
 	viewer->render_all();
 	int w = pixmap->width(), h = pixmap->height();
 	REP(i, w) REP(j, h) {
@@ -106,7 +114,7 @@ void MainWindow::open() {
 
 		now_fname = fname.toStdString();
 		Mesh mesh(fname.toStdString().c_str(), Vec(0, 0, 2), 5);
-		mesh.smooth = true;
+		mesh.smooth = smooth->isChecked();
 		shared_ptr<Texture> tred = make_shared<HomoTexture>(Surface::RED);
 		mesh.set_texture(tred);
 		mesh.finish();
@@ -122,14 +130,14 @@ void MainWindow::save() {
 	if(fname != "") viewer->r.save(fname.toStdString().c_str());
 }
 
-void MainWindow::simplify() {
+void MainWindow::update_mesh() {
 	if(done_load == false) {
 		QMessageBox::critical(this, tr("Error"), tr("Please open a obj file."));
 		return;
 	}
 
 	Mesh mesh(now_fname.c_str(), Vec(0, 0, 2), 5);
-	mesh.smooth = true;
+	mesh.smooth = smooth->isChecked();
 	shared_ptr<Texture> tred = make_shared<HomoTexture>(Surface::RED);
 	mesh.set_texture(tred);
 
