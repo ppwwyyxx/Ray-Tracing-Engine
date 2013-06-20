@@ -4,3 +4,4 @@ objviewer
 *.png
 *.jpg
 gui/Makefile
+doc
