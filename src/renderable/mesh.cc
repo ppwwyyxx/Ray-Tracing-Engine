@@ -1,5 +1,5 @@
 // File: mesh.cc
-// Date: Thu Jun 20 12:20:50 2013 +0800
+// Date: Thu Jun 20 13:51:07 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <algorithm>
@@ -15,10 +15,9 @@ Mesh::Mesh(std::string fname, const Vec& _pivot, real_t _zsize, const shared_ptr
 	ObjReader::read_in(fname, this);
 	cout << "nvtx: " << vtxs.size() << ", nface: " << face_ids.size() << endl;
 	transform_vtxs();
-	for (auto &ids : face_ids) add_face(ids);
 }
 
-void Mesh::simplify(real_t ratio) {
+void Mesh::simplify(real_t ratio) {		// only require face_ids
 	Timer timer;
 	MeshSimplifier s(*this, ratio);
 	s.simplify();
@@ -41,11 +40,8 @@ void Mesh::transform_vtxs() {
 }
 
 void Mesh::finish() {		// build tree, calculate smooth norm
-	if (use_tree)
-		tree = make_shared<KDTree>(faces, get_aabb());
-
 	if (smooth) {		// calculate vtx norm
-		if (faces.size() < 30) {
+		if (face_ids.size() < 30) {
 			printf("Number of faces is too small, cannot use smooth!\n");
 			smooth = false;
 			return;
@@ -65,10 +61,13 @@ void Mesh::finish() {		// build tree, calculate smooth norm
 			norm_sum[get<1>(t)].add(tmp_norm);
 			norm_sum[get<2>(t)].add(tmp_norm);
 		}
-		REP(k, nvtx)
-			vtxs[k].norm = norm_sum[k].sum / norm_sum[k].cnt;
+		REP(k, nvtx) vtxs[k].norm = norm_sum[k].sum / norm_sum[k].cnt;
 		delete[] norm_sum;
 	}
+
+	for (auto &ids : face_ids) add_face(ids);
+	if (use_tree)
+		tree = make_shared<KDTree>(faces, get_aabb());
 }
 
 shared_ptr<Trace> Mesh::get_trace(const Ray& ray, real_t dist) const {
@@ -88,6 +87,7 @@ shared_ptr<Surface> MeshTrace::transform_get_property() const {
 }
 
 bool MeshTrace::intersect() {
+	m_assert(!mesh.use_tree);
 	real_t min = numeric_limits<real_t>::infinity();
 	for (auto & face : mesh.faces) {
 		shared_ptr<Trace> tmp = face->get_trace(ray);
@@ -102,8 +102,8 @@ bool MeshTrace::intersect() {
 }
 
 real_t MeshTrace::intersection_dist()
-{ return nearest_trace->intersection_dist(); }
+{ m_assert(!mesh.use_tree); return nearest_trace->intersection_dist(); }
 
 Vec MeshTrace::normal()
-{ return nearest_trace->normal(); }
+{ m_assert(!mesh.use_tree); return nearest_trace->normal(); }
 

@@ -1,5 +1,5 @@
 // File: mesh.hh
-// Date: Thu Jun 20 12:18:32 2013 +0800
+// Date: Thu Jun 20 13:51:50 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -29,6 +29,21 @@ class Mesh: public RenderAble {
 		Vec bound_min = Vec::max(), bound_max = -Vec::max();
 
 		Mesh() {}
+
+		Mesh(const Mesh& r) {
+			texture = r.texture;
+			smooth = r.smooth;
+			mapped = r.mapped;
+			use_tree = r.use_tree;
+			vtxs = r.vtxs;
+			faces = r.faces;
+			face_ids = r.face_ids;
+			bound_min = r.bound_min;
+			bound_max = r.bound_max;
+			tree = r.tree;
+			for (auto & k : faces) dynamic_pointer_cast<Face>(k)->host = this;
+		}
+
 		Mesh(std::string fname, const Vec& _pivot, real_t _zsize, const shared_ptr<Texture>& _texture = nullptr);
 
 		void add_vertex(const Vec& p) {
@@ -82,6 +97,7 @@ class Mesh: public RenderAble {
 class MeshTrace : public Trace {
 	private:
 		const Mesh& mesh;
+
 		shared_ptr<Trace> nearest_trace = nullptr;
 
 		shared_ptr<Surface> transform_get_property() const;

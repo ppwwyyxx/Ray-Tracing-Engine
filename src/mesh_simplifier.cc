@@ -1,5 +1,5 @@
 // File: mesh_simplifier.cc
-// Date: Thu Jun 20 02:20:05 2013 +0800
+// Date: Thu Jun 20 13:24:22 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <list>
@@ -171,7 +171,7 @@ void MeshSimplifier::do_simplify() {
 	}
 }
 
-void MeshSimplifier::write_back() {
+void MeshSimplifier::write_back() {		// write vtxs and face_ids
 	mesh.clear();
 	int cnt = 0;
 	for (auto & v : vtxs) {
@@ -187,7 +187,6 @@ void MeshSimplifier::write_back() {
 
 		mesh.add_faceid(f.vtx[0]->id, f.vtx[1]->id, f.vtx[2]->id);
 	}
-	for (auto & ids : mesh.face_ids) mesh.add_face(ids);
 }
 
 void MeshSimplifier::simplify() {

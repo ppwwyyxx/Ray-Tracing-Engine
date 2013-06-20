@@ -1,5 +1,5 @@
 // File: space.cc
-// Date: Thu Jun 20 12:38:55 2013 +0800
+// Date: Thu Jun 20 12:59:20 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <limits>
@@ -31,6 +31,7 @@ void Space::add_obj(const rdptr& objptr) {
 		bound_max.update_max(k.max + Vec::eps());
 	}
 	objs.push_back(objptr);
+	cout << objptr.use_count();
 }
 
 void Space::finish() {		// called from View::View()

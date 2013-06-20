@@ -1,5 +1,5 @@
 // File: face.cc
-// Date: Thu Jun 20 12:16:16 2013 +0800
+// Date: Thu Jun 20 13:44:13 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "renderable/mesh.hh"
@@ -37,7 +37,7 @@ real_t Triangle::get_intersect(const Ray& ray, real_t& gx, real_t& gy) const {
 }
 
 shared_ptr<Trace> Face::get_trace(const Ray& ray, real_t dist) const {
-	shared_ptr<Trace> ret = make_shared<FaceTrace>(*this, ray);
+	shared_ptr<Trace> ret = shared_ptr<FaceTrace>(new FaceTrace(*this, ray));
 	if (ret->intersect()) {
 		if (dist == -1 || ret->intersection_dist() < dist)
 			return ret;
@@ -57,6 +57,15 @@ AABB Face::get_aabb() const {
 	ret.update_min(now - eps);
 	ret.update_max(now + eps);
 	return ret;
+}
+
+Vec Face::get_norm(int i) const {
+	if (i == 0)
+		return host->vtxs[get<0>(vtxid)].norm;
+	else if (i == 1)
+		return host->vtxs[get<1>(vtxid)].norm;
+	else
+		return host->vtxs[get<2>(vtxid)].norm;
 }
 
 Vec Face::get_smooth_norm(real_t gx, real_t gy) const {

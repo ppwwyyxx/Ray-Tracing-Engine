@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Thu Jun 20 12:38:12 2013 +0800
+// Date: Thu Jun 20 13:58:20 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "viewer.hh"
 #include "space.hh"
@@ -91,27 +91,24 @@ int main(int argc, char* argv[]) {
 	 *s.add_light(Light(Vec(-10, 0, 8), Color::WHITE, 2.0));
 	 *s.add_light(Light(Vec(0, 0, 9), Color::WHITE, 1.5));
 	 */
-
-	const char* fname = "../res/diamond.obj";
+	const char* fname = "../res/models/fixed.perfect.dragon.100K.0.07.obj";
 	Mesh mesh(fname, Vec(0, 0, 2), 5);
-
-	{
 	shared_ptr<Texture> tred = make_shared<HomoTexture>(Surface::RED);
-	shared_ptr<Texture> t1 = make_shared<GridTexture>(GridTexture::BLACK_WHITE);
 	shared_ptr<Texture> t2 = make_shared<HomoTexture>(Surface::BLUE_REFL);
 	shared_ptr<Texture> tpic = make_shared<ImgTexture>("../res/texture.jpg", 100, 0.6);
-	Plane plane1(InfPlane::XYPLANE, t1);
 
-	mesh.smooth = false;
+	mesh.smooth = true;
 	mesh.set_texture(tred);
-//	mesh.simplify(0.1);
+	mesh.simplify(0.8);
 	mesh.finish();
 	s.add_obj(make_shared<Mesh>(mesh));
 
-	}
+	shared_ptr<Texture> t1 = make_shared<GridTexture>(GridTexture::BLACK_WHITE);
+
 	//REP(i, 100) REP(j, 100) s.add_obj(new Sphere(PureSphere(Vec(i * 2, j * 2, 1), 0.5), t2));
 
-//	s.add_obj(make_shared<Plane>(plane1));
+	Plane plane1(InfPlane::XYPLANE, t1);
+	s.add_obj(make_shared<Plane>(plane1));
 //	Sphere sphere(PureSphere(Vec(1, 0, 1), 0.5), t2);
 //	Sphere sphere(PureSphere::TestSphere, t2);
 //	s.add_obj(new Sphere(sphere));

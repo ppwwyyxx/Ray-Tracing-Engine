@@ -1,5 +1,5 @@
 // File: face.hh
-// Date: Wed Jun 19 11:08:00 2013 +0800
+// Date: Thu Jun 20 13:49:03 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -46,16 +46,14 @@ class Face : public RenderAble {
 		Triangle tri;
 		Vec norm; // can later be re-calculated, can be assigned other than tri.normal
 
-		Mesh* host;
+		Mesh* host;		// XXX be careful when copying
 
 		tuple<int, int, int> vtxid;
-		const vector<Vertex>& vtxs;
 
 		Face(const vector<Vertex>& _vtxs, int a, int b, int c):
 			tri(_vtxs[a].pos, _vtxs[b].pos, _vtxs[c].pos),
 			norm(tri.norm),
-			vtxid{a, b, c},
-			vtxs(_vtxs){
+			vtxid{a, b, c} {
 			m_assert(!tri.e1.is_zero());
 		}
 
@@ -68,14 +66,7 @@ class Face : public RenderAble {
 	protected:
 		friend class FaceTrace;
 
-		Vec get_norm(int i) const {
-			if (i == 0)
-				return vtxs[get<0>(vtxid)].norm;
-			else if (i == 1)
-				return vtxs[get<1>(vtxid)].norm;
-			else
-				return vtxs[get<2>(vtxid)].norm;
-		}
+		Vec get_norm(int i) const;
 
 };
 

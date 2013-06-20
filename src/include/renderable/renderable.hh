@@ -1,5 +1,5 @@
 // File: renderable.hh
-// Date: Thu Jun 20 12:37:19 2013 +0800
+// Date: Thu Jun 20 12:54:17 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 
@@ -20,7 +20,7 @@ class RenderAble {
 	private:
 
 	public:
-		virtual ~RenderAble(){}
+		virtual ~RenderAble(){};
 
 		bool infinity = false;
 		bool have_inside = true;

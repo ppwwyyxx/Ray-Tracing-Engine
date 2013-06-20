@@ -1,5 +1,5 @@
 // File: kdtree.hh
-// Date: Wed Jun 19 11:08:51 2013 +0800
+// Date: Thu Jun 20 12:54:54 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -25,6 +25,8 @@ class KDTree : public RenderAble {
 		Vec bound_min = Vec::max(), bound_max = -Vec::max();
 
 		KDTree(const vector<shared_ptr<RenderAble>>& objs, const AABB& space);
+
+		~KDTree();
 
 		shared_ptr<Trace> get_trace(const Ray& ray, real_t max_dist = -1) const override;
 
