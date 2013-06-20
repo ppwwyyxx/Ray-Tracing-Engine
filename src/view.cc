@@ -1,5 +1,5 @@
 // File: view.cc
-// Date: Thu Jun 20 15:42:21 2013 +0800
+// Date: Thu Jun 20 15:54:23 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "view.hh"
@@ -74,7 +74,6 @@ void View::orbit(int angle) {
 	real_t alpha = M_PI * angle / 180;
 
 	Vec norm = (view_point - mid).get_normalized();
-	if (origin) norm = origin_norm.get_normalized();
 	norm = norm * cos(alpha) + dir_w * sin(alpha);
 	view_point = mid + norm * (view_point - mid).mod();
 	m_assert(fabs(dir_w.sqr()) - 1 < EPS);

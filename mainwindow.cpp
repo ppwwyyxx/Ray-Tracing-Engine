@@ -1,96 +1,83 @@
+// File: mainwindow.cpp
+// Date: Thu Jun 20 16:27:44 2013 +0800
+// Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <sstream>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "lib/Timer.hh"
+
+#define VIEWER_ANGLE 15
+#define ZOOMING 1.2
+#define SHIFT_DISTANCE 20
+#define SHIFT_SCREEN 3
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
-{
+    ui(new Ui::MainWindow) {
 
     ui->setupUi(this);
     this->setFixedSize(this->width(),this->height());
+#define DEF(a, b) a = findChild<b*>( #a )
+#define BUTTON_CONNECT(a) connect(a, SIGNAL(clicked()), this, SLOT(do_ ## a()))
+#define DEFF(a, b) DEF(a, b); BUTTON_CONNECT(a)
 
-    open_action = findChild<QPushButton*>("open");
-    save_action = findChild<QPushButton*>("save");
-    quit_action = findChild<QPushButton*>("quit_it");
-    start_trace = findChild<QPushButton*>("begin_tracing");
-    start_simplify = findChild<QPushButton*>("begin_simplify");
-    pic = findChild<QGraphicsView*>("pic");
-    target_rate = findChild<QLineEdit*>("target_rate");
+	DEFF(open, QPushButton);
+	DEFF(save, QPushButton);
+	DEFF(quit, QPushButton);
+	DEFF(trace, QPushButton);
+
+
+	DEF(simplify, QPushButton);
+    connect(simplify, SIGNAL(clicked()), this, SLOT(update_mesh()));
+
+	DEF(smooth, QCheckBox);
+	connect(smooth, SIGNAL(toggled(bool)), this, SLOT(update_mesh()));
+
+	DEF(pic, QGraphicsView);
+	DEF(target_rate, QLineEdit);
+
     scene = new QGraphicsScene();
     pixmap = new QPixmap(pic->width() - 10, pic->height() - 10);
     image = new QImage(pic->width() - 10, pic->height() - 10, QImage::Format_RGB32);
     scene->addPixmap(*pixmap);
     pic->setScene(scene);
 
+	DEFF(shift_up, QPushButton);
+	DEFF(shift_down, QPushButton);
+	DEFF(shift_right, QPushButton);
+	DEFF(shift_left, QPushButton);
 
-    smooth = findChild<QCheckBox*>("smooth");
+	DEFF(rotate_left, QPushButton);
+	DEFF(rotate_right, QPushButton);
+	DEFF(twist_left, QPushButton);
+	DEFF(twist_right, QPushButton);
+	DEFF(orbit_left, QPushButton);
+	DEFF(orbit_right, QPushButton);
 
-    dist = findChild<QSlider*>("dist");
-    orbit = findChild<QDial*>("orbit");
-    rotate = findChild<QDial*>("rotate");
-
-    lights = findChild<QPlainTextEdit*>("lights");
-    fx = findChild<QPushButton*>("fx");
-    fy = findChild<QPushButton*>("fy");
-    fz = findChild<QPushButton*>("fz");
-    sxy = findChild<QPushButton*>("sxy");
-    sxz = findChild<QPushButton*>("sxz");
-    syz = findChild<QPushButton*>("syz");
-    fill = findChild<QPushButton*>("fill");
-    antia = findChild<QPushButton*>("antia");
-    mos = findChild<QPushButton*>("mosaic");
-
-    combo = findChild<QComboBox*>("texture");
-
-    connect(open_action, SIGNAL(clicked()), this, SLOT(open()));
-    connect(save_action, SIGNAL(clicked()), this, SLOT(save()));
-    connect(quit_action, SIGNAL(clicked()), this, SLOT(quit()));
-    connect(start_trace, SIGNAL(clicked()), this, SLOT(trace()));
-    connect(start_simplify, SIGNAL(clicked()), this, SLOT(update_mesh()));
-
-	connect(smooth, SIGNAL(toggled(bool)), this, SLOT(update_mesh()));
-
-    connect(fx, SIGNAL(clicked()), this, SLOT(update_model_fx()));
-    connect(fy, SIGNAL(clicked()), this, SLOT(update_model_fy()));
-    connect(fz, SIGNAL(clicked()), this, SLOT(update_model_fz()));
-    connect(sxy, SIGNAL(clicked()), this, SLOT(update_model_sxy()));
-    connect(syz, SIGNAL(clicked()), this, SLOT(update_model_syz()));
-    connect(sxz, SIGNAL(clicked()), this, SLOT(update_model_sxz()));
-
-    connect(fill, SIGNAL(clicked()), this, SLOT(flood_fill()));
-    connect(antia, SIGNAL(clicked()), this, SLOT(anti_alias()));
-    connect(mos, SIGNAL(clicked()), this, SLOT(mosaic()));
-
-    connect(combo, SIGNAL(currentTextChanged(QString)),this, SLOT(change_texture()));
-
+	DEFF(zoom_in, QPushButton);
+	DEFF(zoom_out, QPushButton);
 
 
 	done_load = true;
-	space.add_light(Light(Vec(0, -10, 12), Color::WHITE, 2.0));
-	space.add_light(Light(Vec(10, 10, 12), Color::WHITE, 2.0));
-	space.add_light(Light(Vec(10, -10, 12), Color::WHITE, 2.0));
-	space.add_light(Light(Vec(9, 2, 30), Color::WHITE, 2.0));
-	space.add_light(Light(Vec(-9, 2, 30), Color::WHITE, 2.0));
+	space.add_light(Light(Vec(0, -10, 12), Color::WHITE, 1.0));
+	space.add_light(Light(Vec(10, 10, 12), Color::WHITE, 1.0));
+	space.add_light(Light(Vec(10, -10, 12), Color::WHITE, 1.0));
+	space.add_light(Light(Vec(9, 2, 30), Color::WHITE, 1.0));
+	space.add_light(Light(Vec(-9, 2, 30), Color::WHITE, 1.0));
 	shared_ptr<Texture> tpic(new ImgTexture("res/texture.jpg", 80, 1));
 	space.add_obj(new Plane(InfPlane::XYPLANE, tpic));
 	space.finish();
 	view = new View(space, Vec(0, 0, 12), Vec(0, 0, 2), 15, Geometry(pixmap->width(), pixmap->height()));
 	viewer = new CVViewer(*view);
-	trace();
+	do_trace();
 	done_load = false;
 }
 
-void MainWindow::trace() {
+void MainWindow::do_trace() {
     if(done_load == false) {
         QMessageBox::critical(this, tr("Error"), tr("Please open a obj file"));
         return;
     }
-	int orbit_ang = orbit->value();
-	view->orbit(orbit_ang, true);
-	cout << "angle: " << orbit_ang << endl;
 	viewer->render_all();
 	int w = pixmap->width(), h = pixmap->height();
 	REP(i, w) REP(j, h) {
@@ -100,10 +87,7 @@ void MainWindow::trace() {
 	update_scene();
 }
 
-MainWindow::~MainWindow() { delete ui; delete view; delete viewer; }
-void MainWindow::quit() { qApp->quit(); }
-
-void MainWindow::open() {
+void MainWindow::do_open() {
 	QString fname = QFileDialog::getOpenFileName(this, tr("Open File"), "", tr("Obj Files (*.obj);;"));
 	if(fname != "") {
 		QFile file(fname);
@@ -125,7 +109,7 @@ void MainWindow::open() {
 	done_load = true;
 }
 
-void MainWindow::save() {
+void MainWindow::do_save() {
 	QString fname = QFileDialog::getSaveFileName(this, tr("Save File"), "", tr("Png Files (*.png);;"));
 	if(fname != "") viewer->r.save(fname.toStdString().c_str());
 }
@@ -150,7 +134,7 @@ void MainWindow::update_mesh() {
 	space.clear();
 	space.add_obj(make_shared<Mesh>(mesh));
 	space.finish();
-	trace();
+	do_trace();
 }
 
 void MainWindow::update_scene() {
@@ -164,34 +148,19 @@ void MainWindow::update_scene() {
 	QApplication::processEvents();
 }
 
-void MainWindow::update_model_fx() {
+void MainWindow::do_shift_up() { view->shift(SHIFT_DISTANCE, false); }
+void MainWindow::do_shift_down() { view->shift(-SHIFT_DISTANCE, false); }
+void MainWindow::do_shift_left() { view->shift(SHIFT_DISTANCE, true); }
+void MainWindow::do_shift_right() { view->shift(-SHIFT_DISTANCE, true); }
+void MainWindow::do_rotate_left() { view->rotate(-VIEWER_ANGLE); }
+void MainWindow::do_rotate_right() { view->rotate(VIEWER_ANGLE); }
+void MainWindow::do_orbit_left() { view->orbit(-VIEWER_ANGLE); }
+void MainWindow::do_orbit_right() { view->orbit(VIEWER_ANGLE); }
+void MainWindow::do_twist_left() { view->twist(VIEWER_ANGLE); }
+void MainWindow::do_twist_right() { view->twist(-VIEWER_ANGLE); }
+void MainWindow::do_zoom_in() {view->zoom(ZOOMING); };
+void MainWindow::do_zoom_out() {view->zoom(1.0 / ZOOMING); };
 
-}
+MainWindow::~MainWindow() { delete ui; delete view; delete viewer; }
+void MainWindow::do_quit() { qApp->quit(); }
 
-void MainWindow::update_model_fy() {
-}
-
-void MainWindow::update_model_fz() {
-}
-
-void MainWindow::update_model_sxy() {
-}
-
-void MainWindow::update_model_sxz() {
-}
-
-void MainWindow::update_model_syz() {
-}
-
-
-void MainWindow::flood_fill() {
-}
-
-void MainWindow::anti_alias() {
-}
-
-void MainWindow::mosaic() {
-}
-
-void MainWindow::change_texture() {
-}

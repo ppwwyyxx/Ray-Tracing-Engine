@@ -1,4 +1,9 @@
+// File: mainwindow.h
+// Date: Thu Jun 20 16:27:23 2013 +0800
+// Author: Yuxin Wu <ppwwyyxxc@gmail.com>
+
 #pragma once
+
 #include <iostream>
 #include <cstdio>
 #include <cstdlib>
@@ -51,29 +56,21 @@ class MainWindow : public QMainWindow {
 
 	private:
 		Ui::MainWindow *ui;
-		QPushButton *open_action, *save_action;
-		QPushButton *quit_action;
-		QPushButton *start_trace, *start_simplify;
+		QPushButton *open, *save, *quit, *trace, *simplify;
+
 		QGraphicsView *pic;
 		QGraphicsScene *scene;
 		QPixmap *pixmap;
 		QImage *image;
 
-		// for ray tracing parameter
+
 		QCheckBox *smooth;
-		QCheckBox *kd_tree;
-		QSlider *dist;
+
+		QPushButton *shift_up, *shift_down, *shift_left, *shift_right,
+					*rotate_left, *rotate_right, *orbit_left, *orbit_right,
+					*twist_left, *twist_right, *zoom_in, *zoom_out;
+
 		QLineEdit *target_rate;
-		QPlainTextEdit *lights;
-
-		QDial *orbit;
-		QDial *rotate;
-
-		QPushButton* fx, *fy, *fz, *sxy, *syz, *sxz;
-
-		QPushButton * fill;
-		QPushButton * antia, *mos;
-		QComboBox *combo;
 
 		bool done_load = false;
 		Space space;
@@ -82,25 +79,28 @@ class MainWindow : public QMainWindow {
 
 		string now_fname;
 
-
 		public slots:
-			void open();
-			void quit();
-			void save();
-			void trace();
+			void do_open();
+			void do_quit();
+			void do_save();
+			void do_trace();
 
 			void update_mesh();
 
-			void flood_fill();
-			void anti_alias();
-			void mosaic();
+			void do_shift_up();
+			void do_shift_down();
+			void do_shift_left();
+			void do_shift_right();
+
+			void do_orbit_left();
+			void do_orbit_right();
+			void do_twist_left();
+			void do_twist_right();
+			void do_rotate_left();
+			void do_rotate_right();
+			void do_zoom_in();
+			void do_zoom_out();
+
 			void update_scene();
-			void update_model_fx();
-			void update_model_fy();
-			void update_model_fz();
-			void update_model_sxy();
-			void update_model_sxz();
-			void update_model_syz();
-			void change_texture();
 };
 
