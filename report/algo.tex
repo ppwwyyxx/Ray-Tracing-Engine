@@ -1,5 +1,5 @@
 % File: algo.tex
-% Date: Thu Jun 20 20:43:35 2013 +0800
+% Date: Thu Jun 20 21:21:07 2013 +0800
 % Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 \section{算法说明}
 \subsection{光线追踪及光照模型}
@@ -34,8 +34,8 @@ $ \overrightarrow{V}$为视点到表面交点处的向量.
     光线在平面法向方向的投影长度计算交点.见\verb|include/geometry/infplane.hh, renderable/plane.cc|
 
   \item[球]球由球心及半径唯一确定.球与光线求交时,
-    利用球心到它在光线所在直线上的投影的距离判断是否相交,在根据投影位置
-    及勾股定理计算交点. 求交时要考虑光线起始点在球内部的情形.见\verb|include/geometry/sphere.hh, renderable/sphere.cc|
+    利用球心到它在光线所在直线上的投影的距离判断是否相交,在根据投影位置及勾股定理计算交点.
+    求交时要考虑光线起始点在球内部的情形,以供计算相对折射率.见\verb|include/geometry/sphere.hh, renderable/sphere.cc|
 
   \item[三角面片]三角面片用三个顶点坐标存储.
     为了性能,与光线的求交参考了\cite{triangle, triangle_code}的算法及实现,其基本思想是求解满足
@@ -50,6 +50,7 @@ $ \overrightarrow{V}$为视点到表面交点处的向量.
     为了效率,包围盒与光线求交部分参考了\cite{aabb}的算法.
     其基本思想是对每个面逐一计算并更新交点.见\verb|geometry/aabb.hh|
 \end{description}
+
 
 \subsection{视图模型}
 一个视图应包括视点及屏幕,且应使视点在屏幕的中轴线上.
@@ -96,11 +97,37 @@ KD树是一种空间划分树,原本用于在K维空间中快速查找点,可利
 
 实现时,在每个节点处保存了当前节点的两个孩子的切分平面,这样可以预先判断出离
 光线较近的包围盒,若与其内物体相交则不用考虑另一包围盒.
-此时应注意,若光线与第一个包围盒所管理的物体相交,应确认与最近物体的交点是否被第一个包围盒\underline{包含}.
+使用此方法应注意,若光线与第一个包围盒所管理的物体相交,应确认与最近物体的交点是否被第一个包围盒\underline{包含}.
 因为若不包含,则光线首先打到的物体可能并不是此物体,而是第二个包围盒管理的物体.
 
+\subsection{纹理}
+\subsection{抗锯齿}
+\begin{enumerate}
+  \item 使用Beer-Lambert定律,使得光想亮度按传播距离指数衰减,可以有效消除远处纹理密集处的畸形.
+    见\figref{first}与\figref{beer}的对比.
+
+  \item 使用全屏抗锯齿(FSAA),对图片整体应用卷积盒$\begin{bmatrix}1 & 2 & 1\\2 & 4 & 2\\1 & 2 & 1\end{bmatrix} $,
+    消除直线锯齿的同时使图片模糊,影响视觉效果.
+
+  \item 对每一像素,计算其与周围像素距离平方之和,若小于某一阈值则应用如上卷积盒,略有效果. 见\verb|CVRender::antialias()|
+\end{enumerate}
+
+\subsection{软阴影}
+对场景中每一点光源,将其替换为点周围的多个密集点光源以模拟面光源的效果,
+即可实现软阴影.
+效果如\figref{soft}所示. 实现见\verb|Space::add_light()|.
+
+\subsection{景深}
 
 
-\subsection{其他}
-光线密度,折射
+\subsection{小量处理}
+有如下情形需要考虑实数运算中的误差.
+考虑光线斜射平面的情形,
 反射+EPS,
+
+\subsection{网格简化}
+
+\subsection{多线程}
+\begin{enumerate}
+  \item 对生成图片中每个像素
+\end{enumerate}
