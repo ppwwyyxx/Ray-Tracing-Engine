@@ -1,5 +1,5 @@
 % File: algo.tex
-% Date: Fri Jun 21 10:26:30 2013 +0800
+% Date: Fri Jun 21 11:42:47 2013 +0800
 % Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 \section{算法说明}
 \subsection{光线追踪及光照模型}
@@ -191,7 +191,8 @@ KD树是一种空间划分树,原本用于在K维空间中快速查找点,可利
 
 \subsection{多线程}
 \begin{enumerate}
-  \item 对生成图片中每个像素,显然其计算相互独立,使用openmp对其进行多线程优化.
+  \item 对生成图片中每个像素,显然其计算相互独立,使用openmp及C++11的\verb|std::thread|两种方式对其进行多线程优化,
+    效果差不多.见\verb|CVViewer::render_all()|.
 
   \item 建树时,两子树的创建可以并行执行.
     测试表明对根节点的两子节点并行建树有效,而对深层节点并行建树得不偿失.
