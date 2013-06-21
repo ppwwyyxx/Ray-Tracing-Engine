@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Fri Jun 21 11:05:47 2013 +0800
+// Date: Fri Jun 21 11:07:36 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "viewer.hh"
 #include "space.hh"
