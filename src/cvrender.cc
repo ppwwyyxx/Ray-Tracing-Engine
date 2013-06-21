@@ -1,10 +1,11 @@
 // File: cvrender.cc
-// Date: Fri Jun 21 11:06:48 2013 +0800
+// Date: Fri Jun 21 11:41:45 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <functional>
 #include <opencv2/opencv.hpp>
 #include <omp.h>
+#include <mutex>
 #include <algorithm>
 
 #include "render/cvrender.hh"
@@ -115,37 +116,51 @@ void CVRender::blur() {
 	GaussianBlur(dst, img, Size(3, 3), 4);
 }
 
-void render_and_set(pair<int, int> range, View* v, RenderBase* r) {
-	int w = r->get_geo().w;
-	REPL(i, range.first, range.second)
-		REP(j, w) {
-			Color col = v->render(i, j);
-			r->write(j, i, col);
+
+void render_and_set(int* line_cnt, View* v, RenderBase* r) {
+	static mutex line_cnt_mutex;
+	static const int w = r->get_geo().w, h = r->get_geo().h;
+	int now_num;
+	do {
+		{
+			std::lock_guard<std::mutex> lock(line_cnt_mutex);
+			now_num = (*line_cnt);
+			*line_cnt = now_num + 1;
 		}
+		print_progress(now_num * 100 / h);
+
+		if (now_num >= h) return;
+		REP(j, w) {
+			Color col = v->render(now_num, j);
+			r->write(j, now_num, col);
+		}
+	} while (true);
 }
 
 void CVViewer::render_all() {
 	Timer timer;
-	int n = 4;
-	int npiece = geo.h / n;
-	thread th[8];
-	/*
-	 *REP(thread_n, n) {
-	 *    th[thread_n] = thread(std::bind(&render_and_set, make_pair(thread_n * npiece, min(geo.h, (thread_n + 1) * npiece)), &v, &r));
-	 *}
-	 *REP(thread_n, n)
-	 *    th[thread_n].join();
-	 */
 
-#pragma omp parallel for schedule(dynamic)
-	REP(i, geo.h) {
-		if (!omp_get_thread_num())
-			print_progress(i * 100 / geo.h);
-		REP(j, geo.w) {
-			Color col = v.render(i, j);
-			r.write(j, i, col);
-		}
-	}
+	// use thread
+	int nthread = omp_get_num_procs();
+	int render_cnt = 0;
+	thread* th = new thread[nthread];
+	REP(k, nthread) th[k] = thread(render_and_set, &render_cnt, &v, &r);
+	REP(k, nthread) th[k].join();
+	delete[] th;
+
+/*	// use openmp
+ *#pragma omp parallel for schedule(dynamic)
+ *    REP(i, geo.h) {
+ *        if (!omp_get_thread_num())
+ *            print_progress(i * 100 / geo.h);
+ *        REP(j, geo.w) {
+ *            Color col = v.render(i, j);
+ *            r.write(j, i, col);
+ *        }
+ *    }
+ */
+
+
 	printf("Render spends %lf seconds\n", timer.get_time());
 //	r.antialias();
 	if (v.use_dof) r.blur();

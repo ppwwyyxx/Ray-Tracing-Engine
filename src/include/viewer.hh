@@ -1,5 +1,5 @@
 // File: viewer.hh
-// Date: Fri Jun 21 11:01:56 2013 +0800
+// Date: Fri Jun 21 11:13:15 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -47,8 +47,4 @@ class CVViewer : public Viewer {
 		void view();
 
 		void render_all();
-
-	private:
-		int render_cnt = 0;
-
 };
