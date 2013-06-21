@@ -1,5 +1,5 @@
 // File: renderable.hh
-// Date: Thu Jun 20 12:54:17 2013 +0800
+// Date: Fri Jun 21 18:53:27 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 
@@ -13,14 +13,14 @@ using std::shared_ptr;
 using std::make_shared;
 
 class Trace;
-class RenderAble;
-typedef shared_ptr<RenderAble> rdptr;
+class Renderable;
+typedef shared_ptr<Renderable> rdptr;
 
-class RenderAble {
+class Renderable {
 	private:
 
 	public:
-		virtual ~RenderAble(){};
+		virtual ~Renderable(){};
 
 		bool infinity = false;
 		bool have_inside = true;
@@ -38,7 +38,7 @@ class RenderAble {
 // a combination of renderable object and a ray, to integrate some calculations
 class Trace {
 	protected:
-		const RenderAble* obj;
+		const Renderable* obj;
 		const Ray& ray;
 		bool toward = true;
 		real_t inter_dist = std::numeric_limits<real_t>::infinity();
@@ -46,7 +46,7 @@ class Trace {
 		virtual	shared_ptr<Surface> transform_get_property() const = 0;
 
 	public:
-		Trace(const RenderAble* m_obj, const Ray& m_ray):
+		Trace(const Renderable* m_obj, const Ray& m_ray):
 			obj(m_obj), ray(m_ray){}
 
 		// forbid copy of a Trace
@@ -55,7 +55,7 @@ class Trace {
 
 		virtual ~Trace(){ }
 
-		const RenderAble* get_obj()
+		const Renderable* get_obj()
 		{ return obj; }
 
 		virtual Vec intersection_point() const {

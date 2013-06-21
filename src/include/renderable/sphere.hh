@@ -1,5 +1,5 @@
 // File: sphere.hh
-// Date: Wed Jun 19 11:03:06 2013 +0800
+// Date: Fri Jun 21 18:54:27 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -7,20 +7,20 @@
 #include "geometry/sphere.hh"
 #include "renderable/renderable.hh"
 
-class Sphere : public RenderAble {
+class Sphere : public Renderable {
 	public:
 		Vec north = Vec(0, 0, 1);
 
 		const PureSphere sphere;
 
-		Sphere(const PureSphere& m_sphere):
-			sphere(m_sphere) {
+		Sphere(const PureSphere& _sphere):
+			sphere(_sphere) {
 			// calculate a new north
 		}
 
-		Sphere(const PureSphere &m_sphere, std::shared_ptr<Texture> m_texture):
-			Sphere(m_sphere)
-		{ texture = m_texture;	}
+		Sphere(const PureSphere &_sphere, std::shared_ptr<Texture> _texture):
+			Sphere(_sphere)
+		{ texture = _texture;	}
 
 		std::shared_ptr<Trace> get_trace(const Ray& ray, real_t max_dist = -1) const override;
 
@@ -43,8 +43,8 @@ class SphereTrace : public Trace {
 
 
 	public:
-		SphereTrace(const Sphere& m_sphere, const Ray& m_ray):
-			Trace(&m_sphere, m_ray), sphere(m_sphere) {
+		SphereTrace(const Sphere& _sphere, const Ray& _ray):
+			Trace(&_sphere, _ray), sphere(_sphere) {
 			toward = (ray.dir.dot(sphere.sphere.center - ray.orig) > 0) ;
 			inside = sphere.sphere.contain(ray.orig);
 		};

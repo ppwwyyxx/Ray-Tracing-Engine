@@ -1,5 +1,5 @@
 // File: mesh.hh
-// Date: Fri Jun 21 18:37:43 2013 +0800
+// Date: Fri Jun 21 18:54:48 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -11,7 +11,7 @@
 
 class MeshSimplifier;
 
-class Mesh: public RenderAble {
+class Mesh: public Renderable {
 	public:
 		// config
 		bool smooth = true;

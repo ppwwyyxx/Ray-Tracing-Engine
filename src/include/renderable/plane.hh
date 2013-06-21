@@ -1,5 +1,5 @@
 // File: plane.hh
-// Date: Wed Jun 19 11:03:30 2013 +0800
+// Date: Fri Jun 21 18:53:58 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -9,7 +9,7 @@
 #include "geometry/infplane.hh"
 using std::shared_ptr;
 
-class Plane : public RenderAble {
+class Plane : public Renderable {
 	public:
 		real_t radius = 0;
 		Vec surfdir = Vec::infinity();

@@ -1,5 +1,5 @@
 // File: face.hh
-// Date: Thu Jun 20 13:49:03 2013 +0800
+// Date: Fri Jun 21 18:54:42 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -41,7 +41,7 @@ class Vertex {
 };
 
 class Mesh;
-class Face : public RenderAble {
+class Face : public Renderable {
 	public:
 		Triangle tri;
 		Vec norm; // can later be re-calculated, can be assigned other than tri.normal
