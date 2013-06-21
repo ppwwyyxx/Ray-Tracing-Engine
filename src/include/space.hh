@@ -1,5 +1,5 @@
 // File: space.hh
-// Date: Thu Jun 20 11:41:01 2013 +0800
+// Date: Fri Jun 21 18:37:35 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -8,7 +8,7 @@
 #include <memory>
 
 #include "renderable/renderable.hh"
-#include "lib/kdtree.hh"
+#include "kdtree.hh"
 #include "common.hh"
 using std::vector;
 using std::shared_ptr;

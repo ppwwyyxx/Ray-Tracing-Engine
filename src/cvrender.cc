@@ -1,5 +1,5 @@
 // File: cvrender.cc
-// Date: Fri Jun 21 11:41:45 2013 +0800
+// Date: Fri Jun 21 18:18:05 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <functional>
@@ -113,7 +113,7 @@ void CVRender::antialias() {
 
 void CVRender::blur() {
 	Mat dst = img;
-	GaussianBlur(dst, img, Size(3, 3), 4);
+	GaussianBlur(dst, img, Size(3, 3), 0.5);
 }
 
 

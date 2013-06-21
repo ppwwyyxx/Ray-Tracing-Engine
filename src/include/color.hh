@@ -1,5 +1,5 @@
 // File: color.hh
-// Date: Fri Jun 21 00:18:00 2013 +0800
+// Date: Fri Jun 21 18:44:22 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -29,7 +29,14 @@ class Color: public Vector {
 			m_assert(z >= 0 && z <= 1 + EPS);
 		}
 
-		void normalize();
+		void normalize() {
+			real_t max = get_max();
+			if (max > 1) {
+				x /= max;
+				y /= max;
+				z /= max;
+			}
+		}
 
 		Color operator * (real_t p) const
 		{ return Color(x * p, y * p, z * p); }

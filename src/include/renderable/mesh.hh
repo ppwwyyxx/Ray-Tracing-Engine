@@ -1,11 +1,11 @@
 // File: mesh.hh
-// Date: Thu Jun 20 14:17:11 2013 +0800
+// Date: Fri Jun 21 18:37:43 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
 #include <string>
 #include "renderable/face.hh"
-#include "lib/kdtree.hh"
+#include "kdtree.hh"
 
 #define INRANGE(x) (x) < (int)vtxs.size()
 

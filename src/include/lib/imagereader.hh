@@ -1,5 +1,5 @@
 // File: imagereader.hh
-// Date: Tue Jun 18 16:25:59 2013 +0800
+// Date: Fri Jun 21 18:50:03 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -31,5 +31,4 @@ class ImageReader {
 class MagickReader : public ImageReader {
 	public:
 		MagickReader(const char* fname);
-
 };

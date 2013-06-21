@@ -1,9 +1,47 @@
 % File: design.tex
-% Date: Fri Jun 21 02:35:21 2013 +0800
+% Date: Fri Jun 21 18:52:34 2013 +0800
 % Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 \section{项目设计}
-目录结构
+项目的目录结构大致如下:
+\dirtree{%
+.1 /.
+.2 report/\DTcomment{本报告的\LaTeX 源代码}.
+.2 demo/\DTcomment{一些演示}.
+.2 resource/\DTcomment{程序使用到的外部资源}.
+.2 src/\DTcomment{程序源代码}.
+.3 include/\DTcomment{头文件}.
+.4 geometry/\DTcomment{实现抽象几何对象}.
+.4 renderable/\DTcomment{定义可渲染几何对象}.
+.4 lib/\DTcomment{程序使用的辅助功能定义}.
+.4 material/\DTcomment{实现表面属性及纹理}.
+.4 render/\DTcomment{定义图像渲染}.
+.3 lib/\DTcomment{辅助功能的实现}.
+.4 debugutils.cc.
+.4 utils.cc.
+.4 imagereader.cc.
+.4 Timer.cc.
+.3 renderable/\DTcomment{可渲染几何对象及其渲染相关操作的实现}.
+.4 face.cc.
+.4 mesh.cc.
+.4 plane.cc.
+.4 sphere.cc.
+.3 gui/\DTcomment{图形界面}.
+.4 main.cxx.
+.4 window.cxx.
+.4 window.hh.
+.4 window.ui.
+.4 objviewer.pro.
+.3 kdtree.cc.
+.3 cvrender.cc.
+.3 mesh\_simplifier.cc.
+.3 space.cc.
+.3 static\_const.cc.
+.3 view.cc.
+.3 main.cc.
+.3 Makefile.
+.3 Doxyfile.
+}
 
 \subsection{类}
 kdtree

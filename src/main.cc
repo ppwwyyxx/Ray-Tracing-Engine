@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Fri Jun 21 11:07:36 2013 +0800
+// Date: Fri Jun 21 18:19:47 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "viewer.hh"
 #include "space.hh"
@@ -74,6 +74,7 @@ void generate_dof_video() {
 	v.use_dof = true;
 
 
+	v.move_screen(-3);
 	REP(k, 400) {
 		CVViewer viewer(v, "output/" + string_format("%03d", k) + ".png");
 		printf("finish %d\n", k);
@@ -115,7 +116,7 @@ void test_simplify() {
 }
 
 int main() {
-	test_kdtree();
+	generate_dof_video();
 	return 0;
 	int w, h;
 	w = h = 500;
