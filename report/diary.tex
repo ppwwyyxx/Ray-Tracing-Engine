@@ -1,5 +1,5 @@
 % File: diary.tex
-% Date: Fri Jun 21 02:12:50 2013 +0800
+% Date: Fri Jun 21 18:59:22 2013 +0800
 % Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 \section{过程记录}
 \begin{enumerate}
@@ -116,7 +116,7 @@
     \end{figure}
 
   \item 将KDTree扩展到了整个空间.
-    设计方法是将所有的有限大物体合成为一个``KDTree''物体(因为几何物体及KDTree都继承自\verb|RenderAble|基类),保留无限大物体,再在
+    设计方法是将所有的有限大物体合成为一个``KDTree''物体(因为几何物体及KDTree都继承自\verb|Renderable|基类),保留无限大物体,再在
     空间中进行渲染.下图是一个20W面片的龙加上1万个球组成的场景,渲染此图只需1.4s.
     \begin{figure}[H]
       \centering
