@@ -1,5 +1,5 @@
 // File: mesh_simplifier.cc
-// Date: Thu Jun 20 14:08:41 2013 +0800
+// Date: Fri Jun 21 19:24:39 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <list>
@@ -34,7 +34,6 @@ void MeshSimplifier::Face::change_to(Vertex*& u, Vertex*& v) {
 
 void MeshSimplifier::Vertex::change_to(Vertex* u, Vertex* v) {
 	m_assert(this != v);
-	m_assert(adj_vtx.find(u) != adj_vtx.end());
 	adj_vtx.erase(u);
 	adj_vtx.insert(v);
 }

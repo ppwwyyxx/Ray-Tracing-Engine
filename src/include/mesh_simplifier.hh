@@ -1,5 +1,5 @@
 // File: mesh_simplifier.hh
-// Date: Thu Jun 20 13:24:32 2013 +0800
+// Date: Fri Jun 21 19:23:06 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -52,7 +52,7 @@ class MeshSimplifier {
 
 			Vertex(Vec _pos, int _id = -1):pos(_pos), id(_id) {}
 
-			void add_face(Face* f) {
+			inline void add_face(Face* f) {
 				adj_face.insert(f);
 				REP(k, 3) if (f->vtx[k] != this) adj_vtx.insert(f->vtx[k]);
 			}
@@ -73,7 +73,7 @@ class MeshSimplifier {
 			bool operator < (const Elem& r) const
 			{ return cost > r.cost; }
 
-			bool outofdate() const
+			inline bool outofdate() const
 			{ return cost_timestamp < v->cost_timestamp; }
 		};
 
