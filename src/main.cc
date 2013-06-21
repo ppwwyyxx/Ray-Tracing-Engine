@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Fri Jun 21 02:18:52 2013 +0800
+// Date: Fri Jun 21 10:10:36 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "viewer.hh"
 #include "space.hh"
@@ -54,7 +54,7 @@ void dof_ball_scene() {
 }
 
 void generate_dof_video() {
-	int w = 1024, h = 768;
+	int w = 1000, h = 1000;
 	Space s;
 	s.add_light(Light(Vec(0, -10, 12), Color::WHITE, 2.0));
 	s.add_light(Light(Vec(9, 2, 50), Color::WHITE, 2.0));
@@ -74,10 +74,10 @@ void generate_dof_video() {
 	v.use_dof = true;
 
 
-	v.move_screen(-5);
 	REP(k, 400) {
 		CVViewer viewer(v, "output/" + string_format("%03d", k) + ".png");
-		v.move_screen(0.05);
+		printf("finish %d\n", k);
+		v.move_screen(0.04);
 	}
 }
 
