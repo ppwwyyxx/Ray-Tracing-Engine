@@ -1,7 +1,8 @@
 // File: cvrender.cc
-// Date: Fri Jun 21 01:55:37 2013 +0800
+// Date: Fri Jun 21 11:06:48 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
+#include <functional>
 #include <opencv2/opencv.hpp>
 #include <omp.h>
 #include <algorithm>
@@ -114,8 +115,28 @@ void CVRender::blur() {
 	GaussianBlur(dst, img, Size(3, 3), 4);
 }
 
+void render_and_set(pair<int, int> range, View* v, RenderBase* r) {
+	int w = r->get_geo().w;
+	REPL(i, range.first, range.second)
+		REP(j, w) {
+			Color col = v->render(i, j);
+			r->write(j, i, col);
+		}
+}
+
 void CVViewer::render_all() {
 	Timer timer;
+	int n = 4;
+	int npiece = geo.h / n;
+	thread th[8];
+	/*
+	 *REP(thread_n, n) {
+	 *    th[thread_n] = thread(std::bind(&render_and_set, make_pair(thread_n * npiece, min(geo.h, (thread_n + 1) * npiece)), &v, &r));
+	 *}
+	 *REP(thread_n, n)
+	 *    th[thread_n].join();
+	 */
+
 #pragma omp parallel for schedule(dynamic)
 	REP(i, geo.h) {
 		if (!omp_get_thread_num())
