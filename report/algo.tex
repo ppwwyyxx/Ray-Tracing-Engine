@@ -1,5 +1,5 @@
 % File: algo.tex
-% Date: Sat Jun 22 17:19:34 2013 +0800
+% Date: Sat Jun 22 20:03:24 2013 +0800
 % Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 \section{算法说明}
 \subsection{光线追踪及光照模型}
@@ -40,7 +40,7 @@ $ \overrightarrow{V}$为视点到表面交点处的向量.
   \item[三角面片]三角面片用三个顶点坐标存储.
     为了性能,与光线的求交参考了\cite{triangle, triangle_code}的算法及实现,其基本思想是求解满足
     方程
-    \[  \overrightarrow{Orig} + t * \overrightarrow{Dir} = x * \overrightarrow{v_1} + y  \overrightarrow{v_2} + (1 - x -
+    \[  \overrightarrow{Orig} + t  \overrightarrow{Dir} = x \overrightarrow{v_1} + y  \overrightarrow{v_2} + (1 - x -
       y)\overrightarrow{v_3}, t > 0, x, y \in (0, 1), x + y \le 1\]
     的$ (t, x, y)$, 在求交时同时能得到交点的重心坐标\footnote{\url{https://en.wikipedia.org/wiki/Barycentric\_coordinate\_system}}
     ,便于之后进行法向插值.见\verb|include/renderable/face.hh, renderable/face.cc|
@@ -60,8 +60,8 @@ $ \overrightarrow{V}$为视点到表面交点处的向量.
 
 \subsection{KD树}
 KD树是一种空间划分树,原本用于在K维空间中快速查找点,可利用在光线追踪中对物体及其包围盒进行索引.
-基本方法是,树中每个节点对应一个包围盒,选取一个轴平行平面将包围盒一分为二作为两个子节点,叶节点维护待存储的物体.
-与切分面相交的物体在两节点中都应存储.
+基本方法是,树中每个节点对应一个包围盒,选取一个轴平行平面将包围盒一分为二作为两个子节点,叶节点存储包围盒中的物体.
+注意与切分面相交的物体在两子节点中都应维护.
 
 \subsubsection{建树}
 传统的KD树中,按照使两边点的个数尽量接近的原则选取切分平面,这是由于假设了各个点被查询的概率均等.
@@ -146,7 +146,7 @@ KD树是一种空间划分树,原本用于在K维空间中快速查找点,可利
 
 
 \verb|main.cc|中的\verb|dof_ball_scene()|生成一个演示景深的场景,场景中
-可通过键盘控制焦平面位置,详见\secref{navigate}.demo目录中有景深的演示视频.
+可通过键盘控制焦平面位置,详见\tabref{navigate}.demo目录中有景深的演示视频.
 
 随机取点会造成焦平面以外有无规律噪点,在生成视频后会比较明显,
 因而对输出图像统一做了高斯模糊,使噪点不太明显.

@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Sat Jun 22 17:28:06 2013 +0800
+// Date: Sat Jun 22 20:04:07 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "viewer.hh"
 #include "space.hh"
@@ -116,7 +116,7 @@ void test_simplify() {
 }
 
 int main() {
-	test_kdtree();
+	test_simplify();
 	return 0;
 	int w, h;
 	w = h = 500;

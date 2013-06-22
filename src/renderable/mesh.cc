@@ -1,5 +1,5 @@
 // File: mesh.cc
-// Date: Sat Jun 22 17:06:27 2013 +0800
+// Date: Sat Jun 22 20:07:35 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <algorithm>
@@ -13,7 +13,7 @@ Mesh::Mesh(std::string fname, const Vec& _pivot, real_t _zsize, const shared_ptr
 	pivot(_pivot), zoom_size(_zsize) {
 	texture = _texture;
 	ObjReader::read_in(fname, this);
-	cout << "nvtx: " << vtxs.size() << ", nface: " << face_ids.size() << endl;
+	cout << "nvtx = " << vtxs.size() << ", nface = " << face_ids.size() << endl;
 	transform_vtxs();
 }
 
@@ -22,7 +22,7 @@ void Mesh::simplify(real_t ratio) {		// only require face_ids
 	MeshSimplifier s(*this, ratio);
 	s.simplify();
 	printf("Simplification spends %lf seconds\n", timer.get_time());
-	cout << "after-- nvtx: " << vtxs.size() << ", nface: " << face_ids.size() << endl;
+	cout << "after simplification: nvtx = " << vtxs.size() << ", nface = " << face_ids.size() << endl;
 }
 
 void Mesh::transform_vtxs() {

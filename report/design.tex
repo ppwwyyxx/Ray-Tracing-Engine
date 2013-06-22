@@ -1,12 +1,14 @@
 % File: design.tex
-% Date: Sat Jun 22 18:05:09 2013 +0800
+% Date: Sat Jun 22 19:52:16 2013 +0800
 % Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 \section{项目设计}
+\subsection{目录结构}
 项目的目录结构大致如下:
 \dirtree{%
   .1 /.
   .2 report/\DTcomment{本报告的\LaTeX 源代码}.
+  .3 img/\DTcomment{报告中使用到的样例图片}.
   .2 demo/\DTcomment{一些演示}.
   .2 resource/\DTcomment{程序使用到的外部资源}.
   .2 src/\DTcomment{程序源代码}.
@@ -43,70 +45,42 @@
   .3 Doxyfile.
 }
 
-\subsection{C++类设计}
-\begin{enumerate}
-  \item 渲染物体相关类的设计
+\subsection{渲染物体相关类的设计}
+所有可渲染物体,包括平面、球、面片、网格、KD树,均继承自\verb|Renderable|基类,当其需要与光线求交时,
+通过\verb|Renderable::get_trace()|返回一个\verb|Trace|类的子类对象指针,由
+\verb|Trace|类完成求交相关的操作.一个\verb|Trace|对象相当于一个物体与一条光线的组合.
 
-    所有可渲染物体,包括平面、球、面片、网格、KD树,均继承自\verb|Renderable|基类,当其需要与光线求交时,
-    通过\verb|Renderable::get_trace()|返回一个\verb|Trace|类的子类对象指针,由
-    \verb|Trace|类完成求交相关的操作.一个\verb|Trace|对象相当于一个物体与一条光线的组合.
+\begin{figure}[H]
+  \begin{minipage}[b]{0.46\linewidth}
+    \centering
+    \includegraphics[width=\textwidth]{res/renderable_inherit.png}
+  \end{minipage}
+  \begin{minipage}[b]{0.46\linewidth}
+    \centering
+    \includegraphics[width=\textwidth]{res/trace_inherit.png}
+  \end{minipage}
+\end{figure}
 
-    \begin{figure}[H]
-      \begin{minipage}[b]{0.46\linewidth}
-        \centering
-        \includegraphics[width=\textwidth]{res/renderable_inherit.png}
-      \end{minipage}
-      \begin{minipage}[b]{0.46\linewidth}
-        \centering
-        \includegraphics[width=\textwidth]{res/trace_inherit.png}
-      \end{minipage}
-    \end{figure}
+上图是\verb|Renderable|与\verb|Trace|的继承图,其中\verb|Trace|仅有三个子类是由于\verb|Mesh|返回\verb|FaceTrace|对象指针,
+\verb|KDTree|返回它所管理物体对应的\verb|Trace|对象指针.
+\verb|Renderable|类只有获取物体表面纹理及获取包围盒两种方法,
+\verb|Trace|类包括了判断相交、求交点、求交点法向、交点表面属性、交点前方介质密度等方法.
 
-    上图是\verb|Renderable|与\verb|Trace|的继承图,其中\verb|Trace|仅有三个子类是由于\verb|Mesh|返回\verb|FaceTrace|对象指针,
-    \verb|KDTree|返回它所管理物体对应的\verb|Trace|对象指针.
-    \verb|Renderable|类只有获取物体表面纹理及获取包围盒两种方法,
-    \verb|Trace|类包括了判断相交、求交点、求交点法向、交点表面属性、交点前方介质密度等方法.
+这样做的好处是,由\verb|Trace|对象自己管理求交过程的中间结果,保留有用的结果以备其他方法使用,节省了计算资源.
+如判断是否相交时一些中间结果可能在计算交点距离时使用,交点法向方向有可能被计算纹理映射坐标时使用,
+这些中间结果是每一对$ (物体,光线)$特有的,又不该对外界暴露,因而用\verb|Trace|类将其封装.
 
-    这样做的好处是,由\verb|Trace|对象自己管理求交过程的中间结果,保留有用的结果以备其他方法使用,节省了计算资源.
-    如判断是否相交时一些中间结果可能在计算交点距离时使用,交点法向方向有可能被计算纹理映射坐标时使用,
-    这些中间结果是每一对$ (物体,光线)$特有的,又不该对外界暴露,因而用\verb|Trace|类将其封装.
+同时,这种设计使得同样的\verb|KDTree|类只需接受一个\verb|Renderable|对象的集合,
+就可以很好的管理物体,实现了KD树的数据结构在网格以及在整个空间中的复用,也能够支持KD树的嵌套.
 
-    同时,这种设计使得同样的\verb|KDTree|类只需接受一个\verb|Renderable|对象的集合,
-    就可以很好的管理物体,实现了KD树的数据结构在网格以及在整个空间中的复用,也能够支持KD树的嵌套.
-
-  \item 空间视图相关设计
-    \begin{figure}[H]
-      \centering
-      \includegraphics[scale=0.4]{res/viewer_diagram.png}
-    \end{figure}
-    空间\verb|Space|类为一系列物体及光源的封装.
-
-    视图\verb|View|类为一个视点及屏幕的组合,负责生成光线并调用\verb|Space::trace()|获取相应颜色.
-
-    \verb|Viewer|类提供用户操作的接口,
-    根据用户操作调用\verb|View|类的一系列改变视角的方法\secref{navigate},同时调用\verb|RenderBase|类进行显示.
-
-\end{enumerate}
-
-\subsection{视图导航}
-\label{sec:navigate}
-命令行程序在演示时通过OpenCV的\verb|imshow()|函数输出图片,同时能够接收自定义的键盘事件,本程序支持的键盘操作如下:
-\begin{table}[H]
-\begin{tabular}{c|c}
-  \shline
-  \UArrow \DArrow& 屏幕以视点到其连线为轴旋转\\
-  \LArrow \RArrow & 围绕固定中心旋转视点\\
-  \keystroke{h}\keystroke{j}\keystroke{k}\keystroke{l} & 视点及屏幕的平移 \\
-  \keystroke{=}\keystroke{-} & 缩放\\
-  \keystroke{>}\keystroke{<} & 固定视点旋转视角\\
-  \keystroke{]}\keystroke{[} & 调节焦平面远近(景深模式下有用)\\
-  \keystroke{s} & 保存当前图片至output.png\\
-  \keystroke{p} & 输出当前视角信息\\
-  \keystroke{q} \Esc & 退出\\
-\end{tabular}
+\subsection{空间视图相关设计}
+\begin{figure}[H]
   \centering
-\end{table}
+  \includegraphics[scale=0.4]{res/viewer_diagram.png}
+\end{figure}
+空间\verb|Space|类为一系列物体及光源的封装.
 
+视图\verb|View|类为一个视点及屏幕的组合,负责生成光线并调用\verb|Space::trace()|获取相应颜色.
 
-
-\subsection{图形界面}
+\verb|Viewer|类提供用户操作的接口,
+根据用户操作调用\verb|View|类的一系列改变视角的方法\secref{navigate},同时调用\verb|RenderBase|类进行显示.

@@ -1,5 +1,5 @@
 % File: intro.tex
-% Date: Thu Jun 20 23:34:45 2013 +0800
+% Date: Sat Jun 22 19:55:29 2013 +0800
 % Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 \section{简介}
@@ -12,8 +12,9 @@
 
 \subsection{依赖}
 \begin{enumerate}
-  \item 本程序用C++11编写,需要编译器支持C++11中的ranged loop, initializer list, type inference等语法,且标准库包含\verb|std::shared_ptr, std::future|
-    类.建议使用 g++$ \ge$ 4.8 编译.
+  \item 本程序用C++11编写,需要编译器支持C++11中的ranged loop, initializer list, type inference等语法,
+    且需标准库包含\verb|std::shared_ptr, std::future|
+    类.建议使用g++$ \ge$ 4.8 编译.
 
   \item OpenCV2 \footnote{\url{http://opencv.org}}
 
@@ -31,10 +32,29 @@
 \begin{enumerate}
     \item 命令行程序:
       直接运行,渲染一个演示场景. 可在\verb|main()|函数中选择不同的场景.
-      程序调用opencv进行图像显示,显示时可通过键盘进行导航,导航方法见\secref{navigate}
+
+      程序调用opencv进行图像显示,显示时可通过键盘进行导航,导航方法见下表:
+\begin{table}[H]
+  \begin{tabular}{c|c}
+    \shline
+    \UArrow \DArrow& 屏幕以视点到其连线为轴旋转\\
+    \LArrow \RArrow & 围绕固定中心旋转视点\\
+    \keystroke{h}\keystroke{j}\keystroke{k}\keystroke{l} & 视点及屏幕的平移 \\
+    \keystroke{=}\keystroke{-} & 缩放\\
+    \keystroke{>}\keystroke{<} & 固定视点旋转视角\\
+    \keystroke{]}\keystroke{[} & 调节焦平面远近(景深模式下有用)\\
+    \keystroke{s} & 保存当前图片至output.png\\
+    \keystroke{p} & 输出当前视角信息\\
+    \keystroke{q} \Esc & 退出\\
+  \end{tabular}
+  \centering
+  \caption{场景导航快捷键\label{tab:navigate}}
+\end{table}
 
       \item 图形界面程序:
         运行界面如\figref{gui}所示,
-        运行后,通过open按钮选择obj文件,trace按钮渲染. 其余按钮用于更改视角、渲染方式等参数.
-        simplify按钮将obj模型按照给定的简化率进行简化.
+        运行后,通过open按钮选择obj文件,trace按钮渲染,smooth控制是否开启法向插值.
+        其余按钮用于更改视角、渲染方式等参数,改变视角后重新trace即可生效.
+        simplify按钮将obj模型按照给定的简化率进行简化,simplify rate表示简化后保留的面片所占比例.
+
 \end{enumerate}
