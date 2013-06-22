@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Sat Jun 22 22:59:20 2013 +0800
+// Date: Sat Jun 22 23:03:30 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "viewer.hh"
 #include "space.hh"
@@ -137,7 +137,7 @@ void ball() {
 }
 
 int main() {
-	dof_ball_scene();
+	ball();
 	return 0;
 }
 

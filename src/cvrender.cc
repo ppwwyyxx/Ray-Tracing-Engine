@@ -1,5 +1,5 @@
 // File: cvrender.cc
-// Date: Sat Jun 22 23:00:13 2013 +0800
+// Date: Sat Jun 22 23:04:49 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <functional>
@@ -39,7 +39,7 @@ using namespace cv;
 #define VIEWER_ANGLE 15
 #define ZOOMING 1.2
 #define SHIFT_DISTANCE 20
-#define SHIFT_SCREEN 5
+#define SHIFT_SCREEN 4
 
 
 CVRender::CVRender(const Geometry &m_g):
@@ -191,10 +191,10 @@ void CVViewer::view() {
 					rerender = false;
 					break;
 				case KEY_LEFT:
-					v.orbit(VIEWER_ANGLE);
+					v.orbit(-VIEWER_ANGLE);
 					break;
 				case KEY_RIGHT:
-					v.orbit(-VIEWER_ANGLE);
+					v.orbit(+VIEWER_ANGLE);
 					break;
 				case KEY_UP:
 					v.twist(VIEWER_ANGLE);

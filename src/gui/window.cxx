@@ -1,5 +1,5 @@
 // File: window.cxx
-// Date: Thu Jun 20 16:50:33 2013 +0800
+// Date: Sat Jun 22 23:10:33 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <sstream>
@@ -9,7 +9,6 @@
 #define VIEWER_ANGLE 15
 #define ZOOMING 1.2
 #define SHIFT_DISTANCE 20
-#define SHIFT_SCREEN 3
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -59,11 +58,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
 	done_load = true;
-	space.add_light(Light(Vec(0, -10, 12), Color::WHITE, 1.0));
-	space.add_light(Light(Vec(10, 10, 12), Color::WHITE, 1.0));
-	space.add_light(Light(Vec(10, -10, 12), Color::WHITE, 1.0));
-	space.add_light(Light(Vec(9, 2, 30), Color::WHITE, 1.0));
-	space.add_light(Light(Vec(-9, 2, 30), Color::WHITE, 1.0));
+	space.add_light(Light(Vec(0, -10, 12), Color::WHITE, 3.0));
+	space.add_light(Light(Vec(10, 10, 12), Color::WHITE, 3.0));
+	space.add_light(Light(Vec(10, -10, 12), Color::WHITE, 3.0));
+	space.add_light(Light(Vec(9, 2, 30), Color::WHITE, 3.0));
+	space.add_light(Light(Vec(-9, 2, 30), Color::WHITE, 3.0));
 	space.finish();
 	view = new View(space, Vec(0, 0, 12), Vec(0, 0, 2), 15, Geometry(pixmap->width(), pixmap->height()));
 	viewer = new CVViewer(*view);
@@ -97,7 +96,7 @@ void MainWindow::do_open() {
 		now_fname = fname.toStdString();
 		Mesh mesh(fname.toStdString().c_str(), Vec(0, 0, 2), 5);
 		mesh.smooth = smooth->isChecked();
-		shared_ptr<Texture> tred = make_shared<HomoTexture>(Surface::RED);
+		shared_ptr<Texture> tred = make_shared<HomoTexture>(HomoTexture::CYAN);
 		mesh.set_texture(tred);
 		mesh.finish();
 		space.clear();
@@ -120,7 +119,7 @@ void MainWindow::update_mesh() {
 
 	Mesh mesh(now_fname.c_str(), Vec(0, 0, 2), 5);
 	mesh.smooth = smooth->isChecked();
-	shared_ptr<Texture> tred = make_shared<HomoTexture>(Surface::RED);
+	shared_ptr<Texture> tred = make_shared<HomoTexture>(HomoTexture::CYAN);
 	mesh.set_texture(tred);
 
 	stringstream text(target_rate->text().toStdString());
