@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Sat Jun 22 20:43:59 2013 +0800
+// Date: Sat Jun 22 22:59:20 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "viewer.hh"
 #include "space.hh"
@@ -14,7 +14,7 @@ const string texture_fname = "../resource/texture.jpg";
 void test_shadow() {
 	int w = 500, h = 500;
 	Space s; s.use_soft_shadow = true;
-	s.add_light(Light(Vec(0, -10, 12), Color::WHITE, 2.0));
+	s.add_light(Light(Vec(0, -10, 12), Color::WHITE, 6.0));
 
 	shared_ptr<Texture> t2(new HomoTexture(HomoTexture::BLUE));
 	shared_ptr<Texture> tpic(new ImgTexture(texture_fname, 100, 0.6));
@@ -30,11 +30,11 @@ void test_shadow() {
 void dof_ball_scene() {
 	int w = 500, h = 500;
 	Space s;
-	s.add_light(Light(Vec(0, -10, 12), Color::WHITE, 2.0));
-	s.add_light(Light(Vec(9, 2, 50), Color::WHITE, 2.0));
-	s.add_light(Light(Vec(-9, 2, 50), Color::WHITE, 2.0));
-	s.add_light(Light(Vec(-9, -2, 50), Color::WHITE, 2.0));
-	s.add_light(Light(Vec(9, -2, 50), Color::WHITE, 2.0));
+	s.add_light(Light(Vec(0, -10, 12), Color::WHITE, 6.0));
+	s.add_light(Light(Vec(9, 2, 50), Color::WHITE, 6.0));
+	s.add_light(Light(Vec(-9, 2, 50), Color::WHITE, 6.0));
+	s.add_light(Light(Vec(-9, -2, 50), Color::WHITE, 6.0));
+	s.add_light(Light(Vec(9, -2, 50), Color::WHITE, 6.0));
 
 	Surface surf(0, 40, 0.5, Color::CYAN * 0.9, Color::WHITE * DEFAULT_SPECULAR);
 
@@ -54,11 +54,11 @@ void dof_ball_scene() {
 void generate_dof_video() {
 	int w = 1000, h = 1000;
 	Space s;
-	s.add_light(Light(Vec(0, -10, 12), Color::WHITE, 2.0));
-	s.add_light(Light(Vec(9, 2, 50), Color::WHITE, 2.0));
-	s.add_light(Light(Vec(-9, 2, 50), Color::WHITE, 2.0));
-	s.add_light(Light(Vec(-9, -2, 50), Color::WHITE, 2.0));
-	s.add_light(Light(Vec(9, -2, 50), Color::WHITE, 2.0));
+	s.add_light(Light(Vec(0, -10, 12), Color::WHITE, 6.0));
+	s.add_light(Light(Vec(9, 2, 50), Color::WHITE, 6.0));
+	s.add_light(Light(Vec(-9, 2, 50), Color::WHITE, 6.0));
+	s.add_light(Light(Vec(-9, -2, 50), Color::WHITE, 6.0));
+	s.add_light(Light(Vec(9, -2, 50), Color::WHITE, 6.0));
 
 	shared_ptr<Texture> tpic(new ImgTexture(texture_fname, 80, 1));
 	s.add_obj(new Plane(InfPlane::XYPLANE, tpic));
@@ -83,8 +83,8 @@ void generate_dof_video() {
 void test_kdtree() {
 	int w = 500, h = 500;
 	Space s;
-	s.add_light(Light(Vec(0, -10, 12), Color::WHITE, 2.0));
-	s.add_light(Light(Vec(0, 10, 8), Color::WHITE, 2.0));
+	s.add_light(Light(Vec(0, -10, 12), Color::WHITE, 6.0));
+	s.add_light(Light(Vec(0, 10, 8), Color::WHITE, 6.0));
 	const char* fname = "../resource/models/fixed.perfect.dragon.100K.0.07.obj";
 	Mesh mesh(fname, Vec(0, 0, 2), 5);
 
@@ -111,8 +111,8 @@ void test_simplify() {
 	mesh.finish();
 
 	Space s;
-	s.add_light(Light(Vec(0, -10, 12), Color::WHITE, 2.0));
-	s.add_light(Light(Vec(0, 10, 8), Color::WHITE, 2.0));
+	s.add_light(Light(Vec(0, -10, 12), Color::WHITE, 6.0));
+	s.add_light(Light(Vec(0, 10, 8), Color::WHITE, 6.0));
 	s.add_obj(make_shared<Mesh>(mesh));
 	s.finish();
 	View v(s, Vec(0, 0, 12), Vec(0, 0, 2), 15, Geometry(w, h));
@@ -137,7 +137,7 @@ void ball() {
 }
 
 int main() {
-	ball();
+	dof_ball_scene();
 	return 0;
 }
 
