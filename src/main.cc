@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Fri Jun 21 18:19:47 2013 +0800
+// Date: Sat Jun 22 13:19:59 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "viewer.hh"
 #include "space.hh"
@@ -116,7 +116,7 @@ void test_simplify() {
 }
 
 int main() {
-	generate_dof_video();
+	test_kdtree();
 	return 0;
 	int w, h;
 	w = h = 500;

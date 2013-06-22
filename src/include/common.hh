@@ -1,5 +1,5 @@
 // File: common.hh
-// Date: Thu Jun 20 23:49:06 2013 +0800
+// Date: Sat Jun 22 13:21:39 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -10,20 +10,21 @@
 #include <utility>
 #include <limits>
 
-#include "lib/debugutils.hh"
 #include "lib/utils.hh"
 
 const real_t DEFAULT_TRACING_WEIGHT_THRESHOLD = EPS;
+const real_t DEFAULT_REFRACTIVE_INDEX = 1.1;
+const real_t AIR_REFRACTIVE_INDEX = 1;
+const int MAX_RECURSIVE_DEPTH = 3;
+
+// color blending
 const real_t AMBIENT_FACTOR = 0.03;
 const real_t AIR_BEER_DENSITY = 0.03;
 const real_t DEFAULT_SPECULAR = 0.4;
 const real_t REFL_DIFFUSE_FACTOR = 0.3;
 const real_t REFL_DECAY = 0.01;
 const real_t TRANSM_BLEND_FACTOR = 0.7;
-const real_t DEFAULT_REFRACTIVE_INDEX = 1.05;
-const real_t AIR_REFRACTIVE_INDEX = 1;
 
-const int MAX_RECURSIVE_DEPTH = 2;
 
 const int DOF_SAMPLE_CNT = 15;
 const real_t DOF_SAMPLE_RADIUS = 0.4;
