@@ -1,5 +1,5 @@
 // File: kdtree.cc
-// Date: Sat Jun 22 13:25:08 2013 +0800
+// Date: Sat Jun 22 23:17:43 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include <algorithm>
 #include <future>

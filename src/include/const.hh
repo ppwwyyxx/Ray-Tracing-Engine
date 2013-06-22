@@ -1,5 +1,5 @@
 // File: const.hh
-// Date: Sat Jun 22 22:45:48 2013 +0800
+// Date: Sat Jun 22 23:30:19 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -12,13 +12,13 @@
 
 #include "lib/utils.hh"
 
-const real_t DEFAULT_TRACING_WEIGHT_THRESHOLD = EPS;
+const real_t DEFAULT_TRACING_WEIGHT_THRESHOLD = 0.001;
 const real_t DEFAULT_REFRACTIVE_INDEX = 1.1;
 const real_t AIR_REFRACTIVE_INDEX = 1;
 const int MAX_RECURSIVE_DEPTH = 3;
 
 // color blending
-const real_t AMBIENT_FACTOR = 0.03;
+const real_t AMBIENT_FACTOR = 0.01;
 const real_t AIR_BEER_DENSITY = 0.03;
 const real_t DEFAULT_SPECULAR = 0.4;
 const real_t REFL_DIFFUSE_FACTOR = 0.5;

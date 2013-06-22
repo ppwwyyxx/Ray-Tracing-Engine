@@ -1,5 +1,5 @@
 // File: kdtree.hh
-// Date: Fri Jun 21 18:53:48 2013 +0800
+// Date: Sat Jun 22 23:18:00 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once

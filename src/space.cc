@@ -1,5 +1,5 @@
 // File: space.cc
-// Date: Sat Jun 22 22:56:34 2013 +0800
+// Date: Sat Jun 22 23:30:23 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <limits>
@@ -63,10 +63,7 @@ void Space::finish() {		// called from View::View()
 }
 
 Color Space::trace(const Ray& ray, real_t dist, int depth) const {
-	static int now_max_depth = 0;
-	update_max(now_max_depth, depth);
-	if (depth > max_depth)
-		return Color::BLACK;
+	if (depth > max_depth) return Color::BLACK;
 
 	m_assert(fabs(ray.dir.sqr() - 1) < EPS);
 
@@ -117,7 +114,7 @@ Color Space::trace(const Ray& ray, real_t dist, int depth) const {
 
 	// Beer-Lambert's Law
 	dist += inter_dist;
-	now_col *= pow(M_E, -dist * AIR_BEER_DENSITY);
+	now_col = now_col * pow(M_E, -dist * AIR_BEER_DENSITY);
 
 	m_assert(fabs(ray.dir.sqr() - 1) < EPS);
 	Color now_refl = Color::BLACK;

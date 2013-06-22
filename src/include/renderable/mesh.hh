@@ -1,5 +1,5 @@
 // File: mesh.hh
-// Date: Sat Jun 22 17:02:23 2013 +0800
+// Date: Sat Jun 22 23:17:00 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -90,6 +90,6 @@ class Mesh: public Renderable {
 			m_assert(INRANGE(max(a, max(b, c))));
 			Face f(vtxs, a, b, c);
 			f.host = this;
-			faces.push_back(rdptr(new Face(f)));
+			faces.push_back(make_shared<Face>(f));
 		}
 };

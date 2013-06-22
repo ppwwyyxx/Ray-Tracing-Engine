@@ -1,5 +1,5 @@
 // File: space.hh
-// Date: Sat Jun 22 20:41:39 2013 +0800
+// Date: Sat Jun 22 23:15:50 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -44,8 +44,6 @@ class Space {
 		void add_light(const Light& light);
 
 		void add_obj(const rdptr& objptr);
-
-		void add_obj(Renderable* objptr) { add_obj(rdptr(objptr)); }
 
 		// useful, keep lights
 		void clear()
