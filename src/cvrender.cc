@@ -1,5 +1,5 @@
 // File: cvrender.cc
-// Date: Fri Jun 21 18:18:05 2013 +0800
+// Date: Sat Jun 22 17:59:16 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <functional>
@@ -177,9 +177,7 @@ void CVViewer::view() {
 			switch (ret) {
 				case KEY_EXIT:
 				case KEY_Q:
-					/*
-					 *case KEY_ESC:
-					 */
+					case KEY_ESC:
 					return;
 					break;
 				case KEY_S:
@@ -223,10 +221,16 @@ void CVViewer::view() {
 					v.zoom(1.0 / ZOOMING);
 					break;
 				case KEY_lbracket:
-					v.move_screen(-SHIFT_SCREEN);
+					if (!v.use_dof)
+						fprintf(stderr, "not using dof!\n");
+					else
+						v.move_screen(-SHIFT_SCREEN);
 					break;
 				case KEY_rbracket:
-					v.move_screen(SHIFT_SCREEN);
+					if (!v.use_dof)
+						fprintf(stderr, "not using dof!\n");
+					else
+						v.move_screen(SHIFT_SCREEN);
 					break;
 				case KEY_greater:
 					v.rotate(VIEWER_ANGLE);

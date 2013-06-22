@@ -1,5 +1,5 @@
 % File: design.tex
-% Date: Sat Jun 22 17:26:42 2013 +0800
+% Date: Sat Jun 22 18:05:09 2013 +0800
 % Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 \section{项目设计}
@@ -67,21 +67,46 @@
     \verb|Renderable|类只有获取物体表面纹理及获取包围盒两种方法,
     \verb|Trace|类包括了判断相交、求交点、求交点法向、交点表面属性、交点前方介质密度等方法.
 
-    这样做的好处是,由\verb|Trace|对象自己管理求交过程的中间结果,保留有用的结果以备其他方法使用.
+    这样做的好处是,由\verb|Trace|对象自己管理求交过程的中间结果,保留有用的结果以备其他方法使用,节省了计算资源.
     如判断是否相交时一些中间结果可能在计算交点距离时使用,交点法向方向有可能被计算纹理映射坐标时使用,
     这些中间结果是每一对$ (物体,光线)$特有的,又不该对外界暴露,因而用\verb|Trace|类将其封装.
-    同时,这种设计使得同样的\verb|KDTree|类可以即在网格中又在整个空间中使用,并实现\verb|KDTree|的嵌套.
+
+    同时,这种设计使得同样的\verb|KDTree|类只需接受一个\verb|Renderable|对象的集合,
+    就可以很好的管理物体,实现了KD树的数据结构在网格以及在整个空间中的复用,也能够支持KD树的嵌套.
+
+  \item 空间视图相关设计
+    \begin{figure}[H]
+      \centering
+      \includegraphics[scale=0.4]{res/viewer_diagram.png}
+    \end{figure}
+    空间\verb|Space|类为一系列物体及光源的封装.
+
+    视图\verb|View|类为一个视点及屏幕的组合,负责生成光线并调用\verb|Space::trace()|获取相应颜色.
+
+    \verb|Viewer|类提供用户操作的接口,
+    根据用户操作调用\verb|View|类的一系列改变视角的方法\secref{navigate},同时调用\verb|RenderBase|类进行显示.
 
 \end{enumerate}
 
-kdtree
-
-mainwindow
-
-renderable
-
-meshsimplifier
-
 \subsection{视图导航}
+\label{sec:navigate}
+命令行程序在演示时通过OpenCV的\verb|imshow()|函数输出图片,同时能够接收自定义的键盘事件,本程序支持的键盘操作如下:
+\begin{table}[H]
+\begin{tabular}{c|c}
+  \shline
+  \UArrow \DArrow& 屏幕以视点到其连线为轴旋转\\
+  \LArrow \RArrow & 围绕固定中心旋转视点\\
+  \keystroke{h}\keystroke{j}\keystroke{k}\keystroke{l} & 视点及屏幕的平移 \\
+  \keystroke{=}\keystroke{-} & 缩放\\
+  \keystroke{>}\keystroke{<} & 固定视点旋转视角\\
+  \keystroke{]}\keystroke{[} & 调节焦平面远近(景深模式下有用)\\
+  \keystroke{s} & 保存当前图片至output.png\\
+  \keystroke{p} & 输出当前视角信息\\
+  \keystroke{q} \Esc & 退出\\
+\end{tabular}
+  \centering
+\end{table}
+
+
 
 \subsection{图形界面}
