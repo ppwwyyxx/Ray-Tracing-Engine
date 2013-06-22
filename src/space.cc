@@ -1,5 +1,5 @@
 // File: space.cc
-// Date: Sat Jun 22 23:30:23 2013 +0800
+// Date: Sun Jun 23 00:35:05 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <limits>
@@ -23,7 +23,7 @@ void Space::add_light(const Light& light) {
 			Vec diff = Vec(cos(theta), sin(theta), 0) * SOFT_SHADOW_RADIUS;
 			theta += delta_theta;
 
-			Light newlight(light.src + diff, light.color, light.intensity / SOFT_SHADOW_LIGHT);
+			Light newlight(light.get_src() + diff, light.color, light.intensity / SOFT_SHADOW_LIGHT);
 			lights.push_back(make_shared<Light>(newlight));
 		}
 
@@ -64,7 +64,6 @@ void Space::finish() {		// called from View::View()
 
 Color Space::trace(const Ray& ray, real_t dist, int depth) const {
 	if (depth > max_depth) return Color::BLACK;
-
 	m_assert(fabs(ray.dir.sqr() - 1) < EPS);
 
 	auto first_trace = find_first(ray);
@@ -89,9 +88,9 @@ Color Space::trace(const Ray& ray, real_t dist, int depth) const {
 
 	Color now_col = Color::BLACK;
 	for (auto &i : lights) {
-		Vec lm = (i->src - inter_point).get_normalized();
+		Vec lm = (i->get_src() - inter_point).get_normalized();
 		real_t lmn = lm.dot(norm);
-		real_t dist_to_light = (i->src - inter_point).mod();
+		real_t dist_to_light = (i->get_src() - inter_point).mod();
 
 		// shadow if not visible to this light
 		// go foward a little
@@ -109,7 +108,7 @@ Color Space::trace(const Ray& ray, real_t dist, int depth) const {
 		// specular
 		real_t rmv = -norm.reflection(lm).dot(ray.dir);
 		if (rmv > 0)
-			now_col += surf->specular * pow(rmv, surf->shininess) * i->color * i->intensity * damping;
+			now_col += i->color * (i->intensity * damping * surf->specular * pow(rmv, surf->shininess));
 	}
 
 	// Beer-Lambert's Law
@@ -153,7 +152,38 @@ Color Space::trace(const Ray& ray, real_t dist, int depth) const {
 	return Space::blend(now_amb, now_col, now_refl, now_transm);
 }
 
-shared_ptr<Trace> Space::find_first(const Ray& ray) const {
+Color Space::global_trace(const Ray& ray, int depth) const {
+	if (depth > max_depth * 2) return Color::BLACK;		// TODO add new depth thres
+	m_assert(fabs(ray.dir.sqr() - 1) < EPS);
+
+	auto first_trace = find_first(ray);
+	if (!first_trace) { return Color::BLACK; }
+
+	// reach the first object
+	real_t inter_dist = first_trace->intersection_dist();
+	Vec norm = first_trace->normal(),			// already oriented
+		inter_point = first_trace->intersection_point();
+	auto surf = first_trace->get_property();
+	real_t forward_density = first_trace->get_forward_density();
+
+	m_assert((fabs(norm.sqr() - 1) < EPS));
+
+	if (ray.debug) print_debug("debug ray: arrive point (%lf, %lf, %lf) \n", inter_point.x, inter_point.y, inter_point.z);
+
+	real_t max_color_comp = surf->diffuse.get_max();
+/*
+ *    if (depth > 5 || p == 0) {
+ *        if (drand() < p)
+ *            f = f * (1.0 / p);
+ *        else
+ *            //return light?
+ *
+ *    }
+ *
+ */
+}
+
+shared_ptr<Trace> Space::find_first(const Ray& ray, bool include_light) const {
 	real_t min = numeric_limits<real_t>::max();
 	shared_ptr<Trace> ret;
 
@@ -162,6 +192,11 @@ shared_ptr<Trace> Space::find_first(const Ray& ray) const {
 		if (tmp) {
 			real_t d = tmp->intersection_dist();
 			if (update_min(min, d)) ret = tmp;
+		}
+	}
+	if (include_light) {
+		for (auto &l : lights) {
+
 		}
 	}
 	return move(ret);

@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Sat Jun 22 23:30:34 2013 +0800
+// Date: Sun Jun 23 00:37:30 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "viewer.hh"
 #include "space.hh"
@@ -35,7 +35,7 @@ void dof_ball_scene() {
 	s.add_light(Light(Vec(-9, -2, 50), Color::WHITE, 6.0));
 	s.add_light(Light(Vec(9, -2, 50), Color::WHITE, 6.0));
 
-	Surface surf(0, 40, 0.5, Color::CYAN * 0.9, Color::WHITE * DEFAULT_SPECULAR);
+	Surface surf(0, 40, 0.5, Color::CYAN * 0.9, DEFAULT_SPECULAR);
 
 	shared_ptr<Texture> tpic = make_shared<ImgTexture>(texture_fname, 100, 0.6);
 	shared_ptr<Texture> tball(make_shared<HomoTexture>(surf));
@@ -62,7 +62,7 @@ void generate_dof_video() {
 	shared_ptr<Texture> tpic = make_shared<ImgTexture>(texture_fname, 100, 0.6);
 	s.add_obj(make_shared<Plane>(InfPlane::XYPLANE, tpic));
 
-	Surface surf(0, 40, 0.5, Color::CYAN * 0.9, Color::WHITE * DEFAULT_SPECULAR);
+	Surface surf(0, 40, 0.5, Color::CYAN * 0.9, DEFAULT_SPECULAR);
 	shared_ptr<Texture> tball(make_shared<HomoTexture>(surf));
 
 	REP(i, 10) REP(j, 2) s.add_obj(make_shared<Sphere>(PureSphere(Vec(j * 6, 1, i * 3), 1), tball));

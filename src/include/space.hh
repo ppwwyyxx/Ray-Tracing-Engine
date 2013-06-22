@@ -1,5 +1,5 @@
 // File: space.hh
-// Date: Sat Jun 22 23:15:50 2013 +0800
+// Date: Sun Jun 23 00:30:33 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -8,6 +8,7 @@
 #include <memory>
 
 #include "renderable/renderable.hh"
+#include "renderable/light.hh"
 #include "kdtree.hh"
 #include "const.hh"
 using std::vector;
@@ -23,7 +24,7 @@ class Space {
 
 		Vec bound_min = Vec::max(), bound_max = -Vec::max();
 
-		shared_ptr<Trace> find_first(const Ray& ray) const;
+		shared_ptr<Trace> find_first(const Ray& ray, bool include_light = false) const;
 
 		bool find_any(const Ray& ray, real_t dist) const; // is there any obj on the ray within the dist?
 
@@ -52,5 +53,7 @@ class Space {
 		void finish();
 
 		Color trace(const Ray& ray, real_t dist = 0, int depth = 0) const;
+
+		Color global_trace(const Ray& ray, int depth = 0) const;
 };
 

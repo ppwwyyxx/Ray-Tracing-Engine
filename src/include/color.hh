@@ -1,5 +1,5 @@
 // File: color.hh
-// Date: Sat Jun 22 13:24:51 2013 +0800
+// Date: Sun Jun 23 00:17:43 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -47,15 +47,3 @@ class Color: public Vector {
 
 };
 
-
-class Light {
-
-	public:
-		Light(const Vec& _src, const Color& col, real_t _intense):
-			src(_src), color(col), intensity(_intense){};
-
-		Vec src;
-		Color color;
-		real_t intensity;
-		real_t size = EPS;
-};
