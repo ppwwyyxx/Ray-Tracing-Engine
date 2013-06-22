@@ -1,5 +1,5 @@
 // File: view.hh
-// Date: Sun Jun 23 01:01:32 2013 +0800
+// Date: Sun Jun 23 01:58:06 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -33,7 +33,7 @@ class View {
 
 		// config
 		bool use_dof = false;
-		bool use_global = true;
+		bool use_global = false;
 
 		View(const Space& _sp, const Vec& _view_point,
 				const Vec& _mid, real_t w, const Geometry& _geo);

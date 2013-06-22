@@ -1,5 +1,5 @@
 % File: diary.tex
-% Date: Sat Jun 22 19:47:49 2013 +0800
+% Date: Sun Jun 23 02:24:41 2013 +0800
 % Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 \section{过程记录}
 本项目的开发记录可以通过git查看. 项目托管在github\footnote{\url{https://github.com/ppwwyyxx/Ray-Tracing-Engine}}
@@ -211,5 +211,13 @@
       \caption{图形界面展示\label{fig:gui}}
     \end{figure}
 
+    \item 实现了一个简易的全局光照模型,首先按照均匀分布支持了漫反射,渲染效果如下.
+      可以看到颜色变化及阴影都更加自然. 此图采样1600次,渲染耗时16分钟.
+      \begin{figure}[H]
+        \centering
+        \includegraphics[scale=0.4]{img/gllu_first.png}
+      \end{figure}
 
-\end{enumerate}
+
+
+  \end{enumerate}
