@@ -1,5 +1,5 @@
 % File: design.tex
-% Date: Sat Jun 22 19:52:16 2013 +0800
+% Date: Sun Jun 23 01:53:37 2013 +0800
 % Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 \section{项目设计}
@@ -61,8 +61,10 @@
   \end{minipage}
 \end{figure}
 
-上图是\verb|Renderable|与\verb|Trace|的继承图,其中\verb|Trace|仅有三个子类是由于\verb|Mesh|返回\verb|FaceTrace|对象指针,
-\verb|KDTree|返回它所管理物体对应的\verb|Trace|对象指针.
+上图是\verb|Renderable|与\verb|Trace|的继承图,其中\verb|Light|继承自\verb|Renderable|是因为全局光照模型中
+需要对光源求交,程序中只支持球形光源(在局部光照模型中将球形光源看做点光源).
+\verb|Trace|仅有三个子类是由于\verb|Mesh|返回\verb|FaceTrace|对象指针, \verb|KDTree|返回它所管理物体对应的\verb|Trace|对象指针.
+
 \verb|Renderable|类只有获取物体表面纹理及获取包围盒两种方法,
 \verb|Trace|类包括了判断相交、求交点、求交点法向、交点表面属性、交点前方介质密度等方法.
 

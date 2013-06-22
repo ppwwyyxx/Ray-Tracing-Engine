@@ -1,5 +1,5 @@
 // File: static_const.cc
-// Date: Sun Jun 23 01:27:52 2013 +0800
+// Date: Sun Jun 23 01:47:50 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "color.hh"
@@ -25,7 +25,7 @@ const Surface
 	Surface::BLACK_REFL(0, 20, 1, Color::BLACK, DEFAULT_SPECULAR),
 	Surface::BLUE_REFL(1, 50, 0.5, Color::BLUE, DEFAULT_SPECULAR),
 	Surface::CYAN_REFL(0, 20, 0.2, (Color)Color::CYAN * 0.6, DEFAULT_SPECULAR),
-	Surface::LIGHT(0, 0, 0, Color::NONE, 0, Color::WHITE * 12);
+	Surface::GOOD(0, 40, 0.5, Color(0.55, 0.35, 0.2), DEFAULT_SPECULAR);
 
 
 const GridTexture

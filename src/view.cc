@@ -1,5 +1,5 @@
 // File: view.cc
-// Date: Sun Jun 23 01:39:43 2013 +0800
+// Date: Sun Jun 23 01:56:27 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "view.hh"
@@ -27,9 +27,8 @@ Color View::render(int i, int j, bool debug) const {
 	Vec corner = mid - dir_h * (geo.h / 2) - dir_w * (geo.w / 2);
 	Vec dest = corner + dir_h * (geo.h - 1 - i) + dir_w * j;
 
-#define GLOBAL_ILLU_SAMPLE_CNT 400
-	Color ret = Color::NONE;
 	if (use_global) {
+		Color ret = Color::NONE;
 		REP(dx, 2) REP(dy, 2) {
 			REP(n_samp, GLOBAL_ILLU_SAMPLE_CNT) {
 				real_t r1 = 2 * drand48(),
@@ -41,13 +40,12 @@ Color View::render(int i, int j, bool debug) const {
 				ret += sp.global_trace(ray);
 			}
 		}
-//		cout << ret << endl;
+
 		ret = ret * (1.0 / 4 / GLOBAL_ILLU_SAMPLE_CNT);
 #define ppp(x) pow((x < 0) ? 0 : x > 1 ? 1 : x, 1.0 / 2.2)
-		Color real_ret(ppp(ret.x), ppp(ret.y), ppp(ret.z));
-		return real_ret;
+		return Color(ppp(ret.x), ppp(ret.y), ppp(ret.z));
+#undef ppp
 	}
-
 
 
 

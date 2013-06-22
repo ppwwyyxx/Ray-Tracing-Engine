@@ -1,10 +1,10 @@
 % File: intro.tex
-% Date: Sat Jun 22 23:04:03 2013 +0800
+% Date: Sun Jun 23 01:49:23 2013 +0800
 % Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 \section{简介}
 本程序是一个3D渲染程序.
-选用Phong模型\cite{phong}作为局部光照模型,渲染3D场景.
+选用Phong模型\cite{phong}作为局部光照模型或path tracing\cite{pathtracing}作为全局光照模型,渲染3D场景.
 支持平面、球、三角面片、三角网格(可从obj文件读入)几种几何对象,并可方便的扩展.
 渲染支持软阴影,抗锯齿,景深,自定义纹理等功能, 并可对三角网格进行简化.
 三角网格,全局渲染,网格简化均采用数据结构(KD树及堆)与多线程加速,效率很高.
