@@ -1,10 +1,11 @@
-// File: const.cc
-// Date: Fri Jun 21 18:45:01 2013 +0800
+// File: static_const.cc
+// Date: Sat Jun 22 13:23:31 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "color.hh"
 #include "material/surface.hh"
 #include "material/texture.hh"
+#include "const.hh"
 using namespace std;
 
 const Color Color::BLACK(EPS, EPS, EPS),

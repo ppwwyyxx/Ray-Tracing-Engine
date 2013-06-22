@@ -1,8 +1,9 @@
 // File: sphere.cc
-// Date: Thu Jun 20 23:38:25 2013 +0800
+// Date: Sat Jun 22 13:23:23 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "renderable/sphere.hh"
+#include "const.hh"
 using namespace std;
 
 const PureSphere PureSphere::TestSphere(Vec(0, 0, 2), 1.99);

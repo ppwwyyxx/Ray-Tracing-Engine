@@ -1,9 +1,10 @@
 // File: matrix.hh
-// Date: Fri Jun 14 20:35:40 2013 +0800
+// Date: Sat Jun 22 13:24:36 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
 #include <cstring>
+#include "lib/utils.hh"
 #include "lib/debugutils.hh"
 
 // basic 2-d array

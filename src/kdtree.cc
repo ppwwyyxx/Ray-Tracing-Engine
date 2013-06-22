@@ -1,11 +1,12 @@
 // File: kdtree.cc
-// Date: Fri Jun 21 18:37:51 2013 +0800
+// Date: Sat Jun 22 13:25:08 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include <algorithm>
 #include <future>
 #include <omp.h>
 
 #include "kdtree.hh"
+#include "const.hh"
 #include "lib/utils.hh"
 #include "lib/debugutils.hh"
 #include "lib/Timer.hh"

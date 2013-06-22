@@ -1,11 +1,10 @@
 // File: render.hh
-// Date: Tue Jun 18 16:10:49 2013 +0800
+// Date: Sat Jun 22 13:23:56 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 
 #pragma once
 
-#include "common.hh"
 #include "matrix.hh"
 #include "color.hh"
 #include "lib/imagereader.hh"

@@ -1,10 +1,11 @@
 // File: color.hh
-// Date: Fri Jun 21 18:44:22 2013 +0800
+// Date: Sat Jun 22 13:24:51 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
 
 #include "geometry/geometry.hh"
+#include "lib/debugutils.hh"
 
 #include <cmath>
 
@@ -22,8 +23,6 @@ class Color: public Vector {
 		{ return is_zero(C_EPS); }
 
 		void check() const {
-			if (x < 0 || x > 1 + EPS || y < 0 || y > 1 + EPS || z < 0 || z > 1 + EPS)
-				cout << (*this) << endl;
 			m_assert(x >= 0 && x <= 1 + EPS);
 			m_assert(y >= 0 && y <= 1 + EPS);
 			m_assert(z >= 0 && z <= 1 + EPS);

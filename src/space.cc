@@ -1,10 +1,11 @@
 // File: space.cc
-// Date: Fri Jun 21 00:39:35 2013 +0800
+// Date: Sat Jun 22 13:22:47 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <limits>
 #include <algorithm>
 #include "space.hh"
+#include "lib/debugutils.hh"
 
 using namespace std;
 
