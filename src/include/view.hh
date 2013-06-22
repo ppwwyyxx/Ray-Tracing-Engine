@@ -1,5 +1,5 @@
 // File: view.hh
-// Date: Thu Jun 20 15:42:21 2013 +0800
+// Date: Sun Jun 23 01:01:32 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -21,8 +21,9 @@ class View {
 			dir_h = dir_h.get_normalized() * (size / geo.h);
 		}
 
-	public:
 		const Space& sp;
+
+	public:
 		Vec view_point;
 		Vec mid;
 		real_t size;		// length the img cover in the scene
@@ -30,7 +31,9 @@ class View {
 
 		Vec origin_norm;		// the initial view
 
+		// config
 		bool use_dof = false;
+		bool use_global = true;
 
 		View(const Space& _sp, const Vec& _view_point,
 				const Vec& _mid, real_t w, const Geometry& _geo);

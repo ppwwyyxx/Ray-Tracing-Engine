@@ -1,5 +1,5 @@
 // File: surface.hh
-// Date: Sun Jun 23 00:36:33 2013 +0800
+// Date: Sun Jun 23 01:25:20 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -19,7 +19,7 @@ class Surface {
 		Surface(){}
 
 		Surface(real_t _transparency, real_t _shininess,
-				real_t _ambient, const Color& _diffuse, real_t _specular, const Color& _emission = Color::BLACK):
+				real_t _ambient, const Color& _diffuse, real_t _specular, const Color& _emission = Color::NONE):
 			transparency(_transparency), shininess(_shininess),
 			ambient(_ambient), specular(_specular), diffuse(_diffuse),
 			emission(_emission) {}

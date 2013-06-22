@@ -1,5 +1,5 @@
 // File: view.cc
-// Date: Sat Jun 22 23:23:20 2013 +0800
+// Date: Sun Jun 23 01:35:29 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "view.hh"
@@ -26,6 +26,33 @@ View::View(const Space& _sp, const Vec& _view_point,
 Color View::render(int i, int j, bool debug) const {
 	Vec corner = mid - dir_h * (geo.h / 2) - dir_w * (geo.w / 2);
 	Vec dest = corner + dir_h * (geo.h - 1 - i) + dir_w * j;
+
+#define GLOBAL_ILLU_SAMPLE_CNT 100
+	Color ret = Color::NONE;
+	if (use_global) {
+		REP(dx, 2) REP(dy, 2) {
+			REP(n_samp, GLOBAL_ILLU_SAMPLE_CNT) {
+				real_t r1 = 2 * drand48(),
+					   r2 = 2 * drand48();
+				r1 = (r1  < 1) ? sqrt(r1) - 1 : 1 - sqrt(2 - r1);
+				r2 = (r2  < 1) ? sqrt(r2) - 1 : 1 - sqrt(2 - r2);
+				Vec new_dest = dest - dir_h * (dx + 0.5 + r1) / 2 + dir_w * (dy + 0.5 + r2) / 2;
+				Ray ray(view_point, new_dest - view_point, 1, true);
+				ret += sp.global_trace(ray);
+			}
+		}
+//		cout << ret << endl;
+		ret = ret * (1.0 / 4 / GLOBAL_ILLU_SAMPLE_CNT);
+#define ppp(x) pow((x < 0) ? 0 : x > 1 ? 1 : x, 1.0 / 3.2)
+		Color real_ret(ppp(ret.x), ppp(ret.y), ppp(ret.z));
+		if (i % 10 == 0)
+			cout << real_ret << endl;
+		return real_ret;
+	}
+
+
+
+
 	if (!use_dof) {
 		Ray ray(view_point, dest - view_point, 1, true);
 		if (debug) ray.debug = true;

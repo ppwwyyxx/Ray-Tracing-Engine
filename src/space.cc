@@ -1,5 +1,5 @@
 // File: space.cc
-// Date: Sun Jun 23 00:35:05 2013 +0800
+// Date: Sun Jun 23 01:29:05 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <limits>
@@ -153,34 +153,47 @@ Color Space::trace(const Ray& ray, real_t dist, int depth) const {
 }
 
 Color Space::global_trace(const Ray& ray, int depth) const {
-	if (depth > max_depth * 2) return Color::BLACK;		// TODO add new depth thres
+	if (depth > max_depth) return Color::BLACK;		// TODO add new depth thres
 	m_assert(fabs(ray.dir.sqr() - 1) < EPS);
 
-	auto first_trace = find_first(ray);
+	auto first_trace = find_first(ray, true);
 	if (!first_trace) { return Color::BLACK; }
 
-	// reach the first object
+	// reach the first object, could be a light
 	real_t inter_dist = first_trace->intersection_dist();
 	Vec norm = first_trace->normal(),			// already oriented
 		inter_point = first_trace->intersection_point();
 	auto surf = first_trace->get_property();
+	Color diffu = surf->diffuse;
 	real_t forward_density = first_trace->get_forward_density();
 
 	m_assert((fabs(norm.sqr() - 1) < EPS));
 
 	if (ray.debug) print_debug("debug ray: arrive point (%lf, %lf, %lf) \n", inter_point.x, inter_point.y, inter_point.z);
 
-	real_t max_color_comp = surf->diffuse.get_max();
-/*
- *    if (depth > 5 || p == 0) {
- *        if (drand() < p)
- *            f = f * (1.0 / p);
- *        else
- *            //return light?
- *
- *    }
- *
- */
+	real_t max_color_comp = diffu.get_max();
+	if (depth > 5 || fabs(max_color_comp) < EPS) {		// for light, max_color_comp = 0
+		if (drand48() < max_color_comp)		// Russian Roulette
+			diffu = diffu * (1.0 / max_color_comp);
+		else {
+			return surf->emission;
+		}
+	}
+
+	// diffuse
+	real_t r1 = 2 * M_PI * drand48(),
+		   r2 = drand48(),
+		   r2s = sqrt(r2);
+
+	Vec u = ((fabs(norm.x) > 0.1 ? Vec(0, 1, 0) : Vec(1, 0, 0)).cross(norm)).get_normalized(),
+		v = norm.cross(u);
+	// generate random reflected ray by sampling unit hemisphere
+	Vec d = ((u * cos(r1)) * r2s + v * sin(r1) * r2s + norm * (sqrt(1 - r2))).get_normalized();
+
+	// TODO explicit lighting:
+
+	return surf->emission + diffu * global_trace(Ray(inter_point - ray.dir * EPS, d), depth + 1);
+
 }
 
 shared_ptr<Trace> Space::find_first(const Ray& ray, bool include_light) const {
@@ -194,9 +207,14 @@ shared_ptr<Trace> Space::find_first(const Ray& ray, bool include_light) const {
 			if (update_min(min, d)) ret = tmp;
 		}
 	}
-	if (include_light) {
-		for (auto &l : lights) {
 
+	if (include_light) {		// look for light also
+		for (auto &l : lights) {
+			auto tmp = l->get_trace(ray, min == numeric_limits<real_t>::max() ? -1 : min);
+			if (tmp) {
+				real_t d = tmp->intersection_dist();
+				if (update_min(min, d)) ret = tmp;
+			}
 		}
 	}
 	return move(ret);
