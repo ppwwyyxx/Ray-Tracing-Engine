@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Sun Jun 23 01:22:28 2013 +0800
+// Date: Sun Jun 23 01:37:51 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "viewer.hh"
 #include "space.hh"
@@ -141,7 +141,7 @@ void global_illu() {
 
 	shared_ptr<Texture> t2 = make_shared<HomoTexture>(HomoTexture::BLUE);
 	shared_ptr<Texture> tpic = make_shared<ImgTexture>(texture_fname, 100, 0.6);
-	s.add_obj(make_shared<Plane>(InfPlane::XYPLANE, tpic));//make_shared<Plane>(Plane())?
+	s.add_obj(make_shared<Plane>(InfPlane::XYPLANE, tpic));
 	s.add_obj(make_shared<Sphere>(PureSphere::TestSphere, t2));
 
 	s.finish();
@@ -152,7 +152,7 @@ void global_illu() {
 }
 
 int main() {
-	ball();
+	global_illu();
 	return 0;
 }
 
