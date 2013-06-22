@@ -1,5 +1,5 @@
 // File: mesh.cc
-// Date: Thu Jun 20 14:16:38 2013 +0800
+// Date: Sat Jun 22 17:06:27 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <algorithm>
@@ -71,39 +71,15 @@ void Mesh::finish() {		// build tree, calculate smooth norm
 }
 
 shared_ptr<Trace> Mesh::get_trace(const Ray& ray, real_t dist) const {
-	if (use_tree)
-		return tree->get_trace(ray, dist);
-	shared_ptr<Trace> ret = make_shared<MeshTrace>(*this, ray);
-	if (ret->intersect()) {
-		if (dist == -1 || ret->intersection_dist() < dist)
-			return ret;
-	}
-	return nullptr;
-}
+	if (use_tree) return tree->get_trace(ray, dist);
 
-shared_ptr<Surface> MeshTrace::transform_get_property() const {
-	m_assert(mesh.mapped);
-	return nullptr;
-}
-
-bool MeshTrace::intersect() {
-	m_assert(!mesh.use_tree);
+	shared_ptr<Trace> ret;
 	real_t min = numeric_limits<real_t>::infinity();
-	for (auto & face : mesh.faces) {
-		shared_ptr<Trace> tmp = face->get_trace(ray);
+
+	for (auto & face : faces) {
+		shared_ptr<Trace> tmp = face->get_trace(ray, dist);
 		if (tmp && update_min(min, tmp->intersection_dist()))
-			nearest_trace = tmp;
+			ret = tmp;
 	}
-	if (nearest_trace) {		// find a face
-		inter_dist = min;
-		return true;
-	}
-	return false;
+	return move(ret);
 }
-
-real_t MeshTrace::intersection_dist()
-{ m_assert(!mesh.use_tree); return nearest_trace->intersection_dist(); }
-
-Vec MeshTrace::normal()
-{ m_assert(!mesh.use_tree); return nearest_trace->normal(); }
-

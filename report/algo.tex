@@ -1,5 +1,5 @@
 % File: algo.tex
-% Date: Fri Jun 21 11:42:47 2013 +0800
+% Date: Sat Jun 22 17:19:34 2013 +0800
 % Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 \section{算法说明}
 \subsection{光线追踪及光照模型}
@@ -154,7 +154,7 @@ KD树是一种空间划分树,原本用于在K维空间中快速查找点,可利
 \subsection{小量处理}
 在如下情形需要特别注意实数运算中的误差.
 \begin{enumerate}
-  \item 反射折射的交点误差可能导致光线异常.
+  \item 反射折射交点
 
     考虑光线斜射平面的情形,若交点由于误差落在了平面异侧,则反射光仍会打到平面,
     若落在了平面同侧,则透射光仍会打到平面.因而计算反射光线时,

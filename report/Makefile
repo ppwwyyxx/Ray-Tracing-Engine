@@ -3,7 +3,7 @@ TEX=xelatex -shell-escape
 BIBTEX=bibtex
 READER=mupdf
 
-all: view
+all: rebuild
 
 rebuild output/$(TARGET).pdf: *.tex *.bib output
 	cd output && rm -f *.tex *.bib && ln -s ../*.tex ../*.bib .

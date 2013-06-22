@@ -1,5 +1,5 @@
 // File: mesh.hh
-// Date: Fri Jun 21 18:54:48 2013 +0800
+// Date: Sat Jun 22 17:02:23 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -93,24 +93,3 @@ class Mesh: public Renderable {
 			faces.push_back(rdptr(new Face(f)));
 		}
 };
-
-class MeshTrace : public Trace {
-	private:
-		const Mesh& mesh;
-
-		shared_ptr<Trace> nearest_trace = nullptr;
-
-		shared_ptr<Surface> transform_get_property() const;
-
-	public:
-		MeshTrace(const Mesh& _mesh, const Ray& _ray):
-			Trace(&_mesh, _ray), mesh(_mesh){};
-
-		bool intersect() override;
-
-		real_t intersection_dist() override;
-
-		Vec normal() override;
-};
-
-#undef INRANGE

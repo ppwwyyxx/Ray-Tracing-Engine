@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Sat Jun 22 13:19:59 2013 +0800
+// Date: Sat Jun 22 17:06:47 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "viewer.hh"
 #include "space.hh"
@@ -91,8 +91,9 @@ void test_kdtree() {
 	const char* fname = "../resource/models/fixed.perfect.dragon.100K.0.07.obj";
 	Mesh mesh(fname, Vec(0, 0, 2), 5);
 
-	mesh.smooth = true;
+	mesh.smooth = false;
 	mesh.set_texture(make_shared<HomoTexture>(HomoTexture::CYAN));
+	mesh.use_tree = false;
 	mesh.finish();
 	s.add_obj(make_shared<Mesh>(mesh));
 	shared_ptr<Texture> t1 = make_shared<GridTexture>(GridTexture::BLACK_WHITE);
