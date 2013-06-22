@@ -1,5 +1,5 @@
 // File: texture.hh
-// Date: Fri Jun 21 00:26:47 2013 +0800
+// Date: Sat Jun 22 20:14:22 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -70,6 +70,9 @@ class ImgTexture : public Texture {
 		ImgTexture(const char* fname, real_t _zoom, real_t _illu = 1):
 			// _zoom > 1
 			img(fname), size(img.size), zfactor(_zoom), illu(_illu) {}
+
+		ImgTexture(const std::string& fname, real_t _zoom, real_t _illu = 1):
+			ImgTexture(fname.c_str(), _zoom, _illu) {}
 
 		shared_ptr<Surface> get_property(real_t x, real_t y) const override {
 			int int_x = round(zfactor * x) - size.h / 2, int_y = (zfactor * y) - size.w / 2;

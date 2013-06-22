@@ -1,10 +1,12 @@
 // File: static_const.cc
-// Date: Sat Jun 22 13:23:31 2013 +0800
+// Date: Sat Jun 22 20:17:19 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "color.hh"
 #include "material/surface.hh"
 #include "material/texture.hh"
+#include "renderable/plane.hh"
+#include "renderable/sphere.hh"
 #include "const.hh"
 using namespace std;
 
@@ -31,3 +33,9 @@ const HomoTexture
 	HomoTexture::BLUE(Surface::BLUE_REFL),
 	HomoTexture::CYAN(Surface::CYAN_REFL);
 
+
+const PureSphere PureSphere::TestSphere(Vec(0, 0, 2), 1.99);
+
+const InfPlane InfPlane::XYPLANE(Vec(0, 0, 1), 0),
+	  InfPlane::YZPLANE(Vec(1, 0, 0), 0),
+	  InfPlane::XZPLANE(Vec(0, 1, 0), 0);

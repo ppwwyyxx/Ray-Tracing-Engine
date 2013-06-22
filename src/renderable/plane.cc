@@ -1,13 +1,9 @@
 // File: plane.cc
-// Date: Thu Jun 20 19:01:30 2013 +0800
+// Date: Sat Jun 22 20:17:21 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "renderable/plane.hh"
 using namespace std;
-
-const InfPlane InfPlane::XYPLANE(Vec(0, 0, 1), 0),
-	  InfPlane::YZPLANE(Vec(1, 0, 0), 0),
-	  InfPlane::XZPLANE(Vec(0, 1, 0), 0);
 
 shared_ptr<Trace> Plane::get_trace(const Ray& ray, real_t dist) const {
 	shared_ptr<Trace> ret = make_shared<PlaneTrace>(*this, ray);
