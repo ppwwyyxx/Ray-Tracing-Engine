@@ -1,5 +1,5 @@
 // File: static_const.cc
-// Date: Sat Jun 22 20:17:19 2013 +0800
+// Date: Sat Jun 22 22:33:06 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "color.hh"

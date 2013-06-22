@@ -1,5 +1,5 @@
 // File: space.cc
-// Date: Sat Jun 22 20:23:40 2013 +0800
+// Date: Sat Jun 22 22:45:22 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <limits>
@@ -8,6 +8,12 @@
 #include "lib/debugutils.hh"
 
 using namespace std;
+
+Color Space::blend(const Color& amb, const Color& phong, const Color& refl, const Color& transm) {
+	Color ret = (amb + phong + refl + transm * 2) * 0.25;
+	ret.normalize();
+	return ret;
+}
 
 void Space::add_light(const Light& light) {
 	if (use_soft_shadow) {
@@ -72,7 +78,7 @@ Color Space::trace(const Ray& ray, real_t dist, int depth) const {
 	Vec norm = first_trace->normal(),
 		inter_point = first_trace->intersection_point();
 	auto surf = first_trace->get_property();
-	real_t density = first_trace->get_forward_density();
+	real_t forward_density = first_trace->get_forward_density();
 
 	m_assert((fabs(norm.sqr() - 1) < EPS));
 
@@ -82,8 +88,9 @@ Color Space::trace(const Ray& ray, real_t dist, int depth) const {
 	// phong model
 	// http://en.wikipedia.org/wiki/Phong_reflection_model
 	// ambient
-	Color ret = ambient * (surf->diffuse + Color::WHITE) * surf->ambient * 0.5;
+	Color now_amb = ambient * (surf->diffuse + Color::WHITE) * surf->ambient * 0.5;
 
+	Color now_col = Color::BLACK;
 	for (auto &i : lights) {
 		Vec lm = (i->src - inter_point).get_normalized();
 		real_t lmn = lm.dot(norm);
@@ -100,44 +107,54 @@ Color Space::trace(const Ray& ray, real_t dist, int depth) const {
 
 		// diffuse
 		if (lmn > 0)
-			ret += surf->diffuse * i->color * (i->intensity * damping * lmn);		// add beer
+			now_col += surf->diffuse * i->color * (i->intensity * damping * lmn);		// add beer
 
 		// specular
 		real_t rmv = -norm.reflection(lm).dot(ray.dir);
 		if (rmv > 0)
-			ret += surf->specular * pow(rmv, surf->shininess) * i->color * i->intensity * damping;
+			now_col += surf->specular * pow(rmv, surf->shininess) * i->color * i->intensity * damping;
 	}
 
 	// Beer-Lambert's Law
 	dist += inter_dist;
-	ret *= pow(M_E, -dist * AIR_BEER_DENSITY);
+	now_col *= pow(M_E, -dist * AIR_BEER_DENSITY);
 
-	// reflected ray : go back a little, same density
 	m_assert(fabs(ray.dir.sqr() - 1) < EPS);
-	if (surf->ambient < 1 - EPS) {		// do reflection if ambient is small
+	Color now_refl = Color::BLACK;
+
+	// do reflection if ambient is small
+	// inner surface don't reflect
+	if (surf->ambient < 1 - EPS && !(first_trace->contain())) {
+		// reflected ray : go back a little, same density
 		Ray new_ray(inter_point - ray.dir * EPS, -norm.reflection(ray.dir), ray.density);
 		m_assert(fabs((-norm.reflection(ray.dir)).sqr() - 1) < EPS);
 
+
+		real_t lmn = (new_ray.dir.dot(norm));
+		if (lmn < 0) cout << lmn << endl;
+
 		new_ray.debug = ray.debug;
 		Color refl = trace(new_ray, dist, depth + 1);
-		ret += refl * surf->diffuse * (REFL_DECAY * (1 - surf->ambient) * surf->shininess);
+		now_refl = (refl + refl * surf->diffuse * REFL_DIFFUSE_FACTOR) *
+			(REFL_DECAY * (1 - surf->ambient) * surf->shininess * lmn);
 	}
 
 
 	// transmission
+	Color now_transm = Color::BLACK;
 	if (surf->transparency > EPS) {
-		Vec tr_dir = norm.transmission(ray.dir, density / ray.density);
+		Vec tr_dir = norm.transmission(ray.dir, forward_density / ray.density);
 		if (isnormal(tr_dir.x)) { // have transmission
 			// transmission ray : go forward a little
-			Ray new_ray(inter_point + ray.dir * EPS, tr_dir, density);
+			Ray new_ray(inter_point + ray.dir * EPS, tr_dir, forward_density);
 			new_ray.debug = ray.debug;
 			Color transm = trace(new_ray, dist, depth + 1);
-			ret += (transm + surf->diffuse * 0.1) * surf->transparency;
+			now_transm = (transm + transm * surf->diffuse * TRANSM_DIFFUSE_FACTOR) *
+				surf->transparency;
 		}
 	}
 
-	ret.normalize();
-	return ret;
+	return Space::blend(now_amb, now_col, now_refl, now_transm);
 }
 
 shared_ptr<Trace> Space::find_first(const Ray& ray) const {

@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Sat Jun 22 20:21:20 2013 +0800
+// Date: Sat Jun 22 20:43:59 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "viewer.hh"
 #include "space.hh"
@@ -123,7 +123,7 @@ void test_simplify() {
 void ball() {
 	int w = 500, h = 500;
 	Space s;
-	s.add_light(Light(Vec(0, -10, 12), Color::WHITE, 2.0));
+	s.add_light(Light(Vec(0, -10, 12), Color::WHITE, 7));
 
 	shared_ptr<Texture> t2(new HomoTexture(HomoTexture::BLUE));
 	shared_ptr<Texture> tpic(new ImgTexture(texture_fname, 100, 0.6));
