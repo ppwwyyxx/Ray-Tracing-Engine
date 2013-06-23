@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Sun Jun 23 22:09:40 2013 +0800
+// Date: Sun Jun 23 23:10:50 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include <sys/types.h>
 #include <dirent.h>
@@ -14,7 +14,8 @@ using namespace std;
 const string texture_fname = "../resource/ground.jpg";
 const string watermelon_fname = "../resource/watermelon.jpg";
 
-void best() {
+// Complicated Scene
+void all(bool g) {
 	int w = 1000, h = 1000;
 	Space s;
 	s.add_light(Light(PureSphere(Vec(+10, 10, 10), 4), Color::WHITE, 12));
@@ -48,10 +49,16 @@ void best() {
 
 	s.finish();
 	View v(s, Vec(-8.0, -6.3, 11.9), Vec(-2.7, 3.95, 4.4), 18, Geometry(w, h));
-	v.use_global = true;
-	CVViewer viewer(v, "best.png");
+	v.use_global = g;
+	if (g)
+		CVViewer viewer(v, "best.png");
+	else {
+		CVViewer viewer(v);
+		viewer.view();
+	}
 }
 
+// test soft shadow
 void test_shadow() {
 	int w = 500, h = 500;
 	Space s; s.use_soft_shadow = true;
@@ -67,6 +74,7 @@ void test_shadow() {
 	viewer.view();
 }
 
+// test depth of field
 void dof_ball_scene() {
 	int w = 500, h = 500;
 	Space s;
@@ -91,6 +99,7 @@ void dof_ball_scene() {
 	viewer.view();
 }
 
+// generate lots of pictures for video
 void generate_dof_video() {
 	int w = 1000, h = 1000;
 	Space s;
@@ -120,6 +129,7 @@ void generate_dof_video() {
 	}
 }
 
+// test kd tree
 void test_kdtree() {
 	int w = 500, h = 500;
 	Space s;
@@ -140,6 +150,7 @@ void test_kdtree() {
 	viewer.view();
 }
 
+// test obj simplify
 void test_simplify() {
 	int w = 500, h = 500;
 	const char* fname = "../resource/models/fixed.perfect.dragon.100K.0.07.obj";
@@ -159,6 +170,7 @@ void test_simplify() {
 	viewer.view();
 }
 
+// simple ball
 void ball() {
 	int w = 500, h = 500;
 	Space s;
@@ -176,6 +188,7 @@ void ball() {
 	viewer.view();
 }
 
+// test global illumination with diffuse and reflection
 void global_illu() {
 	int w = 500, h = 500;
 	Space s;
@@ -207,6 +220,7 @@ void global_illu() {
 	viewer.r.finish();
 }
 
+// test glass ball effect
 void glass() {
 	int w = 500, h = 500;
 	Space s;
@@ -236,6 +250,7 @@ void glass() {
 	viewer.r.finish();
 }
 
+// lots of obj
 void obj_scene() {
 	int w = 500, h = 500;
 	Space s;
@@ -286,6 +301,7 @@ void obj_scene() {
 	viewer.view();
 }
 
+// generate sequences of pictures by simplifying using different ratio
 void generate_simplified_pictures() {
 	int w = 500, h = 500;
 	auto dirp = opendir("../resource/models");
@@ -318,10 +334,45 @@ void generate_simplified_pictures() {
 	closedir(dirp);
 }
 
-int main() {
-	//global_illu();
-//	panorama();
-	best();
+int main(int argc, char* argv[]) {
+	if (argc == 1) {
+		error_exit("please select a demo !");
+	}
+
+	int a = atoi(argv[1]);
+	switch (a) {
+		case 0:
+			ball();
+			break;
+		case 1:
+			dof_ball_scene();
+			break;
+		case 2:
+			test_kdtree();
+			break;
+		case 3:
+			obj_scene();
+			break;
+		case 4:
+			test_simplify();
+			break;
+		case 5:
+			test_shadow();
+			break;
+		case 6:
+			all(false);
+			break;
+	//  the following are path tracing demo, will take a lot of time
+		case 7:
+			global_illu();
+			break;
+		case 8:
+			glass();
+			break;
+		case 9:
+			all(true);
+			break;
+	}
 	return 0;
 }
 

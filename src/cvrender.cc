@@ -1,5 +1,5 @@
 // File: cvrender.cc
-// Date: Sat Jun 22 23:04:49 2013 +0800
+// Date: Sun Jun 23 23:13:22 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <functional>
@@ -233,10 +233,10 @@ void CVViewer::view() {
 						v.move_screen(SHIFT_SCREEN);
 					break;
 				case KEY_greater:
-					v.rotate(VIEWER_ANGLE);
+					v.rotate(-VIEWER_ANGLE);
 					break;
 				case KEY_smaller:
-					v.rotate(-VIEWER_ANGLE);
+					v.rotate(+VIEWER_ANGLE);
 					break;
 				default:
 					rerender = false;

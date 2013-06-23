@@ -1,5 +1,5 @@
 % File: design.tex
-% Date: Sun Jun 23 22:37:31 2013 +0800
+% Date: Sun Jun 23 23:06:25 2013 +0800
 % Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 \section{项目设计}
@@ -13,6 +13,7 @@
   .2 demo/\DTcomment{一些样例}.
   .2 doc/\DTcomment{由Doxygen生成的程序文档}.
   .2 resource/\DTcomment{程序使用到的外部资源}.
+  .2 simplified/\DTcomment{网格简化结果图,由main.cc中的函数批量生成}.
   .2 src/\DTcomment{程序源代码}.
   .3 include/\DTcomment{头文件}.
   .4 geometry/\DTcomment{实现抽象几何对象}.
@@ -32,10 +33,9 @@
   .4 sphere.cc.
   .3 gui/\DTcomment{图形界面}.
   .4 main.cxx.
-  .4 window.cxx.
-  .4 window.hh.
-  .4 window.ui.
-  .4 objviewer.pro.
+  .4 window.cxx, window.hh\DTcomment{主窗口相关操作实现}.
+  .4 window.ui\DTcomment{UI定义}.
+  .4 objviewer.pro\DTcomment{Qt工程文件}.
   .3 kdtree.cc.
   .3 cvrender.cc.
   .3 mesh\_simplifier.cc.
