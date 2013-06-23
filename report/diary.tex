@@ -1,5 +1,5 @@
 % File: diary.tex
-% Date: Sun Jun 23 19:55:58 2013 +0800
+% Date: Sun Jun 23 21:53:14 2013 +0800
 % Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 \section{过程记录}
 本项目的详细开发记录可以通过git查看. 项目托管在github\footnote{\url{https://github.com/ppwwyyxx/Ray-Tracing-Engine}}
@@ -207,41 +207,41 @@
 
     \begin{figure}[H]
       \centering
-      \includegraphics[scale=0.4]{img/gui.png}
+      \includegraphics[scale=0.38]{img/gui.png}
       \caption{图形界面展示\label{fig:gui}}
     \end{figure}
 
   \item 实现了一个简易的全局光照模型,首先按照均匀分布支持了漫反射,渲染效果如下.
     可以看到颜色变化及阴影都比右图的Phong模型更自然.
     \begin{figure}[H]
-      \begin{minipage}[b]{0.46\linewidth}
+      \begin{minipage}[b]{0.48\linewidth}
         \centering
         \includegraphics[width=\textwidth]{img/gllu_first.png}
       \end{minipage}
-      \begin{minipage}[b]{0.46\linewidth}
+      \begin{minipage}[b]{0.48\linewidth}
         \centering
         \includegraphics[width=\textwidth]{img/compare_diffuse_phong.png}
       \end{minipage}
-      \caption{Path Tracing漫反射效果图\label{fig:pt_diffuse}}
+      \caption{Path Tracing漫反射效果图(左)\label{fig:pt_diffuse}}
     \end{figure}
 
   \item 为全局光照模型加入了镜面反射效果,若干个镜面的球上可以看到光源的亮斑及互相的反射,如下左图.
     \begin{figure}[H]
-      \begin{minipage}[b]{0.46\linewidth}
+      \begin{minipage}[b]{0.48\linewidth}
         \centering
         \includegraphics[width=\textwidth]{img/gllu_refl.png}
       \end{minipage}
-      \begin{minipage}[b]{0.46\linewidth}
+      \begin{minipage}[b]{0.48\linewidth}
         \centering
         \includegraphics[width=\textwidth]{img/compare_refl_phong.png}
       \end{minipage}
-      \caption{Path Tracing镜面效果图\label{fig:pt_refl}}
+      \caption{Path Tracing镜面效果图(左)\label{fig:pt_refl}}
     \end{figure}
 
   \item 加入了全局光照模型的折射效果,结果很逼真,可以看到球下方的caustic效果,Phong模型通常无法模拟此效果.
     \begin{figure}[H]
       \centering
-      \includegraphics[scale=0.6]{img/caustic.png}
+      \includegraphics[scale=0.5]{img/caustic.png}
       \caption{Path Tracing透射效果图\label{fig:pt_transm}}
     \end{figure}
 

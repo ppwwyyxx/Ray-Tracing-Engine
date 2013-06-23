@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Sun Jun 23 20:44:42 2013 +0800
+// Date: Sun Jun 23 22:09:40 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include <sys/types.h>
 #include <dirent.h>
@@ -13,6 +13,44 @@
 using namespace std;
 const string texture_fname = "../resource/ground.jpg";
 const string watermelon_fname = "../resource/watermelon.jpg";
+
+void best() {
+	int w = 1000, h = 1000;
+	Space s;
+	s.add_light(Light(PureSphere(Vec(+10, 10, 10), 4), Color::WHITE, 12));
+	s.add_light(Light(PureSphere(Vec(-10, -10, 10), 4), Color::WHITE, 8));
+
+	shared_ptr<Texture> t_diffuse = make_shared<HomoTexture>(Surface::GOOD);
+	shared_ptr<Texture> t_refl = make_shared<HomoTexture>(Surface::GOOD_REFL);
+	shared_ptr<Texture> t_glass = make_shared<HomoTexture>(Surface::GLASS);
+	shared_ptr<Texture> tpic = make_shared<ImgTexture>(texture_fname, 100, 0.6);
+	s.add_obj(make_shared<Plane>(InfPlane::XYPLANE, tpic));
+	s.add_obj(make_shared<Plane>(InfPlane(Vec(0, 1, 0), 20), make_shared<GridTexture>(GridTexture::BLACK_WHITE_REFL)));
+	s.add_obj(make_shared<Sphere>(PureSphere::TestSphere, t_glass));
+
+	const char* fname = "../resource/models/dinosaur.2k.obj";
+	Mesh mesh(fname, Vec(-3, +5, 2), 9);
+	mesh.set_texture(make_shared<HomoTexture>(HomoTexture::CYAN));
+	mesh.finish();
+	s.add_obj(make_shared<Mesh>(mesh));
+
+	fname = "../resource/models/cube.obj";
+	mesh = Mesh(fname, Vec(-8, 7, 4), 5);
+	mesh.smooth = false;
+	mesh.set_texture(make_shared<HomoTexture>(HomoTexture::BLUE));
+	mesh.finish();
+	s.add_obj(make_shared<Mesh>(mesh));
+
+	REP(i, 5) {
+		s.add_obj(make_shared<Sphere>(PureSphere(Vec(0 + 3, i * 3.2 + 3, 1), 1.5), t_diffuse));
+		s.add_obj(make_shared<Sphere>(PureSphere(Vec(3 + 5, i * 3.2 + 3, 1), 1.5), t_refl));
+	}
+
+	s.finish();
+	View v(s, Vec(-8.0, -6.3, 11.9), Vec(-2.7, 3.95, 4.4), 18, Geometry(w, h));
+	v.use_global = true;
+	CVViewer viewer(v, "best.png");
+}
 
 void test_shadow() {
 	int w = 500, h = 500;
@@ -159,7 +197,7 @@ void global_illu() {
 
 	REP(i, 5) {
 		s.add_obj(make_shared<Sphere>(PureSphere(Vec(0 + 3, i * 3 + 3, 1), 1), t_diffuse));
-		s.add_obj(make_shared<Sphere>(PureSphere(Vec(3 + 3, i * 3 + 3, 1), 1), t_diffuse));
+		s.add_obj(make_shared<Sphere>(PureSphere(Vec(3 + 3, i * 3 + 3, 1), 1), t_refl));
 	}
 
 	s.finish();
@@ -283,7 +321,7 @@ void generate_simplified_pictures() {
 int main() {
 	//global_illu();
 //	panorama();
-	generate_simplified_pictures();
+	best();
 	return 0;
 }
 
