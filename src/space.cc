@@ -1,5 +1,5 @@
 // File: space.cc
-// Date: Sun Jun 23 01:29:05 2013 +0800
+// Date: Sun Jun 23 10:53:07 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <limits>
@@ -118,9 +118,9 @@ Color Space::trace(const Ray& ray, real_t dist, int depth) const {
 	m_assert(fabs(ray.dir.sqr() - 1) < EPS);
 	Color now_refl = Color::BLACK;
 
-	// do reflection if ambient is small
+	// do reflection if specular > 0
 	// inner surface don't reflect
-	if (surf->ambient < 1 - EPS && !(first_trace->contain())) {
+	if (surf->specular > 0 && !(first_trace->contain())) {
 		// reflected ray : go back a little, same density
 		Ray new_ray(inter_point - ray.dir * EPS, -norm.reflection(ray.dir), ray.density);
 		m_assert(fabs((-norm.reflection(ray.dir)).sqr() - 1) < EPS);
@@ -131,14 +131,14 @@ Color Space::trace(const Ray& ray, real_t dist, int depth) const {
 		new_ray.debug = ray.debug;
 		Color refl = trace(new_ray, dist, depth + 1);
 		now_refl = (refl + refl * surf->diffuse * REFL_DIFFUSE_FACTOR) *
-			(REFL_DECAY * (1 - surf->ambient) * surf->shininess * lmn);
+			(REFL_DECAY * surf->specular * surf->shininess * lmn);
 	}
 
 
 	// transmission
 	Color now_transm = Color::BLACK;
 	if (surf->transparency > EPS) {
-		Vec tr_dir = norm.transmission(ray.dir, forward_density / ray.density);
+		Vec tr_dir = norm.transmission(ray.dir, ray.density / forward_density);
 		if (isnormal(tr_dir.x)) { // have transmission
 			// transmission ray : go forward a little
 			Ray new_ray(inter_point + ray.dir * EPS, tr_dir, forward_density);
@@ -189,10 +189,45 @@ Color Space::global_trace(const Ray& ray, int depth) const {
 		v = norm.cross(u);
 	// generate random reflected ray by sampling unit hemisphere
 	Vec d = ((u * cos(r1)) * r2s + v * sin(r1) * r2s + norm * (sqrt(1 - r2))).get_normalized();
+	Color now_diffuse = diffu * global_trace(Ray(inter_point - ray.dir * EPS, d), depth + 1);
 
-	// TODO explicit lighting:
+	// reflection
+	Color now_refl = Color::BLACK;
+	if (surf->specular > 0 && !(first_trace->contain())) {
+		// reflected ray : go back a little, same density
+		Ray new_ray(inter_point - ray.dir * EPS, -norm.reflection(ray.dir), ray.density);
+		m_assert(fabs((-norm.reflection(ray.dir)).sqr() - 1) < EPS);
 
-	return surf->emission + diffu * global_trace(Ray(inter_point - ray.dir * EPS, d), depth + 1);
+//		real_t lmn = fabs(new_ray.dir.dot(norm));
+		new_ray.debug = ray.debug;
+		Color refl = global_trace(new_ray, depth + 1);
+		now_refl = 	surf->diffuse * refl * surf->specular;
+	}
+
+	 // transmission
+	 /*
+	  *Color now_transm = Color::BLACK;
+	  *if (surf->transparency > EPS) {
+	  *    Vec tr_dir = norm.transmission(ray.dir, forward_density / ray.density);
+	  *    if (isnormal(tr_dir.x)) {  //have transmission
+	  *         //transmission ray : go forward a little
+	  *        Ray new_ray(inter_point + ray.dir * EPS, tr_dir, forward_density);
+	  *        new_ray.debug = ray.debug;
+	  *        Color transm = trace(new_ray, depth + 1);
+	  *        now_transm = (transm + transm * surf->diffuse * TRANSM_DIFFUSE_FACTOR) *
+	  *            surf->transparency;
+	  *    } else {	// total reflection
+	  *        Ray new_ray(inter_point - ray.dir * EPS, -norm.reflection(ray.dir), ray.density);
+	  *        new_ray.debug = ray.debug;
+	  *        Color refl = global_trace(new_ray, depth + 1);
+	  *        now_transm = surf->diffuse * refl * surf->specular;
+	  *    }
+	  *}
+	  */
+
+	 // TODO explicit lighting:
+
+	 return surf->emission + now_diffuse + now_refl;
 
 }
 
@@ -208,7 +243,7 @@ shared_ptr<Trace> Space::find_first(const Ray& ray, bool include_light) const {
 		}
 	}
 
-	if (include_light) {		// look for light also
+	if (include_light) {		// also look for light
 		for (auto &l : lights) {
 			auto tmp = l->get_trace(ray, min == numeric_limits<real_t>::max() ? -1 : min);
 			if (tmp) {

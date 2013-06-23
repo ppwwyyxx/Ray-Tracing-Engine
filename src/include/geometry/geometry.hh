@@ -1,5 +1,5 @@
 // File: geometry.hh
-// Date: Sat Jun 22 13:22:59 2013 +0800
+// Date: Sun Jun 23 10:52:47 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -129,11 +129,11 @@ class Vector {
 
 		// i'm norm, return norm
 		Vector transmission(const Vector& v_in, real_t density) const {
+			// density = out_dens / in_dens
 			Vector ret = Vector::infinity();
 
-			density = 1 / density;
 			real_t cos1 = -dot(v_in);
-			if (cos1 < EPS) return ret;
+			m_assert(cos1 > 0);		// norm is towards ray dir
 			if (cos1 / v_in.mod() < 0.1) return v_in.get_normalized();
 			m_assert(cos1 >= 0);
 			real_t cos2 = 1 - ::sqr(density) * (1 - ::sqr(cos1));
