@@ -1,5 +1,5 @@
 // File: const.hh
-// Date: Sun Jun 23 11:44:01 2013 +0800
+// Date: Sun Jun 23 11:49:55 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -36,4 +36,4 @@ const real_t SOFT_SHADOW_RADIUS = 0.8;
 const int KDTREE_MAX_DEPTH = 100;
 const int KDTREE_TERMINATE_OBJ_CNT = 20;
 
-const int GLOBAL_ILLU_SAMPLE_CNT = 1000;
+const int GLOBAL_ILLU_SAMPLE_CNT = 100;

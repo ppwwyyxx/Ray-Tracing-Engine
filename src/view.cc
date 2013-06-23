@@ -1,5 +1,5 @@
 // File: view.cc
-// Date: Sun Jun 23 01:56:27 2013 +0800
+// Date: Sun Jun 23 11:54:37 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "view.hh"
@@ -42,7 +42,7 @@ Color View::render(int i, int j, bool debug) const {
 		}
 
 		ret = ret * (1.0 / 4 / GLOBAL_ILLU_SAMPLE_CNT);
-#define ppp(x) pow((x < 0) ? 0 : x > 1 ? 1 : x, 1.0 / 2.2)
+#define ppp(x) pow((x < EPS) ? EPS : x > 1 ? 1 - EPS : x, 1.0 / 2.2)
 		return Color(ppp(ret.x), ppp(ret.y), ppp(ret.z));
 #undef ppp
 	}
