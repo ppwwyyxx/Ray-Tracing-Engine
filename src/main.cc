@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Sun Jun 23 12:01:51 2013 +0800
+// Date: Sun Jun 23 16:37:05 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "viewer.hh"
 #include "space.hh"
@@ -9,7 +9,8 @@
 #include "renderable/mesh.hh"
 
 using namespace std;
-const string texture_fname = "../resource/texture.jpg";
+const string texture_fname = "../resource/ground.jpg";
+const string watermelon_fname = "../resource/watermelon.jpg";
 
 void test_shadow() {
 	int w = 500, h = 500;
@@ -124,6 +125,7 @@ void ball() {
 	s.add_light(Light(Vec(0, -10, 12), Color::WHITE, 7));
 
 	shared_ptr<Texture> t2 = make_shared<HomoTexture>(HomoTexture::BLUE);
+//	shared_ptr<Texture> t2 = make_shared<ImgTexture>(watermelon_fname, 10, 0.6);
 	shared_ptr<Texture> tpic = make_shared<ImgTexture>(texture_fname, 100, 0.6);
 	s.add_obj(make_shared<Plane>(InfPlane::XYPLANE, tpic));//make_shared<Plane>(Plane())?
 	s.add_obj(make_shared<Sphere>(PureSphere::TestSphere, t2));
@@ -157,12 +159,38 @@ void global_illu() {
 	s.finish();
 	View v(s, Vec(-5.6, -1.6, 10.1), Vec(-0.8, 1.35, 2.5), 13, Geometry(w, h));
 	v.use_global = true;
-	CVViewer viewer(v, "output.png");
+	CVViewer viewer(v, "global_illu.png");
+}
+void glass() {
+	int w = 500, h = 500;
+	Space s;
+	s.add_light(Light(PureSphere(Vec(+10, 10, 10), 4), Color::WHITE, 12));
 
+	shared_ptr<Texture> t2 = make_shared<HomoTexture>(Surface::GLASS);
+	shared_ptr<Texture> tpic = make_shared<ImgTexture>(texture_fname, 100, 0.6);
+	s.add_obj(make_shared<Plane>(InfPlane::XYPLANE, tpic));
+	s.add_obj(make_shared<Sphere>(PureSphere::TestSphere, t2));
+
+	/*
+	 *const char* fname = "../resource/models/fixed.perfect.dragon.100K.0.07.obj";
+	 *Mesh mesh(fname, Vec(-3, +5, 2), 5);
+	 *mesh.smooth = true;
+	 *mesh.set_texture(make_shared<HomoTexture>(HomoTexture::CYAN));
+	 *mesh.simplify(0.4);
+	 *mesh.finish();
+	 *s.add_obj(make_shared<Mesh>(mesh));
+	 */
+
+	REP(i, 5) REP(j, 2) s.add_obj(make_shared<Sphere>(PureSphere(Vec(j * 3 + 3, i * 3 + 3, 1), 1), t2));
+
+	s.finish();
+	View v(s, Vec(-5.6, -1.6, 10.1), Vec(-0.8, 1.35, 2.5), 13, Geometry(w, h));
+	v.use_global = true;
+	CVViewer viewer(v, "glass.png");
 }
 
 int main() {
-	global_illu();
+	glass();
 	return 0;
 }
 

@@ -1,5 +1,5 @@
 // File: space.cc
-// Date: Sun Jun 23 13:01:15 2013 +0800
+// Date: Sun Jun 23 16:53:49 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <limits>
@@ -152,8 +152,9 @@ Color Space::trace(const Ray& ray, real_t dist, int depth) const {
 	return Space::blend(now_amb, now_col, now_refl, now_transm);
 }
 
+// ---------------------------------------------------------------------------------------------------
 Color Space::global_trace(const Ray& ray, int depth) const {
-	if (depth > max_depth) return Color::BLACK;		// TODO add new depth thres
+	if (depth > max_depth * 2) return Color::BLACK;		// TODO add new depth thres
 	m_assert(fabs(ray.dir.sqr() - 1) < EPS);
 
 	auto first_trace = find_first(ray, true);
@@ -189,7 +190,8 @@ Color Space::global_trace(const Ray& ray, int depth) const {
 		v = norm.cross(u);
 	// generate random reflected ray by sampling unit hemisphere
 	Vec d = ((u * cos(r1)) * r2s + v * sin(r1) * r2s + norm * (sqrt(1 - r2))).get_normalized();
-	Color now_diffuse = global_trace(Ray(inter_point - ray.dir * EPS, d), depth + 1) * min(1 - surf->specular, 1 - surf->transparency);
+	Color now_diffuse = global_trace(Ray(inter_point - ray.dir * EPS, d), depth + 1) *
+		min(1 - surf->specular, 1 - surf->transparency);
 
 	// reflection
 	Color now_refl = Color::BLACK;
@@ -211,14 +213,14 @@ Color Space::global_trace(const Ray& ray, int depth) const {
 		 refl_ray.debug = ray.debug;
 		 Color refl = global_trace(refl_ray, depth + 1) * surf->specular;
 
-		 Vec tr_dir = norm.transmission(ray.dir, forward_density / ray.density);
+		 Vec tr_dir = norm.transmission(ray.dir, ray.density / forward_density);
 		 if (isfinite(tr_dir.x)) {  //have transmission
 			  //transmission ray : go forward a little
 			 Ray new_ray(inter_point + ray.dir * EPS, tr_dir, forward_density);
 
 			 real_t F0 = sqr(forward_density - ray.density) / sqr(ray.density + forward_density);
-			 real_t theta = -first_trace->contain() ? tr_dir.dot(norm) : ray.dir.dot(norm);
-			 real_t Fr = F0 + (1 - F0) * pow(1 - theta, 5);
+			 real_t theta = first_trace->contain() ? tr_dir.dot(norm) : ray.dir.dot(norm);
+			 real_t Fr = F0 + (1 - F0) * pow(1 + theta, 5);
 			 new_ray.debug = ray.debug;
 			 Color transm = trace(new_ray, depth + 1);
 			 now_transm = (refl * Fr + transm * (1 - Fr)) * surf->transparency;
