@@ -1,5 +1,5 @@
 // File: infplane.hh
-// Date: Sun Jun 09 23:51:50 2013 +0800
+// Date: Sun Jun 23 20:03:06 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 
@@ -58,6 +58,6 @@ class InfPlane {
 		 *{ return fabs(norm.dot(ray.dir)) < EPS; }
 		 */
 
-		static const InfPlane XYPLANE, YZPLANE, XZPLANE;
+		static const InfPlane XYPLANE;
 };
 

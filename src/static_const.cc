@@ -1,5 +1,5 @@
 // File: static_const.cc
-// Date: Sun Jun 23 19:46:02 2013 +0800
+// Date: Sun Jun 23 20:03:01 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "color.hh"
@@ -43,6 +43,4 @@ const HomoTexture
 
 const PureSphere PureSphere::TestSphere(Vec(0, 0, 2), 1.99);
 
-const InfPlane InfPlane::XYPLANE(Vec(0, 0, 1), 0),
-	  InfPlane::YZPLANE(Vec(1, 0, 0), 0),
-	  InfPlane::XZPLANE(Vec(0, 1, 0), 0);
+const InfPlane InfPlane::XYPLANE(Vec(0, 0, 1), 0);

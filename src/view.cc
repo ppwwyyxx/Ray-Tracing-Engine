@@ -1,5 +1,5 @@
 // File: view.cc
-// Date: Sun Jun 23 19:33:28 2013 +0800
+// Date: Sun Jun 23 20:16:04 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "view.hh"
@@ -122,9 +122,9 @@ void View::rotate(int angle) {
 	normalize_dir_vector();
 	real_t alpha = M_PI * angle / 180;
 	Vec norm = (mid - view_point).get_normalized();
-	norm = norm * cos(alpha) + dir_w * sin(alpha);
+	norm = norm * cos(alpha) - dir_w * sin(alpha);
 	mid = view_point + norm * (mid - view_point).mod();
 	m_assert(fabs(dir_w.sqr()) - 1 < EPS);
-	dir_w = -norm.cross(dir_h);
+	dir_w = norm.cross(dir_h);
 	resume_dir_vector();
 }

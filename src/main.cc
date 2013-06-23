@@ -1,6 +1,8 @@
 // File: main.cc
-// Date: Sun Jun 23 19:46:33 2013 +0800
+// Date: Sun Jun 23 20:44:42 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
+#include <sys/types.h>
+#include <dirent.h>
 #include "viewer.hh"
 #include "space.hh"
 #include "renderable/plane.hh"
@@ -85,7 +87,7 @@ void test_kdtree() {
 	Space s;
 	s.add_light(Light(Vec(0, -10, 12), Color::WHITE, 6.0));
 	s.add_light(Light(Vec(0, 10, 8), Color::WHITE, 6.0));
-	const char* fname = "../resource/teapot_nonorm.obj";
+	const char* fname = "../resource/models/fixed.perfect.dragon.100K.0.07.obj";
 	Mesh mesh(fname, Vec(0, 0, 2), 5);
 
 	mesh.smooth = true;
@@ -196,8 +198,92 @@ void glass() {
 	viewer.r.finish();
 }
 
+void obj_scene() {
+	int w = 500, h = 500;
+	Space s;
+	s.add_light(Light(Vec(0, -10, 12), Color::WHITE, 6.0));
+	s.add_light(Light(Vec(0, 10, 8), Color::WHITE, 6.0));
+	const char* fname = "../resource/models/Arma.obj";
+	Mesh mesh(fname, Vec(0, -8, 2), 5);
+	mesh.set_texture(make_shared<HomoTexture>(HomoTexture::CYAN));
+	mesh.finish();
+	s.add_obj(make_shared<Mesh>(mesh));
+
+	fname = "../resource/models/Buddha.obj";
+	mesh = Mesh(fname, Vec(6, 6, 4), 7);
+	mesh.set_texture(make_shared<HomoTexture>(Surface::GOOD_REFL));
+	mesh.finish();
+	s.add_obj(make_shared<Mesh>(mesh));
+
+	fname = "../resource/models/bunny.fine.obj";
+	mesh = Mesh(fname, Vec(0, 8, 3), 5);
+	mesh.set_texture(make_shared<HomoTexture>(HomoTexture::BLUE));
+	mesh.finish();
+	s.add_obj(make_shared<Mesh>(mesh));
+
+	fname = "../resource/models/dinosaur.2k.obj";
+	mesh = Mesh(fname, Vec(-8, 5, 3), 9);
+	mesh.set_texture(make_shared<HomoTexture>(Surface::GOOD));
+	mesh.finish();
+	s.add_obj(make_shared<Mesh>(mesh));
+
+	fname = "../resource/models/kitten.50k.obj";
+	mesh = Mesh(fname, Vec(-10, -9, 3), 9);
+	mesh.set_texture(make_shared<HomoTexture>(Surface::GOOD));
+	mesh.finish();
+	s.add_obj(make_shared<Mesh>(mesh));
+
+	fname = "../resource/models/horse.fine.90k.obj";
+	mesh = Mesh(fname, Vec(7, 0, 3), 9);
+	mesh.set_texture(make_shared<HomoTexture>(Surface::GOOD));
+	mesh.finish();
+	s.add_obj(make_shared<Mesh>(mesh));
+
+	shared_ptr<Texture> t1 = make_shared<ImgTexture>(texture_fname, 100, 0.6);
+	s.add_obj(make_shared<Plane>(InfPlane::XYPLANE, t1));
+	s.finish();
+	View v(s, Vec(0, 0, 2), Vec(0, 5, 3), 15, Geometry(w, h));
+
+	CVViewer viewer(v);
+	viewer.view();
+}
+
+void generate_simplified_pictures() {
+	int w = 500, h = 500;
+	auto dirp = opendir("../resource/models");
+	dirent* dp;
+	const real_t ratio[5] = {0.1, 0.2, 0.4, 0.6, 1};
+	while ((dp = readdir(dirp)) != NULL) {
+		if (dp->d_name[0] == '.') continue;
+		cout << "reading file " << dp->d_name << " ... " << endl;
+		string fname(dp->d_name);
+
+		REP(k, 5) {
+			Mesh mesh("../resource/models/" + fname, Vec(0, 0, 2), 5);
+			mesh.smooth = true;
+			mesh.set_texture(make_shared<HomoTexture>(HomoTexture::CYAN));
+			mesh.simplify(ratio[k]);
+			mesh.finish();
+
+			Space s;
+			s.add_light(Light(Vec(0, -10, 12), Color::WHITE, 6.0));
+			s.add_light(Light(Vec(0, 10, 8), Color::WHITE, 6.0));
+			s.add_obj(make_shared<Mesh>(mesh));
+
+			shared_ptr<Texture> tpic = make_shared<ImgTexture>(texture_fname, 100, 0.6);
+			s.add_obj(make_shared<Plane>(InfPlane::XYPLANE, tpic));
+			s.finish();
+			View v(s, Vec(0, 0, 10), Vec(0, 0, 0), 12, Geometry(w, h));
+			CVViewer viewer(v, "output/" + string_format("%s_%lf.png", fname.c_str(), ratio[k]));
+		}
+	}
+	closedir(dirp);
+}
+
 int main() {
-	global_illu();
+	//global_illu();
+//	panorama();
+	generate_simplified_pictures();
 	return 0;
 }
 
