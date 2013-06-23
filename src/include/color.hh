@@ -1,5 +1,5 @@
 // File: color.hh
-// Date: Sun Jun 23 11:55:08 2013 +0800
+// Date: Sun Jun 23 12:52:48 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -24,7 +24,7 @@ class Color: public Vector {
 		{ return is_zero(C_EPS); }
 
 		void check() const {
-			if (x < 0 || x > 1 || y < 0 || y > 1 || z < 0 || z > 1)
+			if (!(BETW(x, 0, 1 + EPS) && BETW(y, 0, 1 + EPS) && BETW(z, 0, 1 + EPS)))
 				std::cout << *this << std::endl;
 			m_assert(x >= 0 && x <= 1 + EPS);
 			m_assert(y >= 0 && y <= 1 + EPS);

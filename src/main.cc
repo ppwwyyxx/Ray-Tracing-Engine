@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Sun Jun 23 11:37:29 2013 +0800
+// Date: Sun Jun 23 12:01:51 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "viewer.hh"
 #include "space.hh"
@@ -157,8 +157,7 @@ void global_illu() {
 	s.finish();
 	View v(s, Vec(-5.6, -1.6, 10.1), Vec(-0.8, 1.35, 2.5), 13, Geometry(w, h));
 	v.use_global = true;
-	CVViewer viewer(v);
-	viewer.view();
+	CVViewer viewer(v, "output.png");
 
 }
 
