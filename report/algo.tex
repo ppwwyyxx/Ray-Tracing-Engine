@@ -1,5 +1,5 @@
 % File: algo.tex
-% Date: Sun Jun 23 19:55:43 2013 +0800
+% Date: Sun Jun 23 23:38:12 2013 +0800
 % Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 \section{算法说明}
 \subsection{光线追踪及局部光照模型}
@@ -202,13 +202,13 @@ KD树是一种空间划分树,原本用于在K维空间中快速查找点,可利
 由于算法具有优先队列结构,因此使用了\verb|std::priority_queue|进行堆加速.
 但由于需要执行堆元素修改操作,因而对堆结构进行了如下处理:
 
-对每个顶点,维护它相邻顶点中最适合坍缩的顶点指针.
+对每个顶点,维护它相邻顶点中最适合坍缩的一个顶点指针.
 堆元素存储一顶点指针及它与相应邻点的坍缩代价,另有一时间戳.
 堆元素按照坍缩代价保持堆性质,坍缩一对顶点后更新了附近顶点的最优代价,就将新的值打上新的时间戳压入堆中,
 而取堆顶元素时,若从时间戳发现其不是最新就抛弃.这样就可以替代修改操作.见\verb|include/mesh_simplifier.hh, mesh_simplifier.cc|
 
 对于20万面片的龙模型\footnote{models/fixed.perfect.dragon.100K.0.07.obj},
-简化掉80\%的面片需要2.37s, 而不用堆加速时需要55s.效果见\figref{simplify}.
+简化掉80\%的面片需要2.37s, 而不用堆加速时需要55s.效果见\figref{simplify}及simplified目录中的图片.
 
 \subsection{多线程}
 \begin{enumerate}

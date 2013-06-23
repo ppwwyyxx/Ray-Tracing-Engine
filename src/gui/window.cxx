@@ -1,5 +1,5 @@
 // File: window.cxx
-// Date: Sat Jun 22 23:10:33 2013 +0800
+// Date: Sun Jun 23 23:15:53 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <sstream>
@@ -149,8 +149,8 @@ void MainWindow::do_shift_up() { view->shift(SHIFT_DISTANCE, false); }
 void MainWindow::do_shift_down() { view->shift(-SHIFT_DISTANCE, false); }
 void MainWindow::do_shift_left() { view->shift(SHIFT_DISTANCE, true); }
 void MainWindow::do_shift_right() { view->shift(-SHIFT_DISTANCE, true); }
-void MainWindow::do_rotate_left() { view->rotate(-VIEWER_ANGLE); }
-void MainWindow::do_rotate_right() { view->rotate(VIEWER_ANGLE); }
+void MainWindow::do_rotate_left() { view->rotate(VIEWER_ANGLE); }
+void MainWindow::do_rotate_right() { view->rotate(-VIEWER_ANGLE); }
 void MainWindow::do_orbit_left() { view->orbit(-VIEWER_ANGLE); }
 void MainWindow::do_orbit_right() { view->orbit(VIEWER_ANGLE); }
 void MainWindow::do_twist_left() { view->twist(VIEWER_ANGLE); }
