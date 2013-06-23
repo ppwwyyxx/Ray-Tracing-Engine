@@ -1,5 +1,5 @@
 % File: algo.tex
-% Date: Sun Jun 23 01:54:26 2013 +0800
+% Date: Sun Jun 23 18:05:56 2013 +0800
 % Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 \section{算法说明}
 \subsection{光线追踪及光照模型}
@@ -21,6 +21,8 @@
 $ \overrightarrow{L_m}$为该点指向光源的向量, $ \overrightarrow{N}$为表面法向,
 $ \overrightarrow{R_m}$为光源指向该点的光线经理想反射后的指向,
 $ \overrightarrow{V}$为视点到表面交点处的向量.
+
+另外,程序还支持基于Monte Carlo Path Tracing的全局光照模型,其
 
 \subsection{几何对象表示及计算}
 程序支持了平面、球、三角面片、包围盒四类基本几何物体,

@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Sun Jun 23 17:47:18 2013 +0800
+// Date: Sun Jun 23 18:01:29 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "viewer.hh"
 #include "space.hh"
@@ -166,9 +166,10 @@ void glass() {
 	Space s;
 	s.add_light(Light(PureSphere(Vec(+10, 10, 10), 4), Color::WHITE, 12));
 
+	shared_ptr<Texture> t1 = make_shared<GridTexture>(GridTexture::BLACK_WHITE);
 	shared_ptr<Texture> t2 = make_shared<HomoTexture>(Surface::GLASS);
 	shared_ptr<Texture> tpic = make_shared<ImgTexture>(texture_fname, 100, 0.6);
-	s.add_obj(make_shared<Plane>(InfPlane::XYPLANE, tpic));
+	s.add_obj(make_shared<Plane>(InfPlane::XYPLANE, t1));
 	s.add_obj(make_shared<Sphere>(PureSphere::TestSphere, t2));
 
 	const char* fname = "../resource/models/fixed.perfect.dragon.100K.0.07.obj";
