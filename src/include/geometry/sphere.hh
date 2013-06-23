@@ -1,5 +1,5 @@
 // File: sphere.hh
-// Date: Tue Jun 18 19:44:00 2013 +0800
+// Date: Sun Jun 23 17:35:28 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -16,10 +16,13 @@ class PureSphere {
 		virtual ~PureSphere(){}
 
 		inline real_t dist(const Vec& p) const
-		{ return (center - p).mod(); }
+		{ return sqrt(distsqr(p)); }
+
+		inline real_t distsqr(const Vec& p) const
+		{ return (center - p).sqr(); }
 
 		inline bool contain(const Vec& p) const
-		{ return dist(p) < r; }
+		{ return distsqr(p) < r * r; }
 
 		static const PureSphere TestSphere;
 

@@ -1,5 +1,5 @@
 // File: space.cc
-// Date: Sun Jun 23 16:53:49 2013 +0800
+// Date: Sun Jun 23 17:47:54 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <limits>
@@ -63,7 +63,7 @@ void Space::finish() {		// called from View::View()
 }
 
 Color Space::trace(const Ray& ray, real_t dist, int depth) const {
-	if (depth > max_depth) return Color::BLACK;
+	if (depth > max_phong_depth) return Color::BLACK;
 	m_assert(fabs(ray.dir.sqr() - 1) < EPS);
 
 	auto first_trace = find_first(ray);
@@ -154,7 +154,7 @@ Color Space::trace(const Ray& ray, real_t dist, int depth) const {
 
 // ---------------------------------------------------------------------------------------------------
 Color Space::global_trace(const Ray& ray, int depth) const {
-	if (depth > max_depth * 2) return Color::BLACK;		// TODO add new depth thres
+	if (depth > max_global_depth) return Color::BLACK;		// TODO add new depth thres
 	m_assert(fabs(ray.dir.sqr() - 1) < EPS);
 
 	auto first_trace = find_first(ray, true);
@@ -200,32 +200,40 @@ Color Space::global_trace(const Ray& ray, int depth) const {
 		Ray new_ray(inter_point - ray.dir * EPS, -norm.reflection(ray.dir), ray.density);
 		m_assert(fabs((-norm.reflection(ray.dir)).sqr() - 1) < EPS);
 
-//		real_t lmn = fabs(new_ray.dir.dot(norm));
-		new_ray.debug = ray.debug;
-		Color refl = global_trace(new_ray, depth + 1);
-		now_refl = 	refl * surf->specular;
-	}
+	   new_ray.debug = ray.debug;
+	   Color refl = global_trace(new_ray, depth + 1);
+	   now_refl = 	refl * surf->specular;
+   }
+
 
 	 // transmission
 	 Color now_transm = Color::BLACK;
 	 if (surf->transparency > EPS) {
 		 Ray refl_ray(inter_point - ray.dir * EPS, -norm.reflection(ray.dir), ray.density);
 		 refl_ray.debug = ray.debug;
-		 Color refl = global_trace(refl_ray, depth + 1) * surf->specular;
 
 		 Vec tr_dir = norm.transmission(ray.dir, ray.density / forward_density);
 		 if (isfinite(tr_dir.x)) {  //have transmission
 			  //transmission ray : go forward a little
 			 Ray new_ray(inter_point + ray.dir * EPS, tr_dir, forward_density);
+			 new_ray.debug = ray.debug;
 
-			 real_t F0 = sqr(forward_density - ray.density) / sqr(ray.density + forward_density);
+			 real_t F0 = sqr(0.5) / sqr(ray.density + forward_density);
 			 real_t theta = first_trace->contain() ? tr_dir.dot(norm) : ray.dir.dot(norm);
 			 real_t Fr = F0 + (1 - F0) * pow(1 + theta, 5);
-			 new_ray.debug = ray.debug;
-			 Color transm = trace(new_ray, depth + 1);
-			 now_transm = (refl * Fr + transm * (1 - Fr)) * surf->transparency;
+			 real_t P = 0.25 + Fr * 0.5;
+			 if (drand48() < P) {
+				 Color refl = global_trace(refl_ray, depth + 1) * surf->specular;
+				 now_transm = refl * Fr / P;
+			 } else {
+				Color transm = global_trace(new_ray, depth + 1);
+				now_transm = transm * ((1 - Fr) / (1 - P)) * surf->transparency;
+			 }
+//			 now_transm = (refl * Fr + transm * (1 - Fr)) * surf->transparency;
+
 		 } else {	// total reflection
-			 now_transm = surf->diffuse * refl;
+			 Color refl = global_trace(refl_ray, depth + 1) * surf->specular;
+			 now_transm = refl;
 		 }
 	 }
 

@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Sun Jun 23 16:37:05 2013 +0800
+// Date: Sun Jun 23 17:47:18 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "viewer.hh"
 #include "space.hh"
@@ -171,15 +171,13 @@ void glass() {
 	s.add_obj(make_shared<Plane>(InfPlane::XYPLANE, tpic));
 	s.add_obj(make_shared<Sphere>(PureSphere::TestSphere, t2));
 
-	/*
-	 *const char* fname = "../resource/models/fixed.perfect.dragon.100K.0.07.obj";
-	 *Mesh mesh(fname, Vec(-3, +5, 2), 5);
-	 *mesh.smooth = true;
-	 *mesh.set_texture(make_shared<HomoTexture>(HomoTexture::CYAN));
-	 *mesh.simplify(0.4);
-	 *mesh.finish();
-	 *s.add_obj(make_shared<Mesh>(mesh));
-	 */
+	const char* fname = "../resource/models/fixed.perfect.dragon.100K.0.07.obj";
+	Mesh mesh(fname, Vec(-3, +5, 2), 5);
+	mesh.smooth = true;
+	mesh.set_texture(make_shared<HomoTexture>(HomoTexture::CYAN));
+	mesh.simplify(0.2);
+	mesh.finish();
+	s.add_obj(make_shared<Mesh>(mesh));
 
 	REP(i, 5) REP(j, 2) s.add_obj(make_shared<Sphere>(PureSphere(Vec(j * 3 + 3, i * 3 + 3, 1), 1), t2));
 
@@ -187,6 +185,7 @@ void glass() {
 	View v(s, Vec(-5.6, -1.6, 10.1), Vec(-0.8, 1.35, 2.5), 13, Geometry(w, h));
 	v.use_global = true;
 	CVViewer viewer(v, "glass.png");
+//	viewer.view();
 }
 
 int main() {

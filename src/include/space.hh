@@ -1,5 +1,5 @@
 // File: space.hh
-// Date: Sun Jun 23 00:30:33 2013 +0800
+// Date: Sun Jun 23 17:00:07 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -35,7 +35,8 @@ class Space {
 		// config
 		bool use_tree = true;
 		bool use_soft_shadow = false;
-		int max_depth = MAX_RECURSIVE_DEPTH;
+		int max_phong_depth = MAX_PHONG_DEPTH;
+		int max_global_depth = MAX_GLOBAL_DEPTH;
 		real_t weight_threshold = DEFAULT_TRACING_WEIGHT_THRESHOLD;
 
 		Space(){ }
