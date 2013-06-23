@@ -1,5 +1,5 @@
 // File: const.hh
-// Date: Sun Jun 23 01:55:13 2013 +0800
+// Date: Sun Jun 23 11:44:01 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once

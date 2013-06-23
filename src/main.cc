@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Sun Jun 23 09:55:24 2013 +0800
+// Date: Sun Jun 23 11:37:29 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "viewer.hh"
 #include "space.hh"
@@ -137,7 +137,7 @@ void ball() {
 void global_illu() {
 	int w = 500, h = 500;
 	Space s;
-	s.add_light(Light(PureSphere(Vec(0, -10, 12), 4), Color::WHITE, 12));
+	s.add_light(Light(PureSphere(Vec(+10, 10, 10), 4), Color::WHITE, 12));
 
 	shared_ptr<Texture> t2 = make_shared<HomoTexture>(Surface::GOOD);
 	shared_ptr<Texture> tpic = make_shared<ImgTexture>(texture_fname, 100, 0.6);
@@ -145,10 +145,10 @@ void global_illu() {
 	s.add_obj(make_shared<Sphere>(PureSphere::TestSphere, t2));
 
 	const char* fname = "../resource/models/fixed.perfect.dragon.100K.0.07.obj";
-	Mesh mesh(fname, Vec(-3, -2, 2), 5);
+	Mesh mesh(fname, Vec(-3, +5, 2), 5);
 	mesh.smooth = true;
 	mesh.set_texture(make_shared<HomoTexture>(HomoTexture::CYAN));
-	mesh.simplify(0.5);
+	mesh.simplify(0.4);
 	mesh.finish();
 	s.add_obj(make_shared<Mesh>(mesh));
 
@@ -156,7 +156,7 @@ void global_illu() {
 
 	s.finish();
 	View v(s, Vec(-5.6, -1.6, 10.1), Vec(-0.8, 1.35, 2.5), 13, Geometry(w, h));
-	//v.use_global = true;
+	v.use_global = true;
 	CVViewer viewer(v);
 	viewer.view();
 

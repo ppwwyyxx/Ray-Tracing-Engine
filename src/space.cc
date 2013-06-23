@@ -1,5 +1,5 @@
 // File: space.cc
-// Date: Sun Jun 23 10:53:07 2013 +0800
+// Date: Sun Jun 23 11:22:52 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <limits>
@@ -10,7 +10,7 @@
 using namespace std;
 
 Color Space::blend(const Color& amb, const Color& phong, const Color& refl, const Color& transm) {
-	Color ret = (amb + phong + refl + transm * 2) * 0.25;
+	Color ret = (amb + phong + refl + transm * 1.5) * 0.25;
 	ret.normalize();
 	return ret;
 }
@@ -227,7 +227,7 @@ Color Space::global_trace(const Ray& ray, int depth) const {
 
 	 // TODO explicit lighting:
 
-	 return surf->emission + now_diffuse + now_refl;
+	 return surf->emission + now_diffuse * (1 - surf->specular) + now_refl;
 
 }
 
