@@ -1,5 +1,5 @@
 // File: texture.hh
-// Date: Sun Jun 23 11:43:47 2013 +0800
+// Date: Sun Jun 23 18:23:39 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -57,7 +57,7 @@ class GridTexture : public Texture {
 			else return make_shared<Surface>(pty2);
 		}
 
-		static const GridTexture BLACK_WHITE;
+		static const GridTexture BLACK_WHITE_REFL, BLACK_WHITE;
 };
 
 class ImgTexture : public Texture {

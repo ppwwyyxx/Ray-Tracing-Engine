@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Sun Jun 23 18:01:29 2013 +0800
+// Date: Sun Jun 23 19:46:33 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include "viewer.hh"
 #include "space.hh"
@@ -92,7 +92,7 @@ void test_kdtree() {
 	mesh.set_texture(make_shared<HomoTexture>(HomoTexture::CYAN));
 	mesh.finish();
 	s.add_obj(make_shared<Mesh>(mesh));
-	shared_ptr<Texture> t1 = make_shared<GridTexture>(GridTexture::BLACK_WHITE);
+	shared_ptr<Texture> t1 = make_shared<GridTexture>(GridTexture::BLACK_WHITE_REFL);
 	s.add_obj(make_shared<Plane>(InfPlane::XYPLANE, t1));
 	s.finish();
 	View v(s, Vec(0, 0, 12), Vec(0, 0, 2), 15, Geometry(w, h));
@@ -141,10 +141,11 @@ void global_illu() {
 	Space s;
 	s.add_light(Light(PureSphere(Vec(+10, 10, 10), 4), Color::WHITE, 12));
 
-	shared_ptr<Texture> t2 = make_shared<HomoTexture>(Surface::GOOD);
+	shared_ptr<Texture> t_diffuse = make_shared<HomoTexture>(Surface::GOOD);
+	shared_ptr<Texture> t_refl = make_shared<HomoTexture>(Surface::GOOD_REFL);
 	shared_ptr<Texture> tpic = make_shared<ImgTexture>(texture_fname, 100, 0.6);
 	s.add_obj(make_shared<Plane>(InfPlane::XYPLANE, tpic));
-	s.add_obj(make_shared<Sphere>(PureSphere::TestSphere, t2));
+	s.add_obj(make_shared<Sphere>(PureSphere::TestSphere, t_diffuse));
 
 	const char* fname = "../resource/models/fixed.perfect.dragon.100K.0.07.obj";
 	Mesh mesh(fname, Vec(-3, +5, 2), 5);
@@ -154,22 +155,28 @@ void global_illu() {
 	mesh.finish();
 	s.add_obj(make_shared<Mesh>(mesh));
 
-	REP(i, 5) REP(j, 2) s.add_obj(make_shared<Sphere>(PureSphere(Vec(j * 3 + 3, i * 3 + 3, 1), 1), t2));
+	REP(i, 5) {
+		s.add_obj(make_shared<Sphere>(PureSphere(Vec(0 + 3, i * 3 + 3, 1), 1), t_diffuse));
+		s.add_obj(make_shared<Sphere>(PureSphere(Vec(3 + 3, i * 3 + 3, 1), 1), t_diffuse));
+	}
 
 	s.finish();
 	View v(s, Vec(-5.6, -1.6, 10.1), Vec(-0.8, 1.35, 2.5), 13, Geometry(w, h));
 	v.use_global = true;
 	CVViewer viewer(v, "global_illu.png");
+	viewer.r.finish();
 }
+
 void glass() {
 	int w = 500, h = 500;
 	Space s;
-	s.add_light(Light(PureSphere(Vec(+10, 10, 10), 4), Color::WHITE, 12));
+	s.add_light(Light(PureSphere(Vec(+5, 0, 13), 4), Color::WHITE, 13));
 
 	shared_ptr<Texture> t1 = make_shared<GridTexture>(GridTexture::BLACK_WHITE);
 	shared_ptr<Texture> t2 = make_shared<HomoTexture>(Surface::GLASS);
 	shared_ptr<Texture> tpic = make_shared<ImgTexture>(texture_fname, 100, 0.6);
 	s.add_obj(make_shared<Plane>(InfPlane::XYPLANE, t1));
+	s.add_obj(make_shared<Plane>(InfPlane(Vec(0, 1, 0), -3), tpic));
 	s.add_obj(make_shared<Sphere>(PureSphere::TestSphere, t2));
 
 	const char* fname = "../resource/models/fixed.perfect.dragon.100K.0.07.obj";
@@ -183,14 +190,14 @@ void glass() {
 	REP(i, 5) REP(j, 2) s.add_obj(make_shared<Sphere>(PureSphere(Vec(j * 3 + 3, i * 3 + 3, 1), 1), t2));
 
 	s.finish();
-	View v(s, Vec(-5.6, -1.6, 10.1), Vec(-0.8, 1.35, 2.5), 13, Geometry(w, h));
+	View v(s, Vec(-7.6, 6.3, 10.9), Vec(-0.82, 4.32, 2.1), 15.6, Geometry(w, h));
 	v.use_global = true;
 	CVViewer viewer(v, "glass.png");
-//	viewer.view();
+	viewer.r.finish();
 }
 
 int main() {
-	glass();
+	global_illu();
 	return 0;
 }
 

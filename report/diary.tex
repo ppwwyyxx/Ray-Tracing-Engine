@@ -1,9 +1,9 @@
 % File: diary.tex
-% Date: Sun Jun 23 16:20:06 2013 +0800
+% Date: Sun Jun 23 19:55:58 2013 +0800
 % Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 \section{过程记录}
-本项目的开发记录可以通过git查看. 项目托管在github\footnote{\url{https://github.com/ppwwyyxx/Ray-Tracing-Engine}}
-及计算机系git9\footnote{\url{http://git.net9.org/ppwwyyxx/ray}}上,并于6月24日开源.
+本项目的详细开发记录可以通过git查看. 项目托管在github\footnote{\url{https://github.com/ppwwyyxx/Ray-Tracing-Engine}}
+及计算机系git9\footnote{\url{http://git.net9.org/ppwwyyxx/ray}}上,并于6月24日开源.以下是一些重要记录.
 
 \begin{enumerate}
   \item
@@ -198,7 +198,7 @@
   \item 发现对于某些模型,简化时会触发\verb|assert|,调试后发现是由于网格坍缩时可能会导致一个面片中三点共线从而无法正确计算出法向.
     将其修正为:若坍缩后面片三点共线,则保留原法向.
 
-  \item 发现在调用\verb|Space::add_obj()|后,若在调用栈中将\verb|Mesh|析构,则会发生段错误.调试后发现是由于
+  \item 发现在调用\verb|Space::add_obj()|后,若在调用栈中将\verb|Mesh|析构,则会发生段错误.调试很久后发现是由于
     \verb|Face|类中存储了指向其宿主的指针\verb|Mesh* host|,用于获取插值及纹理信息用,此指针在\verb|Mesh|复制时未被正确更新导致
     得不到其宿主.
 
@@ -212,19 +212,38 @@
     \end{figure}
 
   \item 实现了一个简易的全局光照模型,首先按照均匀分布支持了漫反射,渲染效果如下.
-    可以看到颜色变化及阴影都更加自然.
+    可以看到颜色变化及阴影都比右图的Phong模型更自然.
     \begin{figure}[H]
-      \centering
-      \includegraphics[scale=0.4]{img/gllu_first.png}
+      \begin{minipage}[b]{0.46\linewidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/gllu_first.png}
+      \end{minipage}
+      \begin{minipage}[b]{0.46\linewidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/compare_diffuse_phong.png}
+      \end{minipage}
+      \caption{Path Tracing漫反射效果图\label{fig:pt_diffuse}}
     \end{figure}
 
-  \item 为全局光照模型加入了反射效果,若干个镜面的球上可以看到光源的亮斑及互相的反射.
+  \item 为全局光照模型加入了镜面反射效果,若干个镜面的球上可以看到光源的亮斑及互相的反射,如下左图.
     \begin{figure}[H]
-      \centering
-      \includegraphics[scale=0.6]{img/gllu_refl.png}
+      \begin{minipage}[b]{0.46\linewidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/gllu_refl.png}
+      \end{minipage}
+      \begin{minipage}[b]{0.46\linewidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/compare_refl_phong.png}
+      \end{minipage}
+      \caption{Path Tracing镜面效果图\label{fig:pt_refl}}
     \end{figure}
 
-
+  \item 加入了全局光照模型的折射效果,结果很逼真,可以看到球下方的caustic效果,Phong模型通常无法模拟此效果.
+    \begin{figure}[H]
+      \centering
+      \includegraphics[scale=0.6]{img/caustic.png}
+      \caption{Path Tracing透射效果图\label{fig:pt_transm}}
+    \end{figure}
 
 
 \end{enumerate}

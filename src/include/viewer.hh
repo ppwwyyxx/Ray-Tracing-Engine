@@ -1,5 +1,5 @@
 // File: viewer.hh
-// Date: Fri Jun 21 11:13:15 2013 +0800
+// Date: Sun Jun 23 19:42:31 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -44,7 +44,7 @@ class CVViewer : public Viewer {
 		CVViewer(View& _v, std::string fname):
 			CVViewer(_v, fname.c_str()){}
 
-		void view();
+		void view() override;
 
 		void render_all();
 };

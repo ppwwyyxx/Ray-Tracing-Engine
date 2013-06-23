@@ -1,8 +1,8 @@
 % File: algo.tex
-% Date: Sun Jun 23 18:05:56 2013 +0800
+% Date: Sun Jun 23 19:55:43 2013 +0800
 % Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 \section{算法说明}
-\subsection{光线追踪及光照模型}
+\subsection{光线追踪及局部光照模型}
 光线追踪的基本原理如下图所示.
 \begin{figure}[H]
   \centering
@@ -20,9 +20,28 @@
 其中$ k_s, k_d, k_a, \alpha$分别为物体表面该点处的高光系数,漫反射系数,环境光系数,亮度.
 $ \overrightarrow{L_m}$为该点指向光源的向量, $ \overrightarrow{N}$为表面法向,
 $ \overrightarrow{R_m}$为光源指向该点的光线经理想反射后的指向,
-$ \overrightarrow{V}$为视点到表面交点处的向量.
+$ \overrightarrow{V}$为视点到表面交点处的向量. 实现见\verb|Space::trace()|
 
-另外,程序还支持基于Monte Carlo Path Tracing的全局光照模型,其
+\subsection{全局光照模型}
+
+程序还支持了基于Path Tracing\footnote{\url{http://en.wikipedia.org/wiki/Path_tracing}}
+的全局光照模型,其渲染方程如下:
+
+\[ L(x \rightarrow v) = L_e(x \rightarrow v)
++ \int_{\Omega}L(\Phi \rightarrow x) F_s(x, \Phi \rightarrow v)\cos \theta_{\Phi} d \Omega\]
+
+其中, $ L(a\rightarrow b)$表示从$ b$处观察$ a$处所得结果,$ L_e$为物体自身发光亮度,$ F_s(x, \Phi \rightarrow v)$为
+物体表面BRDF函数.
+
+采用Monte Carlo Path Tracing\cite{montecarlo}对此方程进行逼近,其基本方法是,
+在光线与物体的交点处随机向其他方向发光线,递归求解. 随机时依据表面材质的不同选取不同的概率分布.
+对于漫反射,遵循空间均匀分布,实现中在半球面中随机采样.
+对于反射,分布近似一个尖峰函数,仅在反射方向上有概率.
+对于透射,依照Fresnel方程\cite{fresnel}计算透射比与反射比,随机选择一者进行递归.
+实现见\verb|Space::global_trace()|.
+
+Monte Carlo Path Tracing需要大量的采样才能够得到较好效果,因而其效率较低,
+一张质量较好的图需要二十分钟渲染. 但它得到的图像更真实,如\figref{pt_diffuse}, \figref{pt_refl}, \figref{pt_transm}.
 
 \subsection{几何对象表示及计算}
 程序支持了平面、球、三角面片、包围盒四类基本几何物体,
@@ -70,7 +89,7 @@ KD树是一种空间划分树,原本用于在K维空间中快速查找点,可利
 在光线追踪中,一般采用面积启发式的平面选取方式\cite{kdtree},选取切平面使得
 两个子节点的包围盒表面积与包含物体个数的积之和尽量大,这样可以使KD树在查询时效率更高.
 但启发式的建树需要枚举切分平面,计算包含物体个数,复杂度较高.
-直接的枚举为$ O(n^2)$复杂度,本程序实现了\cite{kdtree}中提供的$ O(n \log^2 n)$算法.
+直接的枚举为$ O(n^2)$复杂度,程序实现了\cite{kdtree}中提供的$ O(n \log^2 n)$算法.
 对于20W面片的龙模型\footnote{models/fixed.perfect.dragon.100K.0.07.obj},
 采用不同方法单线程建树的用时及在几个固定视角渲染耗时如下(单位: 秒):
 
@@ -134,10 +153,10 @@ KD树是一种空间划分树,原本用于在K维空间中快速查找点,可利
   \item 对每一像素,计算其与周围像素距离平方之和,若小于某一阈值则应用如上卷积盒,略有效果. 见\verb|CVRender::antialias()|
 \end{enumerate}
 
-\subsection{软阴影}
+\subsection{Phong模型中的软阴影}
 \label{sec:soft}
 对场景中每一点光源,将其替换为点周围的多个密集点光源以模拟面光源的效果,
-即可实现软阴影.效果如\figref{soft}所示. 实现见\verb|Space::add_light()|.
+即可实现软阴影.效果如\figref{soft}所示, 比起Path Tracing的软阴影的话还是十分不真实. 实现见\verb|Space::add_light()|.
 
 \subsection{景深}
 程序中景深\footnote{\url{http://en.wikipedia.org/wiki/Depth\_of\_field}}
