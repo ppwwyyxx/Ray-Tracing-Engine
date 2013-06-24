@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Mon Jun 24 11:23:16 2013 +0800
+// Date: Mon Jun 24 20:25:18 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include <sys/types.h>
 #include <dirent.h>
@@ -16,7 +16,7 @@ const string watermelon_fname = "../resource/watermelon.jpg";
 
 // Complicated Scene
 void all(bool g) {
-	int w = 1024, h = 1024;
+	int w = 1000, h = 1000;
 	Space s;
 	s.add_light(Light(PureSphere(Vec(+10, 10, 20), 4), Color::WHITE, 15));
 	s.add_light(Light(PureSphere(Vec(-10, -10, 20), 4), Color::WHITE, 10));
@@ -40,7 +40,7 @@ void all(bool g) {
 	s.add_obj(make_shared<Mesh>(mesh));
 
 	fname = "../resource/models/cube.obj";
-	mesh = Mesh(fname, Vec(-10, 7, 4), 5);
+	mesh = Mesh(fname, Vec(-10, 7, 5), 5);
 	mesh.smooth = false;
 	mesh.set_texture(make_shared<HomoTexture>(HomoTexture::BLUE));
 	mesh.finish();
