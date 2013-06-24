@@ -1,0 +1,8 @@
+add several glass ball with different density
+fix size with different width and height
+support complicated obj file
+support texture map in mesh
+
+speed up for path tracing:
+1. huge amount of sampling is only necessary for diffuse surface
+2. metropolis light transport
