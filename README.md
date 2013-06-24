@@ -1,19 +1,20 @@
 ## Introduction
 
 This is a 3D Rendering Engine written in C++11.
+For the details of this project, please see ``report.pdf``
 
 ## Features
 
-* [Phong Model](http://www.imagemagick.org/Magick++/) and [Path Tracing](http://en.wikipedia.org/wiki/Path_tracing) Model (Monte Carlo Path Tracing)
+* [Phong Model](http://en.wikipedia.org/wiki/Phong_reflection_model) and [Path Tracing](http://en.wikipedia.org/wiki/Path_tracing) Model (Monte Carlo Path Tracing)
 * rendering of plane, sphere and mesh
 * read mesh from a simple obj file
+* fast SAH-Based KDtree in mesh as well as the whole scene
 * soft shadow in Phong model
 * depth of field
 * custom texture
-* fast SAH-Based KDtree.
 * mesh smoothing
 * mesh simplification
-* parallelization
+* parallel rendering
 * qt-based gui
 
 ## Usage
@@ -32,6 +33,7 @@ $ make gui   (gui)
 #### Use
 
 Command line:
+
 ``./main <demo id>``, show demo scene defined in ``main.cc``.
 
 The display is based on OpenCV, allowing keyboard control of the viewpoint:
