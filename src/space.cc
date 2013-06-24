@@ -1,5 +1,5 @@
 // File: space.cc
-// Date: Sun Jun 23 17:47:54 2013 +0800
+// Date: Mon Jun 24 11:14:47 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <limits>
@@ -76,6 +76,8 @@ Color Space::trace(const Ray& ray, real_t dist, int depth) const {
 	auto surf = first_trace->get_property();
 	real_t forward_density = first_trace->get_forward_density();
 
+	if (fabs(norm.sqr() - 1) >= EPS)
+		cout << norm << "  " << norm.sqr() << endl;
 	m_assert((fabs(norm.sqr() - 1) < EPS));
 
 	if (ray.debug)
