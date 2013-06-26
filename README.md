@@ -51,27 +51,27 @@ GUI is only an objviewer with some simple control.
 ![gui](https://github.com/ppwwyyxx/Ray-Tracing-Engine/raw/master/demo/gui.png)
 
 ## Examples
-A simple ball with transmission
+A simple ball with transmission:
 
 ![ball](https://github.com/ppwwyyxx/Ray-Tracing-Engine/raw/master/demo/transmission.png)
 
-Obj and ground texture
+Obj and ground texture:
 
 ![pict](https://github.com/ppwwyyxx/Ray-Tracing-Engine/raw/master/demo/pic_texture.png)
 
-Soft shadow
+Soft shadow:
 
 ![soft](https://github.com/ppwwyyxx/Ray-Tracing-Engine/raw/master/demo/soft.png)
 
-Depth of field (There is also a video in `demo/`)
+Depth of field (There is also a video in `demo/`):
 
 ![dof](https://github.com/ppwwyyxx/Ray-Tracing-Engine/raw/master/demo/dof.png)
 
-Caustic using path tracing
+Caustic using path tracing:
 
 ![caustic](https://github.com/ppwwyyxx/Ray-Tracing-Engine/raw/master/demo/caustic.png)
 
-Large scene using Phong Model(first) and Path Tracing(second)
+Large scene using Phong Model(first) and Path Tracing(second):
 
 ![allph](https://github.com/ppwwyyxx/Ray-Tracing-Engine/raw/master/demo/all_phong.png)
 ![allpt](https://github.com/ppwwyyxx/Ray-Tracing-Engine/raw/master/best.png)
