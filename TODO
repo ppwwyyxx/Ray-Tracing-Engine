@@ -6,3 +6,5 @@ support texture map in mesh
 speed up for path tracing:
 1. huge amount of sampling is only necessary for diffuse surface
 2. metropolis light transport
+
+change the use of drand48()  would probably make path tracing faster
