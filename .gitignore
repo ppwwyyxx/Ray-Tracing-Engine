@@ -1,3 +1,4 @@
 report/output
 build
 ./Makefile
+*.pyc
