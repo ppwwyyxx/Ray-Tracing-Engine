@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Mon Jun 24 20:25:18 2013 +0800
+// Date: Wed Jul 10 13:35:59 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include <sys/types.h>
 #include <dirent.h>
@@ -192,6 +192,24 @@ void ball() {
 	viewer.view();
 }
 
+// simple ball
+void global_illu_ball() {
+	int w = 500, h = 500;
+	Space s;
+	s.add_light(Light(PureSphere(Vec(0, -10, 12), 4), Color::WHITE, 8));
+
+	shared_ptr<Texture> t2 = make_shared<HomoTexture>(Surface::GOOD);
+//	shared_ptr<Texture> t2 = make_shared<ImgTexture>(watermelon_fname, 10, 0.6);
+	shared_ptr<Texture> tpic = make_shared<ImgTexture>(texture_fname, 100, 0.6);
+	s.add_obj(make_shared<Plane>(InfPlane::XYPLANE, tpic));//make_shared<Plane>(Plane())?
+	s.add_obj(make_shared<Sphere>(PureSphere::TestSphere, t2));
+
+	s.finish();
+	View v(s, Vec(-5, -1, 4), Vec(0, 0, 2), 8, Geometry(w, h));
+	v.use_global = true;
+	CVViewer viewer(v);
+	viewer.view();
+}
 // test global illumination with diffuse and reflection
 void global_illu() {
 	int w = 500, h = 500;
@@ -368,12 +386,15 @@ int main(int argc, char* argv[]) {
 			break;
 	//  the following are path tracing demo, will take a lot of time
 		case 7:
-			global_illu();
+			global_illu_ball();
 			break;
 		case 8:
-			glass();
+			global_illu();
 			break;
 		case 9:
+			glass();
+			break;
+		case 10:
 			all(true);
 			break;
 	}
