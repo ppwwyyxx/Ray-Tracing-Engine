@@ -184,6 +184,7 @@ KDTree::Node* KDTree::build(const vector<RenderWrapper>& objs, const AABB& box, 
 	// On building fast kd-trees for ray tracing, and on doing that in O (N log N)
 	// Wald, Ingo and Havran, Vlastimil
 	// O(n log^2(n)) build
+    
 #define GEN_CAND_LIST \
 	do { \
 		for (auto & obj: objs) \
@@ -253,9 +254,7 @@ KDTree::Node* KDTree::build(const vector<RenderWrapper>& objs, const AABB& box, 
 	}
 	// end of algo 2
 
-
-
-	if (depth < 0) { // parallel
+	if (depth < 1) { // parallel when depth is small
 		future<Node*> lch_fut = async(launch::async, [&]() {
 				return build(move(objl), par.first, depth + 1); });
 		future<Node*> rch_fut = async(launch::async, [&]() {
