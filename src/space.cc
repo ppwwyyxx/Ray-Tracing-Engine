@@ -1,5 +1,5 @@
 // File: space.cc
-// Date: Thu Jun 27 19:57:24 2013 +0800
+// Date: Wed Aug 21 16:46:36 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <limits>
@@ -231,7 +231,7 @@ Color Space::global_trace(const Ray& ray, int depth) const {
 				Color transm = global_trace(new_ray, depth + 1);
 				now_transm = transm * ((1 - Fr) / (1 - P)) * surf->transparency;
 			}
-			//			 now_transm = (refl * Fr + transm * (1 - Fr)) * surf->transparency;
+			//	 now_transm = (refl * Fr + transm * (1 - Fr)) * surf->transparency;
 
 		} else {	// total reflection
 			Color refl = global_trace(refl_ray, depth + 1) * surf->specular;

@@ -1,5 +1,5 @@
 // File: mesh.hh
-// Date: Sat Jun 22 23:17:00 2013 +0800
+// Date: Sun Sep 01 10:28:24 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -41,10 +41,13 @@ class Mesh: public Renderable {
 			bound_min = r.bound_min;
 			bound_max = r.bound_max;
 			tree = r.tree;
+
+			// IMPORTANT!!
 			for (auto & k : faces) dynamic_pointer_cast<Face>(k)->host = this;
 		}
 
-		Mesh(std::string fname, const Vec& _pivot, real_t _zsize, const shared_ptr<Texture>& _texture = nullptr);
+		Mesh(std::string fname, const Vec& _pivot,
+				real_t _zsize, const shared_ptr<Texture>& _texture = nullptr);
 
 		void add_vertex(const Vec& p) {
 			vtxs.push_back(Vertex(p));
@@ -60,11 +63,18 @@ class Mesh: public Renderable {
 
 		void add_faceid(int a, int b, int c) {
 			m_assert(INRANGE(max(a, max(b, c))));
-			face_ids.push_back(tuple<int, int, int>{a, b, c});
+			/*
+			 *face_ids.push_back(tuple<int, int, int>{a, b, c});
+			 */
+			// Probably this doesn't work, but it seems OK.
+			face_ids.push_back(tie(a, b, c));
 		}
 
-		void add_face(const tuple<int, int, int>& t)
-		{ add_face(get<0>(t), get<1>(t), get<2>(t));}
+		void add_face(const tuple<int, int, int>& t) {
+			int a, b, c;
+			tie(a, b, c) = t;
+			add_face(a, b, c);
+		}
 
 		void transform_vtxs();
 

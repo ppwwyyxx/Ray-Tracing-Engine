@@ -1,13 +1,13 @@
 TARGET=report
 TEX=xelatex -shell-escape
-BIBTEX=bibtex
+BIBTEX=biber
 READER=mupdf
 
 all: rebuild
 
 rebuild output/$(TARGET).pdf: *.tex *.bib output
 	cd output && rm -f *.tex *.bib && ln -s ../*.tex ../*.bib .
-	cd output &&  $(TEX) $(TARGET).tex && $(BIBTEX) $(TARGET).aux
+	cd output &&  $(TEX) $(TARGET).tex && $(BIBTEX) $(TARGET)
 	cp output/$(TARGET).pdf ../ -f
 
 
@@ -24,7 +24,7 @@ clean:
 # compile twice to get cross reference right
 final : *.tex *.bib output
 	cd output && rm -f *.tex *.bib && ln -s ../*.tex ../*.bib .
-	cd output && $(TEX) $(TARGET).tex && $(BIBTEX) $(TARGET).aux && \
+	cd output && $(TEX) $(TARGET).tex && $(BIBTEX) $(TARGET) && \
 		$(TEX) $(TARGET).tex && $(TEX) $(TARGET).tex
 
 count:

@@ -1,5 +1,5 @@
 // File: mesh_simplifier.cc
-// Date: Fri Jun 21 19:24:39 2013 +0800
+// Date: Sun Sep 01 10:30:24 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <list>
@@ -181,9 +181,9 @@ void MeshSimplifier::write_back() {		// write vtxs and face_ids
 	}
 
 	for (auto & f : faces) {
-		bool dead = false;
-		REP(k, 3) if (!f.vtx[k] || f.vtx[k]->erased) dead = true;
-		if (dead) continue;
+		bool erased = false;
+		REP(k, 3) if (!f.vtx[k] || f.vtx[k]->erased) erased = true;
+		if (erased) continue;
 		REP(k, 3) if (f.vtx[k]->id == -1) m_assert(false);
 
 		mesh.add_faceid(f.vtx[0]->id, f.vtx[1]->id, f.vtx[2]->id);

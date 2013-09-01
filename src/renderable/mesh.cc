@@ -1,5 +1,5 @@
 // File: mesh.cc
-// Date: Sat Jun 22 20:07:35 2013 +0800
+// Date: Sun Sep 01 10:32:56 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <algorithm>
@@ -55,10 +55,12 @@ void Mesh::finish() {		// build tree, calculate smooth norm
 
 			NormSum* norm_sum = new NormSum[nvtx];
 			for (auto & t : face_ids) {
-				Vec tmp_norm = Triangle(vtxs[get<0>(t)].pos, vtxs[get<1>(t)].pos, vtxs[get<2>(t)].pos).norm;
-				norm_sum[get<0>(t)].add(tmp_norm);
-				norm_sum[get<1>(t)].add(tmp_norm);
-				norm_sum[get<2>(t)].add(tmp_norm);
+				int a, b, c;
+				tie(a, b, c) = t;
+				Vec tmp_norm = Triangle(vtxs[a].pos, vtxs[b].pos, vtxs[c].pos).norm;
+				norm_sum[a].add(tmp_norm);
+				norm_sum[b].add(tmp_norm);
+				norm_sum[c].add(tmp_norm);
 			}
 			REP(k, nvtx) vtxs[k].norm = norm_sum[k].sum / norm_sum[k].cnt;
 			delete[] norm_sum;
@@ -71,7 +73,8 @@ void Mesh::finish() {		// build tree, calculate smooth norm
 }
 
 shared_ptr<Trace> Mesh::get_trace(const Ray& ray, real_t dist) const {
-	if (use_tree) return tree->get_trace(ray, dist);
+	if (use_tree)
+		return tree->get_trace(ray, dist);
 
 	shared_ptr<Trace> ret;
 	real_t min = numeric_limits<real_t>::infinity();

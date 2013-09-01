@@ -1,9 +1,12 @@
 % File: diary.tex
-% Date: Sun Jun 23 23:57:02 2013 +0800
+% Date: Sun Sep 01 10:52:53 2013 +0800
 % Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 \section{过程记录}
 本项目的详细开发记录可以通过git查看. 项目托管在github\footnote{\url{https://github.com/ppwwyyxx/Ray-Tracing-Engine}}
-及计算机系git9\footnote{\url{http://git.net9.org/ppwwyyxx/ray}}上,并于6月24日开源.以下是一些重要记录.
+及计算机系git9\footnote{\url{http://git.net9.org/ppwwyyxx/ray}}上,并于2013年6月24日开源.以下是一些重要记录.
+
+以下图片中, 除最后两张效果图外, 均以800x800尺寸渲染, PDF中保留了原始尺寸的图片.
+计时的机器CPU为8核 i7-3770 3.40GHz.
 
 \begin{enumerate}
   \item
@@ -30,7 +33,7 @@
   \item
 
     考虑了Phong模型中的高光,并对$ x-y$平面和$ y-z$平面加入了反射系数,有了互相反射的效果,并且
-    左下部分能够看到高光.打开\verb|-O3|编译开关时,在我的机器上渲染一张$600 \times 600$的图片需要0.39s.
+    左下部分能够看到高光.
     \begin{figure}[H]
       \centering
       \includegraphics[scale=0.4]{img/specular.png}
@@ -119,7 +122,7 @@
     \end{figure}
 
   \item 将KDTree扩展到了整个空间.
-    设计方法是将所有的有限大物体合成为一个``KDTree''物体(因为几何物体及KDTree都继承自\verb|Renderable|基类),保留无限大物体,再在
+    设计方法是将所有的有限大物体合成为一个``KDTree''物体,保留无限大物体,再在
     空间中进行渲染.下图是一个20W面片的龙加上1万个球组成的场景,渲染此图只需1.4s.
     \begin{figure}[H]
       \centering
