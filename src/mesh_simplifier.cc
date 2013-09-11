@@ -1,5 +1,5 @@
 // File: mesh_simplifier.cc
-// Date: Sun Sep 01 10:30:24 2013 +0800
+// Date: Wed Sep 11 20:08:33 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <list>
@@ -50,8 +50,8 @@ MeshSimplifier::MeshSimplifier(Mesh& _mesh, real_t ratio): mesh(_mesh) {
 		vtxs.push_back(Vertex(mesh.vtxs[k].pos, k));
 
 	REP(k, nface) {
-		int a, b, c;
-		tie(a, b, c) = mesh.face_ids[k];
+		auto & tmp = mesh.face_ids[k];
+		int a = tmp[0], b = tmp[1], c = tmp[2];
 		faces.push_back(Face(&vtxs[a], &vtxs[b], &vtxs[c]));
 		vtxs[a].add_face(&faces[k]);
 		vtxs[b].add_face(&faces[k]);

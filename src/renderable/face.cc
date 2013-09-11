@@ -1,5 +1,5 @@
 // File: face.cc
-// Date: Thu Jun 20 19:11:24 2013 +0800
+// Date: Wed Sep 11 20:12:04 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "renderable/mesh.hh"
@@ -59,14 +59,8 @@ AABB Face::get_aabb() const {
 	return ret;
 }
 
-Vec Face::get_norm(int i) const {
-	if (i == 0)
-		return host->vtxs[get<0>(vtxid)].norm;
-	else if (i == 1)
-		return host->vtxs[get<1>(vtxid)].norm;
-	else
-		return host->vtxs[get<2>(vtxid)].norm;
-}
+Vec Face::get_norm(int i) const
+{ return host->vtxs[vtxid[i]].norm; }
 
 Vec Face::get_smooth_norm(real_t gx, real_t gy) const {
 	// e1 : gx, e2: gy

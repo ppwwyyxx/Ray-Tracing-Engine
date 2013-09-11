@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Wed Jul 10 13:35:59 2013 +0800
+// Date: Wed Sep 11 20:12:12 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include <sys/types.h>
 #include <dirent.h>
@@ -161,7 +161,7 @@ void test_simplify() {
 	Mesh mesh(fname, Vec(0, 0, 2), 5);
 	mesh.smooth = true;
 	mesh.set_texture(make_shared<HomoTexture>(HomoTexture::CYAN));
-	mesh.simplify(0.2);
+	mesh.simplify(0.5);
 	mesh.finish();
 
 	Space s;

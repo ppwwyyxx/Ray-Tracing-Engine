@@ -1,5 +1,5 @@
 // File: kdtree.cc
-// Date: Sat Jun 22 23:17:43 2013 +0800
+// Date: Wed Sep 11 20:20:12 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include <algorithm>
 #include <future>
@@ -184,7 +184,7 @@ KDTree::Node* KDTree::build(const vector<RenderWrapper>& objs, const AABB& box, 
 	// On building fast kd-trees for ray tracing, and on doing that in O (N log N)
 	// Wald, Ingo and Havran, Vlastimil
 	// O(n log^2(n)) build
-    
+
 #define GEN_CAND_LIST \
 	do { \
 		for (auto & obj: objs) \

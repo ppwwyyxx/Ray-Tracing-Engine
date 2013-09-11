@@ -1,5 +1,5 @@
 // File: geometry.hh
-// Date: Sun Jun 23 20:04:12 2013 +0800
+// Date: Wed Sep 11 20:28:07 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -262,5 +262,4 @@ typedef Vector2D<int> Coor;
 typedef Vector2D<real_t> Vec2D;
 
 typedef std::pair<Coor, Coor> Line2D;
-typedef std::vector<Coor> Polygon;
 

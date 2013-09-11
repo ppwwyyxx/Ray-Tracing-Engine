@@ -1,5 +1,5 @@
 // File: mesh.hh
-// Date: Sun Sep 01 10:28:24 2013 +0800
+// Date: Wed Sep 11 20:21:03 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -23,7 +23,7 @@ class Mesh: public Renderable {
 
 		vector<Vertex> vtxs;
 		vector<rdptr> faces;
-		vector<tuple<int, int, int>> face_ids;
+		vector<array<int, 3>> face_ids;
 		shared_ptr<KDTree> tree;
 
 		Vec bound_min = Vec::max(), bound_max = -Vec::max();
@@ -63,18 +63,11 @@ class Mesh: public Renderable {
 
 		void add_faceid(int a, int b, int c) {
 			m_assert(INRANGE(max(a, max(b, c))));
-			/*
-			 *face_ids.push_back(tuple<int, int, int>{a, b, c});
-			 */
-			// Probably this doesn't work, but it seems OK.
-			face_ids.push_back(tie(a, b, c));
+			face_ids.push_back(array<int, 3>{a, b, c});
 		}
 
-		void add_face(const tuple<int, int, int>& t) {
-			int a, b, c;
-			tie(a, b, c) = t;
-			add_face(a, b, c);
-		}
+		void add_face(const array<int, 3>& t)
+		{ add_face(t[0], t[1], t[2]); }
 
 		void transform_vtxs();
 

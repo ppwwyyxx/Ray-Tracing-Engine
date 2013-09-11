@@ -1,5 +1,5 @@
 // File: mesh.cc
-// Date: Sun Sep 01 10:32:56 2013 +0800
+// Date: Wed Sep 11 20:08:02 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <algorithm>
@@ -55,8 +55,7 @@ void Mesh::finish() {		// build tree, calculate smooth norm
 
 			NormSum* norm_sum = new NormSum[nvtx];
 			for (auto & t : face_ids) {
-				int a, b, c;
-				tie(a, b, c) = t;
+				int a = t[0], b = t[1], c = t[2];
 				Vec tmp_norm = Triangle(vtxs[a].pos, vtxs[b].pos, vtxs[c].pos).norm;
 				norm_sum[a].add(tmp_norm);
 				norm_sum[b].add(tmp_norm);

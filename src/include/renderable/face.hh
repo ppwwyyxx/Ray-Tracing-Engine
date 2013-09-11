@@ -1,5 +1,5 @@
 // File: face.hh
-// Date: Fri Jun 21 18:54:42 2013 +0800
+// Date: Wed Sep 11 20:09:06 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -46,9 +46,9 @@ class Face : public Renderable {
 		Triangle tri;
 		Vec norm; // can later be re-calculated, can be assigned other than tri.normal
 
-		Mesh* host;		// XXX be careful when copying
+		Mesh* host;		// IMPORTANT be careful when copying
 
-		tuple<int, int, int> vtxid;
+		array<int, 3> vtxid;
 
 		Face(const vector<Vertex>& _vtxs, int a, int b, int c):
 			tri(_vtxs[a].pos, _vtxs[b].pos, _vtxs[c].pos),

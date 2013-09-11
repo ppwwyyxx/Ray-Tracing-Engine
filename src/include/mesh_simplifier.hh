@@ -1,5 +1,5 @@
 // File: mesh_simplifier.hh
-// Date: Fri Jun 21 19:23:06 2013 +0800
+// Date: Wed Sep 11 20:13:35 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -21,12 +21,12 @@ class MeshSimplifier {
 			Vertex * vtx[3];
 			Vec norm;
 
-			Face(Vertex* a, Vertex* b, Vertex* c): vtx{a, b, c} {
-				norm = (c->pos - a->pos).cross((b->pos - a->pos)).get_normalized();
-			}
+			Face(Vertex* a, Vertex* b, Vertex* c): vtx{a, b, c}
+			{ norm = (c->pos - a->pos).cross((b->pos - a->pos)).get_normalized(); }
 
 			// delete this face (containing u, v) when collapsing from u to v
 			void delete_from(Vertex*& u, Vertex*& v);
+
 			// change vertex u to v when collapsing from u to v
 			void change_to(Vertex*& u, Vertex*& v);
 
