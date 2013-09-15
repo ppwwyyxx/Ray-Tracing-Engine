@@ -1,5 +1,5 @@
 // File: kdtree.cc
-// Date: Wed Sep 11 20:20:12 2013 +0800
+// Date: Sun Sep 15 13:13:14 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include <algorithm>
 #include <future>
@@ -18,9 +18,7 @@ class KDTree::Node {
 		Node* child[2];
 		AAPlane pl;
 
-		Node(const AABB& _box, Node* p1 = nullptr, Node* p2 = nullptr) :
-			box(_box), child{p1, p2} { }
-
+		Node(const AABB& _box, Node* p1 = nullptr, Node* p2 = nullptr) : box(_box), child{p1, p2} { }
 		~Node() { delete child[0]; delete child[1]; }
 
 		bool leaf() const

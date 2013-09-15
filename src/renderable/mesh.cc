@@ -1,5 +1,5 @@
 // File: mesh.cc
-// Date: Wed Sep 11 20:08:02 2013 +0800
+// Date: Sun Sep 15 13:13:14 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <algorithm>
@@ -68,7 +68,7 @@ void Mesh::finish() {		// build tree, calculate smooth norm
 
 	for (auto &ids : face_ids) add_face(ids);
 	if (use_tree)
-		tree = make_shared<KDTree>(faces, get_aabb());
+		tree = make_shared<KDTree>(vector<rdptr>(faces.begin(), faces.end()), get_aabb());
 }
 
 shared_ptr<Trace> Mesh::get_trace(const Ray& ray, real_t dist) const {

@@ -1,5 +1,5 @@
 // File: mesh.hh
-// Date: Wed Sep 11 20:21:03 2013 +0800
+// Date: Sun Sep 15 13:12:31 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -22,7 +22,7 @@ class Mesh: public Renderable {
 		real_t zoom_size = 5;
 
 		vector<Vertex> vtxs;
-		vector<rdptr> faces;
+		vector<shared_ptr<Face>> faces;
 		vector<array<int, 3>> face_ids;
 		shared_ptr<KDTree> tree;
 
@@ -43,7 +43,7 @@ class Mesh: public Renderable {
 			tree = r.tree;
 
 			// IMPORTANT!!
-			for (auto & k : faces) dynamic_pointer_cast<Face>(k)->host = this;
+			for (auto & k : faces) k->host = this;
 		}
 
 		Mesh(std::string fname, const Vec& _pivot,
