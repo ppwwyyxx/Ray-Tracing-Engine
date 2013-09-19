@@ -1,5 +1,5 @@
 // File: space.cc
-// Date: Wed Aug 21 16:46:36 2013 +0800
+// Date: Thu Sep 19 18:56:51 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <limits>
@@ -136,7 +136,6 @@ Color Space::trace(const Ray& ray, real_t dist, int depth) const {
 			(REFL_DECAY * surf->specular * surf->shininess * lmn);
 	}
 
-
 	// transmission
 	Color now_transm = Color::BLACK;
 	if (surf->transparency > EPS) {
@@ -160,10 +159,10 @@ Color Space::global_trace(const Ray& ray, int depth) const {
 	m_assert(fabs(ray.dir.sqr() - 1) < EPS);
 
 	auto first_trace = find_first(ray, true);
-	if (!first_trace) { return Color::BLACK; }
+	if (!first_trace)
+		return Color::BLACK;
 
 	// reach the first object, could be a light
-	real_t inter_dist = first_trace->intersection_dist();
 	Vec norm = first_trace->normal(),			// already oriented
 		inter_point = first_trace->intersection_point();
 	auto surf = first_trace->get_property();
@@ -172,15 +171,15 @@ Color Space::global_trace(const Ray& ray, int depth) const {
 
 	m_assert((fabs(norm.sqr() - 1) < EPS));
 
-	if (ray.debug) print_debug("debug ray: arrive point (%lf, %lf, %lf) \n", inter_point.x, inter_point.y, inter_point.z);
+	if (ray.debug)
+		print_debug("debug ray: arrive point (%lf, %lf, %lf) \n", inter_point.x, inter_point.y, inter_point.z);
 
 	real_t max_color_comp = diffu.get_max();
 	if (depth > 5 || fabs(max_color_comp) < EPS) {		// for light, max_color_comp = 0
 		if (drand48() < max_color_comp)		// Russian Roulette
 			diffu = diffu * (1.0 / max_color_comp);
-		else {
+		else
 			return surf->emission;
-		}
 	}
 
 	// diffuse
@@ -207,7 +206,6 @@ Color Space::global_trace(const Ray& ray, int depth) const {
 		now_refl = 	refl * surf->specular;
 	}
 
-
 	// transmission
 	Color now_transm = Color::BLACK;
 	if (surf->transparency > EPS) {
@@ -231,15 +229,11 @@ Color Space::global_trace(const Ray& ray, int depth) const {
 				Color transm = global_trace(new_ray, depth + 1);
 				now_transm = transm * ((1 - Fr) / (1 - P)) * surf->transparency;
 			}
-			//	 now_transm = (refl * Fr + transm * (1 - Fr)) * surf->transparency;
-
 		} else {	// total reflection
 			Color refl = global_trace(refl_ray, depth + 1) * surf->specular;
 			now_transm = refl;
 		}
 	}
-
-	// TODO explicit lighting:
 
 	return surf->emission + diffu * (now_diffuse + now_refl + now_transm);
 }

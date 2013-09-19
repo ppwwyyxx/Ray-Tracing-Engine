@@ -1,5 +1,5 @@
 // File: renderable.hh
-// Date: Sat Jun 22 17:27:25 2013 +0800
+// Date: Thu Sep 19 18:52:42 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 
@@ -17,8 +17,6 @@ class Renderable;
 typedef shared_ptr<Renderable> rdptr;
 
 class Renderable {
-	private:
-
 	public:
 		virtual ~Renderable(){};
 
@@ -54,9 +52,6 @@ class Trace {
 		Trace& operator = (const Trace&) = delete;
 
 		virtual ~Trace(){ }
-
-		const Renderable* get_obj()
-		{ return obj; }
 
 		virtual Vec intersection_point() const {
 			m_assert(isfinite(inter_dist) && inter_dist >= 0);
