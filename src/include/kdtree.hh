@@ -1,5 +1,5 @@
 // File: kdtree.hh
-// Date: Wed Sep 11 20:28:08 2013 +0800
+// Date: Sat Sep 21 01:31:45 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -28,7 +28,7 @@ class KDTree : public Renderable {
 
 		~KDTree();
 
-		shared_ptr<Trace> get_trace(const Ray& ray, real_t max_dist = -1) const override;
+		shared_ptr<Trace> get_trace(const Ray& ray, real_t max_dist) const override;
 
 		AABB get_aabb() const override
 		{ return AABB(bound_min, bound_max); }

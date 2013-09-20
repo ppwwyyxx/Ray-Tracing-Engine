@@ -1,5 +1,5 @@
 // File: face.hh
-// Date: Sat Sep 21 01:19:20 2013 +0800
+// Date: Sat Sep 21 01:31:31 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -60,7 +60,7 @@ class Face : public Renderable {
 		bool have_inside() const override
 		{ return false; }
 
-		shared_ptr<Trace> get_trace(const Ray& ray, real_t max_dist = -1) const override;
+		shared_ptr<Trace> get_trace(const Ray& ray, real_t max_dist) const override;
 
 		Vec get_smooth_norm(real_t gx, real_t gy) const;
 

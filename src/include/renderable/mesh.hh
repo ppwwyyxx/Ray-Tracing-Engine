@@ -1,5 +1,5 @@
 // File: mesh.hh
-// Date: Sat Sep 21 01:17:27 2013 +0800
+// Date: Sat Sep 21 01:31:36 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -81,7 +81,7 @@ class Mesh: public Renderable {
 			tree = nullptr;
 		}
 
-		shared_ptr<Trace> get_trace(const Ray& ray, real_t max_dist = -1) const override;
+		shared_ptr<Trace> get_trace(const Ray& ray, real_t max_dist) const override;
 
 		AABB get_aabb() const override
 		{ return AABB(bound_min, bound_max); }
