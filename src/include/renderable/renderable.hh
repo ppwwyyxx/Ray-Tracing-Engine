@@ -1,5 +1,5 @@
 // File: renderable.hh
-// Date: Thu Sep 19 18:52:42 2013 +0800
+// Date: Fri Sep 20 19:26:22 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 
@@ -17,15 +17,28 @@ class Renderable;
 typedef shared_ptr<Renderable> rdptr;
 
 class Renderable {
+	private:
+		shared_ptr<Texture> texture = nullptr;
+
 	public:
 		virtual ~Renderable(){};
 
-		bool infinity = false;
-		bool have_inside = true;
-		shared_ptr<Texture> texture;
+		Renderable(){ }
+
+		Renderable(const shared_ptr<Texture>& _texture):
+			texture(_texture) { }
+
+		virtual bool infinity() const
+		{ return false; }
+
+		virtual bool have_inside() const
+		{ return true; }
 
 		void set_texture(const shared_ptr<Texture>& _texture)
 		{ texture = _texture; }
+
+		shared_ptr<Texture> get_texture() const
+		{ return texture; }
 
 		virtual shared_ptr<Trace> get_trace(const Ray& ray, real_t max_dist = -1) const = 0;
 		// judge visibility and return ptr if visible
@@ -69,7 +82,7 @@ class Trace {
 		virtual real_t get_forward_density() const { return ray.density; }
 
 		virtual shared_ptr<Surface> get_property() const {
-			shared_ptr<Surface> ret = obj->texture->get_property();
+			shared_ptr<Surface> ret = obj->get_texture()->get_property();
 			if (ret) return move(ret);
 			return transform_get_property();		// is this working?
 		}

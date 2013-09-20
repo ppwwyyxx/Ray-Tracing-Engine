@@ -1,5 +1,5 @@
 // File: kdtree.cc
-// Date: Sun Sep 15 13:13:14 2013 +0800
+// Date: Fri Sep 20 19:13:21 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include <algorithm>
 #include <future>
@@ -110,7 +110,7 @@ class KDTree::Node {
 KDTree::KDTree(const vector<rdptr>& objs, const AABB& space) {
 	vector<RenderWrapper> objlist;
 	for (auto & obj : objs) {
-		m_assert(!obj->infinity);
+		m_assert(!obj->infinity());
 		AABB aabb = obj->get_aabb();
 		objlist.push_back(RenderWrapper(obj, aabb));
 		bound_min.update_min(aabb.min), bound_max.update_max(aabb.max);

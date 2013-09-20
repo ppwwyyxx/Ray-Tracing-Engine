@@ -1,5 +1,5 @@
 // File: face.hh
-// Date: Wed Sep 11 20:09:06 2013 +0800
+// Date: Fri Sep 20 19:19:18 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -56,6 +56,9 @@ class Face : public Renderable {
 			vtxid{a, b, c} {
 			m_assert(!tri.e1.is_zero());
 		}
+
+		bool have_inside() const override
+		{ return false; }
 
 		shared_ptr<Trace> get_trace(const Ray& ray, real_t max_dist = -1) const override;
 

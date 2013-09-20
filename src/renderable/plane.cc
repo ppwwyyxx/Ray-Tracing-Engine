@@ -1,5 +1,5 @@
 // File: plane.cc
-// Date: Sat Jun 22 20:17:21 2013 +0800
+// Date: Fri Sep 20 19:32:47 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "renderable/plane.hh"
@@ -25,12 +25,6 @@ Vec Plane::surf_dir() const {
 	m_assert(!(ret == Vec::zero()));
 	ret.normalize();
 	return ret;
-}
-
-void Plane::set_finite(real_t _radius, Vec _center) {
-	infinity = false;
-	radius = _radius;
-	center = _center;
 }
 
 bool PlaneTrace::intersect() {
@@ -73,5 +67,5 @@ shared_ptr<Surface> PlaneTrace::transform_get_property() const {
 	Vec diff = intersection_point() - plane.center;
 	real_t x = diff.dot(plane.surfdir);
 	real_t y = diff.dot(plane.surfdir.cross(plane.plane.norm));
-	return plane.texture->get_property(x, y);
+	return plane.get_texture()->get_property(x, y);
 }

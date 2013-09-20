@@ -1,5 +1,5 @@
 // File: mesh.cc
-// Date: Sun Sep 15 13:13:14 2013 +0800
+// Date: Fri Sep 20 19:31:04 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <algorithm>
@@ -10,8 +10,7 @@
 using namespace std;
 
 Mesh::Mesh(std::string fname, const Vec& _pivot, real_t _zsize, const shared_ptr<Texture>& _texture):
-	pivot(_pivot), zoom_size(_zsize) {
-	texture = _texture;
+	Renderable(_texture), pivot(_pivot), zoom_size(_zsize) {
 	ObjReader::read_in(fname, this);
 	cout << "nvtx = " << vtxs.size() << ", nface = " << face_ids.size() << endl;
 	transform_vtxs();

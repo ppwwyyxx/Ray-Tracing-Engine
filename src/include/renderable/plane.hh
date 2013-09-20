@@ -1,5 +1,5 @@
 // File: plane.hh
-// Date: Fri Jun 21 18:53:58 2013 +0800
+// Date: Fri Sep 20 19:30:25 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -25,10 +25,15 @@ class Plane : public Renderable {
 		// can later set_texture
 
 		Plane(const InfPlane& _plane, const shared_ptr<Texture>& _texture):
-			Plane(_plane)
-		{ texture = _texture; infinity = true; have_inside = false; }
+			Plane(_plane) {
+				set_texture(_texture);
+			}
 
-		void set_finite(real_t radius, Vec center);
+		bool have_inside() const override
+		{ return false; }
+
+		bool infinity() const override
+		{ return true; }
 
 		shared_ptr<Trace> get_trace(const Ray& ray, real_t max_dist = -1) const override;
 

@@ -1,5 +1,5 @@
 // File: mesh.hh
-// Date: Sun Sep 15 13:12:31 2013 +0800
+// Date: Fri Sep 20 19:29:23 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -30,8 +30,8 @@ class Mesh: public Renderable {
 
 		Mesh() {}
 
-		Mesh(const Mesh& r) {
-			texture = r.texture;
+		Mesh(const Mesh& r):Renderable(r.get_texture())
+		{
 			smooth = r.smooth;
 			mapped = r.mapped;
 			use_tree = r.use_tree;

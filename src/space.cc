@@ -1,5 +1,5 @@
 // File: space.cc
-// Date: Thu Sep 19 18:56:51 2013 +0800
+// Date: Fri Sep 20 19:17:25 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <limits>
@@ -32,7 +32,7 @@ void Space::add_light(const Light& light) {
 }
 
 void Space::add_obj(const rdptr& objptr) {
-	if (!objptr->infinity) {
+	if (!objptr->infinity()) {
 		auto k = objptr->get_aabb();
 		bound_min.update_min(k.min - Vec::eps());
 		bound_max.update_max(k.max + Vec::eps());
@@ -50,10 +50,13 @@ void Space::finish() {		// called from View::View()
 	if (use_tree) {
 		// the final objs contains a kdtree and all the infinite obj
 		vector<rdptr> infinite_obj;
-		for (auto &k : objs) if (k->infinity) infinite_obj.push_back(k);
+		// TODO use a better stl function? e.g. remove_copy_if
+		for (auto &k : objs)
+			if (k->infinity())
+				infinite_obj.push_back(k);
 		objs.erase(remove_if(objs.begin(), objs.end(),
 					[](const rdptr& p) {
-					return p->infinity;
+						return p->infinity();
 					}), objs.end());
 
 		if (objs.size())

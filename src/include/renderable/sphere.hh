@@ -1,5 +1,5 @@
 // File: sphere.hh
-// Date: Sun Jun 23 17:25:59 2013 +0800
+// Date: Fri Sep 20 19:27:52 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -19,8 +19,7 @@ class Sphere : public Renderable {
 		}
 
 		Sphere(const PureSphere &_sphere, std::shared_ptr<Texture> _texture):
-			Sphere(_sphere)
-		{ texture = _texture;	}
+			Renderable(_texture), sphere(_sphere) {}
 
 		std::shared_ptr<Trace> get_trace(const Ray& ray, real_t max_dist = -1) const override;
 
