@@ -1,5 +1,5 @@
 // File: space.cc
-// Date: Fri Sep 20 19:17:25 2013 +0800
+// Date: Fri Sep 20 23:38:23 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <limits>
@@ -54,7 +54,7 @@ void Space::finish() {		// called from View::View()
 		for (auto &k : objs)
 			if (k->infinity())
 				infinite_obj.push_back(k);
-		objs.erase(remove_if(objs.begin(), objs.end(),
+		objs.erase(remove_if(begin(objs), end(objs),
 					[](const rdptr& p) {
 						return p->infinity();
 					}), objs.end());

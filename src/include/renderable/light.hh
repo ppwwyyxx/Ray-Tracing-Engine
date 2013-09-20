@@ -1,5 +1,5 @@
 // File: light.hh
-// Date: Fri Sep 20 19:28:59 2013 +0800
+// Date: Fri Sep 20 23:40:23 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -20,7 +20,7 @@ class Light : public Sphere {
 		Light(const PureSphere& _sphere, const Color& col, real_t _intense):
 			Sphere(_sphere,
 					make_shared<HomoTexture>(
-						Surface(0, 0, 0, Color::NONE, 0, col * intensity))),
+						Surface(0, 0, 0, Color::NONE, 0, col * _intense))),
 			color(col), intensity(_intense) { };
 
 		Light(const Vec& src, const Color& col, real_t _intense):

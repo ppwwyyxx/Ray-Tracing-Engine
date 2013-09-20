@@ -1,5 +1,5 @@
 // File: mesh.cc
-// Date: Fri Sep 20 19:31:04 2013 +0800
+// Date: Fri Sep 20 23:41:55 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <algorithm>
@@ -30,7 +30,7 @@ void Mesh::transform_vtxs() {
 	for (auto &k : vtxs) sum = sum + k.pos;
 	sum = pivot - sum / vtxs.size();
 
-	for_each(vtxs.begin(), vtxs.end(),
+	for_each(begin(vtxs), end(vtxs),
 		[&](Vertex &v) {
 			v.pos = pivot + (v.pos + sum - pivot) * zfactor;
 	});
