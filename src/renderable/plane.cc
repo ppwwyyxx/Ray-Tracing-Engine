@@ -1,5 +1,5 @@
 // File: plane.cc
-// Date: Fri Sep 20 19:32:47 2013 +0800
+// Date: Sat Sep 21 01:53:11 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "renderable/plane.hh"
@@ -27,7 +27,7 @@ Vec Plane::surf_dir() const {
 	return ret;
 }
 
-bool PlaneTrace::intersect() {
+bool PlaneTrace::intersect() const {
 	dist_to_plane = plane.plane.dist(ray.orig);
 	if (fabs(dist_to_plane) < EPS) // source on the plane
 		return false;
@@ -50,13 +50,13 @@ bool PlaneTrace::intersect() {
 	}
 }
 
-real_t PlaneTrace::intersection_dist() {
+real_t PlaneTrace::intersection_dist() const {
 	if (isfinite(inter_dist)) return inter_dist;
 	inter_dist = -dist_to_plane / dir_dot_norm;
 	return inter_dist;
 }
 
-Vec PlaneTrace::normal() {	// norm to the ray side
+Vec PlaneTrace::normal() const {	// norm to the ray side
 	Vec ret = plane.plane.norm;
 	if (plane.plane.in_half_space(ray.orig))
 		return ret;

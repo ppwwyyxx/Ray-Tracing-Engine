@@ -1,5 +1,5 @@
 // File: face.cc
-// Date: Fri Sep 20 19:31:19 2013 +0800
+// Date: Sat Sep 21 01:54:09 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "renderable/mesh.hh"
@@ -78,15 +78,15 @@ shared_ptr<Surface> FaceTrace::transform_get_property() const {
 	return face.get_texture()->get_property(x, y);
 }
 
-bool FaceTrace::intersect() {
+bool FaceTrace::intersect() const {
 	inter_dist = face.tri.get_intersect(ray, gx, gy);
 	if (inter_dist <= 0) return false;
 	return true;
 }
 
-real_t FaceTrace::intersection_dist() { return inter_dist; }
+real_t FaceTrace::intersection_dist() const { return inter_dist; }
 
-Vec FaceTrace::normal() {		// norm to the ray side
+Vec FaceTrace::normal() const {		// norm to the ray side
 	Vec ret;
 	if (face.host->smooth)
 		ret = face.get_smooth_norm(gx, gy);

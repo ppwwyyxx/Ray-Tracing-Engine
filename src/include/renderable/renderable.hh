@@ -1,5 +1,5 @@
 // File: renderable.hh
-// Date: Sat Sep 21 01:36:12 2013 +0800
+// Date: Sat Sep 21 01:55:23 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 
@@ -56,11 +56,11 @@ class Trace {
 	protected:
 		const Ray& ray;			// ray must have longer lifecycle than any trace !
 
-		// two useful internal members
-		bool toward = true;
-		real_t inter_dist = std::numeric_limits<real_t>::infinity();
-
 		virtual	shared_ptr<Surface> transform_get_property() const = 0;
+
+		// two useful internal members
+		mutable bool toward = true;
+		mutable real_t inter_dist = std::numeric_limits<real_t>::infinity();
 
 	public:
 		Trace(const Ray& _ray): ray(_ray){}
@@ -78,11 +78,11 @@ class Trace {
 			return ray.get_dist(inter_dist);
 		}
 
-		virtual bool intersect() = 0;
+		virtual bool intersect() const = 0;
 
-		virtual real_t intersection_dist() = 0;
+		virtual real_t intersection_dist() const = 0;
 
-		virtual Vec normal() = 0;
+		virtual Vec normal() const = 0;
 		// return Vec::zero if no normal exists
 		// return a `normalized` normal vector
 

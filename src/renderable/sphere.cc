@@ -1,5 +1,5 @@
 // File: sphere.cc
-// Date: Fri Sep 20 19:31:41 2013 +0800
+// Date: Sat Sep 21 01:54:37 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "renderable/sphere.hh"
@@ -23,7 +23,7 @@ AABB Sphere::get_aabb() const {
 }
 
 
-bool SphereTrace::intersect() {
+bool SphereTrace::intersect() const {
 	if (!toward && !inside)	// ray leaves sphere
 		return false;
 
@@ -35,7 +35,7 @@ bool SphereTrace::intersect() {
 	return true;
 }
 
-real_t SphereTrace::intersection_dist() {
+real_t SphereTrace::intersection_dist() const {
 	if (!inside)
 		inter_dist = (proj - ray.orig).mod() - sqrt(sqrdiff);
 	else if (toward)
@@ -56,7 +56,7 @@ Vec SphereTrace::intersection_point() const {
 	return inter_point;
 }
 
-Vec SphereTrace::normal() {
+Vec SphereTrace::normal() const {
 	Vec ret = inter_point - sphere.sphere.center;
 	ret.normalize();
 	if (!inside) return ret;

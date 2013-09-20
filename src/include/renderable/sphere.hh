@@ -1,5 +1,5 @@
 // File: sphere.hh
-// Date: Sat Sep 21 01:28:41 2013 +0800
+// Date: Sat Sep 21 01:55:34 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -33,13 +33,13 @@ class Sphere : public Renderable {
 class SphereTrace : public Trace {
 	private:
 		const Sphere& sphere;
-		Vec proj = Vec::infinity();
-		Vec inter_point = Vec::infinity();
-		real_t sqrdiff = std::numeric_limits<real_t>::infinity();
-		bool inside = false;
 
 		std::shared_ptr<Surface> transform_get_property() const override;
 
+		mutable Vec proj = Vec::infinity();
+		mutable Vec inter_point = Vec::infinity();
+		mutable real_t sqrdiff = std::numeric_limits<real_t>::infinity();
+		bool inside = false;
 
 	public:
 		SphereTrace(const Sphere& _sphere, const Ray& _ray):
@@ -51,13 +51,13 @@ class SphereTrace : public Trace {
 		const Renderable* get_obj() const override
 		{ return &sphere; }
 
-		bool intersect() override;
-
-		real_t intersection_dist() override;
+		bool intersect() const override;
 
 		Vec intersection_point() const override;
 
-		Vec normal() override;
+		real_t intersection_dist() const override;
+
+		Vec normal() const override;
 
 		real_t get_forward_density() const override;
 

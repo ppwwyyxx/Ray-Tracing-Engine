@@ -1,5 +1,5 @@
 // File: face.hh
-// Date: Sat Sep 21 01:31:31 2013 +0800
+// Date: Sat Sep 21 01:56:21 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -76,9 +76,10 @@ class Face : public Renderable {
 class FaceTrace : public Trace {
 	private:
 		const Face& face;
-		real_t dist, gx, gy;
 
 		shared_ptr<Surface> transform_get_property() const override;
+
+		mutable real_t dist, gx, gy;
 
 	public:
 		FaceTrace(const Face& _face, const Ray& _ray):
@@ -87,11 +88,11 @@ class FaceTrace : public Trace {
 		const Renderable* get_obj() const override
 		{ return &face; }
 
-		bool intersect() override;
+		bool intersect() const override;
 
-		real_t intersection_dist() override;
+		real_t intersection_dist() const override;
 
-		Vec normal() override;
+		Vec normal() const override;
 
 		shared_ptr<Surface> get_property() const override;
 };

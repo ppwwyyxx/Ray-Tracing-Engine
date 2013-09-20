@@ -1,5 +1,5 @@
 // File: plane.hh
-// Date: Sat Sep 21 01:31:23 2013 +0800
+// Date: Sat Sep 21 01:55:51 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -53,9 +53,11 @@ class Plane : public Renderable {
 class PlaneTrace : public Trace {
 	private:
 		const Plane& plane;
-		real_t dist_to_plane = std::numeric_limits<real_t>::infinity();
-		real_t dir_dot_norm = std::numeric_limits<real_t>::infinity();
-		shared_ptr<Surface> transform_get_property() const;
+
+		shared_ptr<Surface> transform_get_property() const override;
+
+		mutable real_t dist_to_plane = std::numeric_limits<real_t>::infinity();
+		mutable real_t dir_dot_norm = std::numeric_limits<real_t>::infinity();
 
 	public:
 		PlaneTrace(const Plane& _plane, const Ray& _ray):
@@ -64,10 +66,10 @@ class PlaneTrace : public Trace {
 		const Renderable* get_obj() const override
 		{ return &plane; }
 
-		bool intersect() override;
+		bool intersect() const override;
 
-		real_t intersection_dist() override;
+		real_t intersection_dist() const override;
 
-		Vec normal() override;
+		Vec normal() const override;
 };
 
