@@ -1,5 +1,5 @@
 // File: renderable.hh
-// Date: Fri Sep 20 19:26:22 2013 +0800
+// Date: Sat Sep 21 01:22:47 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 
@@ -49,22 +49,24 @@ class Renderable {
 // a combination of renderable object and a ray, to integrate some calculations
 class Trace {
 	protected:
-		const Renderable* obj;
-		const Ray& ray;
+		const Ray& ray;			// ray must have longer lifecycle than any trace !
+
+		// two useful internal members
 		bool toward = true;
 		real_t inter_dist = std::numeric_limits<real_t>::infinity();
 
 		virtual	shared_ptr<Surface> transform_get_property() const = 0;
 
 	public:
-		Trace(const Renderable* m_obj, const Ray& m_ray):
-			obj(m_obj), ray(m_ray){}
+		Trace(const Ray& _ray): ray(_ray){}
 
-		// forbid copy of a Trace
+		// we have `const Ray&, const Renderable*` member, so forbid copy of a Trace
 		Trace(const Trace&) = delete;
 		Trace& operator = (const Trace&) = delete;
 
 		virtual ~Trace(){ }
+
+		virtual const Renderable* get_obj() const = 0;
 
 		virtual Vec intersection_point() const {
 			m_assert(isfinite(inter_dist) && inter_dist >= 0);
@@ -79,16 +81,17 @@ class Trace {
 		// return Vec::zero if no normal exists
 		// return a `normalized` normal vector
 
-		virtual real_t get_forward_density() const { return ray.density; }
-
-		virtual shared_ptr<Surface> get_property() const {
-			shared_ptr<Surface> ret = obj->get_texture()->get_property();
-			if (ret) return move(ret);
-			return transform_get_property();		// is this working?
-		}
+		virtual real_t get_forward_density() const
+		{ return ray.density; }
 
 		virtual bool contain() const
 		{ return false; }
+
+		virtual shared_ptr<Surface> get_property() const {
+			shared_ptr<Surface> ret = get_obj()->get_texture()->get_property();
+			if (ret) return move(ret);
+			return transform_get_property();		// is this working?
+		}
 };
 
 

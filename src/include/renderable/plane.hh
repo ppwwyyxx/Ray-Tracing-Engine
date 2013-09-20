@@ -1,5 +1,5 @@
 // File: plane.hh
-// Date: Fri Sep 20 19:30:25 2013 +0800
+// Date: Sat Sep 21 01:19:14 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -59,7 +59,10 @@ class PlaneTrace : public Trace {
 
 	public:
 		PlaneTrace(const Plane& _plane, const Ray& _ray):
-			Trace(&_plane, _ray), plane(_plane){};
+			Trace(_ray), plane(_plane){};
+
+		const Renderable* get_obj() const override
+		{ return &plane; }
 
 		bool intersect() override;
 

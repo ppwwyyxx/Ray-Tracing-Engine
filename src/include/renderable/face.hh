@@ -1,5 +1,5 @@
 // File: face.hh
-// Date: Fri Sep 20 19:19:18 2013 +0800
+// Date: Sat Sep 21 01:19:20 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -82,7 +82,10 @@ class FaceTrace : public Trace {
 
 	public:
 		FaceTrace(const Face& _face, const Ray& _ray):
-			Trace(&_face, _ray), face(_face){};
+			Trace(_ray), face(_face){};
+
+		const Renderable* get_obj() const override
+		{ return &face; }
 
 		bool intersect() override;
 

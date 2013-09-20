@@ -1,5 +1,5 @@
 // File: sphere.hh
-// Date: Fri Sep 20 19:27:52 2013 +0800
+// Date: Sat Sep 21 01:19:06 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -43,10 +43,13 @@ class SphereTrace : public Trace {
 
 	public:
 		SphereTrace(const Sphere& _sphere, const Ray& _ray):
-			Trace(&_sphere, _ray), sphere(_sphere) {
+			Trace(_ray), sphere(_sphere) {
 			toward = (ray.dir.dot(sphere.sphere.center - ray.orig) > 0);
 			inside = sphere.sphere.contain(ray.orig);
 		};
+
+		const Renderable* get_obj() const override
+		{ return &sphere; }
 
 		bool intersect() override;
 

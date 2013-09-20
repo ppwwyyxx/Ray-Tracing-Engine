@@ -1,5 +1,5 @@
 // File: mesh.hh
-// Date: Fri Sep 20 19:29:23 2013 +0800
+// Date: Sat Sep 21 01:17:27 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -87,8 +87,6 @@ class Mesh: public Renderable {
 		{ return AABB(bound_min, bound_max); }
 
 	protected:
-		friend class MeshTrace;
-
 		void add_face(int a, int b, int c) {
 			m_assert(INRANGE(max(a, max(b, c))));
 			Face f(vtxs, a, b, c);
