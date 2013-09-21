@@ -1,5 +1,5 @@
 // File: geometry.hh
-// Date: Wed Sep 11 20:28:07 2013 +0800
+// Date: Sat Sep 21 11:23:07 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -11,8 +11,6 @@ using std::numeric_limits;
 
 #include "lib/debugutils.hh"
 #include "lib/utils.hh"
-
-enum AXIS { AXIS_X = 0, AXIS_Y, AXIS_Z, ERROR};
 
 class Geometry {
 	public:

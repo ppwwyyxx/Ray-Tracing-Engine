@@ -1,5 +1,5 @@
 // File: renderable.hh
-// Date: Sat Sep 21 01:55:23 2013 +0800
+// Date: Sat Sep 21 11:15:51 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 
@@ -37,7 +37,7 @@ class Renderable {
 		void set_texture(const shared_ptr<Texture>& _texture)
 		{ texture = _texture; }
 
-		shared_ptr<Texture> get_texture() const
+		const shared_ptr<Texture>& get_texture() const
 		{ return texture; }
 
 		virtual shared_ptr<Trace> get_trace(const Ray& ray, real_t max_dist) const = 0;
@@ -95,7 +95,7 @@ class Trace {
 		virtual shared_ptr<Surface> get_property() const {
 			shared_ptr<Surface> ret = get_obj()->get_texture()->get_property();
 			if (ret) return move(ret);
-			return transform_get_property();		// is this working?
+			return transform_get_property();
 		}
 };
 

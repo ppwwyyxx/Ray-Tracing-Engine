@@ -1,5 +1,5 @@
 // File: kdtree.cc
-// Date: Sat Sep 21 01:33:24 2013 +0800
+// Date: Sat Sep 21 11:30:14 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include <algorithm>
 #include <future>
@@ -131,14 +131,14 @@ shared_ptr<Trace> KDTree::get_trace(const Ray& ray, real_t max_dist) const {
 }
 
 AAPlane KDTree::cut(const vector<RenderWrapper>& objs, int depth) const {
-	AAPlane ret;
-	ret.axis = static_cast<AXIS>(depth % 3);
+	AAPlane ret(depth % 3, 0);
 
 	vector<real_t> min_list;
 	for (auto &obj : objs)
 		min_list.push_back(obj.box.min[ret.axis]);
 	nth_element(min_list.begin(), min_list.begin() + min_list.size() / 2, min_list.end());
 	// partial sort
+	//
 	ret.pos = min_list[min_list.size() / 2] + 2 * EPS;		// SEE what happen
 	return ret;
 }
@@ -195,6 +195,7 @@ KDTree::Node* KDTree::build(const vector<RenderWrapper>& objs, const AABB& box, 
 	} while (0)
 
 	future<vector<pair<real_t, bool>>> task[3];
+
 	const int THREAD_DEPTH_THRES = 1;
 	if (depth < THREAD_DEPTH_THRES) {
 		REP(dim, 3)
@@ -238,7 +239,7 @@ KDTree::Node* KDTree::build(const vector<RenderWrapper>& objs, const AABB& box, 
 		} while (ptr != cand_list.end());
 	}
 
-	if (best_pl.axis == ERROR) {
+	if (best_pl.axis == AAPlane::ERROR) { // didn't find best_pl
 		ADDOBJ;
 		return ret;
 	}

@@ -1,5 +1,5 @@
 // File: sphere.cc
-// Date: Sat Sep 21 01:54:37 2013 +0800
+// Date: Sat Sep 21 11:16:39 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "renderable/sphere.hh"
@@ -10,7 +10,7 @@ shared_ptr<Trace> Sphere::get_trace(const Ray& ray, real_t dist) const {
 	shared_ptr<Trace> ret = make_shared<SphereTrace>(*this, ray);
 	if (ret->intersect()) {
 		if (dist == -1 || ret->intersection_dist() < dist)
-			return  ret;
+			return move(ret);
 	}
 	return nullptr;
 }

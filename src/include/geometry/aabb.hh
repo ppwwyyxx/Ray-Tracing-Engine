@@ -1,5 +1,5 @@
 // File: aabb.hh
-// Date: Fri Jun 21 00:47:23 2013 +0800
+// Date: Sat Sep 21 11:24:41 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -10,7 +10,10 @@
 #include "geometry/ray.hh"
 
 class AAPlane {
+
 	public:
+		enum AXIS { AXIS_X = 0, AXIS_Y, AXIS_Z, ERROR};
+
 		AXIS axis;
 		real_t pos;
 
