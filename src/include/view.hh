@@ -1,5 +1,5 @@
 // File: view.hh
-// Date: Sun Jun 23 01:58:06 2013 +0800
+// Date: Sat Sep 21 23:27:52 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -17,8 +17,10 @@ class View {
 		{ dir_w.normalize(); dir_h.normalize(); }
 
 		inline void resume_dir_vector() {
-			dir_w = dir_w.get_normalized() * (size / geo.w);
+			// NEED explanation here!
+			dir_w = dir_w.get_normalized() * (size / geo.h);
 			dir_h = dir_h.get_normalized() * (size / geo.h);
+			// use either geo.h or geo.w
 		}
 
 		const Space& sp;

@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Sat Sep 21 11:56:51 2013 +0800
+// Date: Sat Sep 21 23:28:17 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include <sys/types.h>
 #include <dirent.h>
@@ -19,7 +19,7 @@ void all(bool g) {
 	int w = 1000, h = 1000;
 	Space s;
 	s.add_light(Light(PureSphere(Vec(+10, 10, 20), 4), Color::WHITE, 15));
-	s.add_light(Light(PureSphere(Vec(-10, -10, 20), 4), Color::WHITE, 10));
+	s.add_light(Light(PureSphere(Vec(-10, -10, 20), 4), Color::WHITE, 8));
 
 	shared_ptr<Texture> t_diffuse = make_shared<HomoTexture>(Surface::GOOD);
 	shared_ptr<Texture> t_refl = make_shared<HomoTexture>(Surface::GOOD_REFL);
@@ -379,7 +379,7 @@ int main(int argc, char* argv[]) {
 		case 4:
 			test_simplify();
 			break;
-		case 5:
+			case 5:
 			test_shadow();
 			break;
 		case 6:

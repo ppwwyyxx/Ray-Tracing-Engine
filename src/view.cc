@@ -1,5 +1,5 @@
 // File: view.cc
-// Date: Sun Jun 23 20:16:04 2013 +0800
+// Date: Sat Sep 21 23:19:39 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "view.hh"
@@ -47,7 +47,6 @@ Color View::render(int i, int j, bool debug) const {
 		return Color(ppp(ret.x), ppp(ret.y), ppp(ret.z));
 #undef ppp
 	}
-
 
 
 	if (!use_dof) {
