@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Sat Sep 21 23:28:17 2013 +0800
+// Date: Sat Sep 21 23:53:58 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include <sys/types.h>
 #include <dirent.h>
@@ -16,10 +16,10 @@ const string watermelon_fname = "../resource/watermelon.jpg";
 
 // Complicated Scene
 void all(bool g) {
-	int w = 1000, h = 1000;
+	int w = 1366, h = 768;
 	Space s;
-	s.add_light(Light(PureSphere(Vec(+10, 10, 20), 4), Color::WHITE, 15));
-	s.add_light(Light(PureSphere(Vec(-10, -10, 20), 4), Color::WHITE, 8));
+	s.add_light(Light(PureSphere(Vec(+10, 10, 20), 4), Color::WHITE, 8));
+	s.add_light(Light(PureSphere(Vec(-10, -10, 20), 4), Color::WHITE, 5));
 
 	shared_ptr<Texture> t_diffuse = make_shared<HomoTexture>(Surface::GOOD);
 	shared_ptr<Texture> t_refl = make_shared<HomoTexture>(Surface::GOOD_REFL);
@@ -29,30 +29,37 @@ void all(bool g) {
 	s.add_obj(make_shared<Plane>(InfPlane::XYPLANE, tpic));
 	s.add_obj(make_shared<Plane>(InfPlane(Vec(0, 1, 0), 20), make_shared<GridTexture>(GridTexture::BLACK_WHITE_REFL)));
 	s.add_obj(make_shared<Plane>(InfPlane(Vec(-3, -1, 0), -16, true), make_shared<HomoTexture>(Surface::MIRROR)));
-	s.add_obj(make_shared<Sphere>(PureSphere::TestSphere, t_glass));
+	s.add_obj(make_shared<Sphere>(PureSphere(Vec(+5, -6, 2), 1.5), t_glass));
 	s.add_obj(make_shared<Sphere>(PureSphere(Vec(-4, 6, 8), 1.5), t_wtm));
 
 
 	const char* fname = "../resource/models/dinosaur.2k.obj";
-	Mesh mesh(fname, Vec(-3, +5, 2), 9);
+	Mesh mesh(fname, Vec(-3, 0, 3), 9);
 	mesh.set_texture(make_shared<HomoTexture>(HomoTexture::CYAN));
 	mesh.finish();
 	s.add_obj(make_shared<Mesh>(mesh));
 
 	fname = "../resource/models/cube.obj";
-	mesh = Mesh(fname, Vec(-10, 7, 5), 5);
+	mesh = Mesh(fname, Vec(-12, 7, 5), 4);
 	mesh.smooth = false;
 	mesh.set_texture(make_shared<HomoTexture>(HomoTexture::BLUE));
 	mesh.finish();
 	s.add_obj(make_shared<Mesh>(mesh));
 
-	REP(i, 5) {
-		s.add_obj(make_shared<Sphere>(PureSphere(Vec(0 + 3, i * 3.2 + 3, 1), 1.5), (drand48() < 0.5 ? t_diffuse : t_glass)));
-		s.add_obj(make_shared<Sphere>(PureSphere(Vec(3 + 5, i * 3.2 + 3, 1), 1.5), t_refl));
+	fname = "../resource/models/fixed.perfect.dragon.100K.0.07.obj";
+	mesh = Mesh(fname, Vec(-8, 3, 5), 5);
+	mesh.smooth = false;
+	mesh.set_texture(t_glass);
+	mesh.finish();
+	s.add_obj(make_shared<Mesh>(mesh));
+
+	REP(i, 2) {
+		s.add_obj(make_shared<Sphere>(PureSphere(Vec(0 + 3, i * 4.2 + 1, 1), 1.5), (drand48() < 0.5 ? t_diffuse : t_glass)));
+		s.add_obj(make_shared<Sphere>(PureSphere(Vec(3 + 5, i * 3.2 + 1, 1), 1.5), t_refl));
 	}
 
 	s.finish();
-	View v(s, Vec(-8.0, -6.3, 11.9), Vec(-2.7, 3.95, 4.4), 18, Geometry(w, h));
+	View v(s, Vec(-10.4, -0.9, 18.7), Vec(-2.1, 6.75, 7.1), 21.6, Geometry(w, h));
 	v.use_global = g;
 	if (g)
 		CVViewer viewer(v, "best.png");
