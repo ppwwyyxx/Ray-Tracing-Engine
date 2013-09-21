@@ -1,5 +1,5 @@
 // File: light.hh
-// Date: Fri Sep 20 23:40:23 2013 +0800
+// Date: Sat Sep 21 11:56:37 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -17,14 +17,15 @@ class Light : public Sphere {
 		Color color;
 		real_t intensity;
 
-		Light(const PureSphere& _sphere, const Color& col, real_t _intense):
-			Sphere(_sphere,
-					make_shared<HomoTexture>(
-						Surface(0, 0, 0, Color::NONE, 0, col * _intense))),
-			color(col), intensity(_intense) { };
+		Light(const PureSphere& _sphere, const Color& _col, real_t _intense):
+			Sphere(_sphere),
+			surf(Surface(0, 0, 0, Color::NONE, 0, _col * _intense)),
+			color(_col), intensity(_intense)
+		{ set_texture(make_shared<HomoTexture>(surf)); };
 
-		Light(const Vec& src, const Color& col, real_t _intense):
-			Light(PureSphere(src, 0.1), col, _intense) {};
+		Light(const Vec& src, const Color& _col, real_t _intense):
+			Light(PureSphere(src, 0.1), _col, _intense) {};
 
-		Vec get_src() const { return sphere.center; }
+		Vec get_src() const
+		{ return sphere.center; }
 };

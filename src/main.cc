@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Sat Sep 21 11:41:12 2013 +0800
+// Date: Sat Sep 21 11:56:51 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include <sys/types.h>
 #include <dirent.h>
@@ -194,7 +194,7 @@ void ball() {
 
 // simple ball
 void global_illu_ball() {
-	int w = 200, h = 200;
+	int w = 500, h = 500;
 	Space s;
 	s.add_light(Light(PureSphere(Vec(0, -10, 12), 4), Color::WHITE, 8));
 
