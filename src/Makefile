@@ -1,5 +1,5 @@
 # $File: Makefile
-# $Date: Sun Sep 22 20:56:38 2013 +0800
+# $Date: Mon Sep 23 01:35:40 2013 +0800
 
 OBJ_DIR = build
 TARGET = ray-tracing
@@ -7,7 +7,7 @@ TARGET = ray-tracing
 INCLUDE_DIR = -Iinclude
 DEFINES = -DDEBUG
 
-OPTFLAGS = -Wall -Wextra -Ofast
+OPTFLAGS = -Wall -Wextra -Ofast -fno-finite-math-only
 
 LIBS = opencv
 INCLUDE_DIR += $(shell pkg-config --cflags $(LIBS))
@@ -32,12 +32,12 @@ all: $(TARGET)
 
 sinclude $(DEPFILES)
 
-$(OBJ_DIR)/%.o: %.cc Makefile
+$(OBJ_DIR)/%.o: %.cc
 	@mkdir -p $(dir $@)
 	@echo "[cc] $< ..."
 	@$(CC) -c $< -o $@ $(CXXFLAGS)
 
-$(OBJ_DIR)/%.dep: %.cc
+$(OBJ_DIR)/%.dep: %.cc Makefile
 	@mkdir -p $(dir $@)
 	@echo "[dep] $< ..."
 	@$(CC) $(CXXFLAGS) -MM -MT "$(OBJ_DIR)/$(<:.cc=.o) $(OBJ_DIR)/$(<:.cc=.dep)" "$<"  > "$@"

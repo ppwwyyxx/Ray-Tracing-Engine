@@ -1,5 +1,5 @@
 // File: plane.cc
-// Date: Sat Sep 21 01:53:11 2013 +0800
+// Date: Mon Sep 23 01:31:30 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "renderable/plane.hh"
@@ -37,7 +37,7 @@ bool PlaneTrace::intersect() const {
 	if ((dist_to_plane > 0) ^ (dir_dot_norm < 0))  // ray leaves plane
 		return toward = false;
 
-	if (plane.radius < EPS) 		// infinite
+	if (plane.radius < EPS) 		// is an infinite plane
 		return true;
 	else {
 		inter_dist = - dist_to_plane / dir_dot_norm;
@@ -51,7 +51,8 @@ bool PlaneTrace::intersect() const {
 }
 
 real_t PlaneTrace::intersection_dist() const {
-	if (isfinite(inter_dist)) return inter_dist;
+	if (isfinite(inter_dist))
+		return inter_dist;
 	inter_dist = -dist_to_plane / dir_dot_norm;
 	return inter_dist;
 }

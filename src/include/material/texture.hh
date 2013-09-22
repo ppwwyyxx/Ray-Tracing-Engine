@@ -1,5 +1,5 @@
 // File: texture.hh
-// Date: Sun Sep 22 20:45:09 2013 +0800
+// Date: Mon Sep 23 01:22:54 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -63,20 +63,19 @@ class GridTexture : public Texture {
 class ImgTexture : public Texture {
 	private:
 		MagickReader img;
-		Geometry size;
 		real_t zfactor, illu;
 
 	public:
 		ImgTexture(const char* fname, real_t _zoom, real_t _illu = 1):
 			// _zoom > 1
-			img(fname), size(img.size), zfactor(_zoom), illu(_illu) {}
+			img(fname), zfactor(_zoom), illu(_illu) {}
 
 		ImgTexture(const std::string& fname, real_t _zoom, real_t _illu = 1):
 			ImgTexture(fname.c_str(), _zoom, _illu) {}
 
 		shared_ptr<Surface> get_property(real_t x, real_t y) const override {
-			int int_x = round(zfactor * x) - size.h / 2, int_y = (zfactor * y) - size.w / 2;
-			Color col = img.get((int_x % size.h + size.h) % size.h, (int_y % size.w + size.w) % size.w);
+			int int_x = round(zfactor * x) - img.size.h / 2, int_y = (zfactor * y) - img.size.w / 2;
+			Color col = img.get((int_x % img.size.h + img.size.h) % img.size.h, (int_y % img.size.w + img.size.w) % img.size.w);
 			return make_shared<Surface>(0, 20, 0.7, col, 0);
 		}
 };
