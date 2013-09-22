@@ -34,7 +34,7 @@ $ make gui   (gui)
 
 Command line:
 
-``./main <demo id>``, show demo scene defined in ``main.cc``.
+``./ray-tracing <demo id>``, show demo scene defined in ``main.cc``.
 
 The display is based on OpenCV, allowing keyboard control of the viewpoint:
 

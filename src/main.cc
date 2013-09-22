@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Sat Sep 21 23:53:58 2013 +0800
+// Date: Sun Sep 22 18:38:56 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include <sys/types.h>
 #include <dirent.h>
@@ -18,8 +18,8 @@ const string watermelon_fname = "../resource/watermelon.jpg";
 void all(bool g) {
 	int w = 1366, h = 768;
 	Space s;
-	s.add_light(Light(PureSphere(Vec(+10, 10, 20), 4), Color::WHITE, 8));
-	s.add_light(Light(PureSphere(Vec(-10, -10, 20), 4), Color::WHITE, 5));
+	s.add_light(Light(PureSphere(Vec(+10, 10, 20), 4), Color::WHITE, 6));
+//	s.add_light(Light(PureSphere(Vec(-10, -10, 20), 4), Color::WHITE, 2));
 
 	shared_ptr<Texture> t_diffuse = make_shared<HomoTexture>(Surface::GOOD);
 	shared_ptr<Texture> t_refl = make_shared<HomoTexture>(Surface::GOOD_REFL);
@@ -54,12 +54,12 @@ void all(bool g) {
 	s.add_obj(make_shared<Mesh>(mesh));
 
 	REP(i, 2) {
-		s.add_obj(make_shared<Sphere>(PureSphere(Vec(0 + 3, i * 4.2 + 1, 1), 1.5), (drand48() < 0.5 ? t_diffuse : t_glass)));
-		s.add_obj(make_shared<Sphere>(PureSphere(Vec(3 + 5, i * 3.2 + 1, 1), 1.5), t_refl));
+		s.add_obj(make_shared<Sphere>(PureSphere(Vec(0 + 3, i * 4.2 + 1, 1.5), 1.5), (drand48() < 0.5 ? t_diffuse : t_glass)));
+		s.add_obj(make_shared<Sphere>(PureSphere(Vec(3 + 5, i * 3.2 + 1, 1.5), 1.5), t_refl));
 	}
 
 	s.finish();
-	View v(s, Vec(-10.4, -0.9, 18.7), Vec(-2.1, 6.75, 7.1), 21.6, Geometry(w, h));
+	View v(s, Vec(-7.8, -7.3, 14.7), Vec(-2.6, 3.20, 3.5), 24.5, Geometry(w, h));
 	v.use_global = g;
 	if (g)
 		CVViewer viewer(v, "best.png");
