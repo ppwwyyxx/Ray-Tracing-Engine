@@ -1,5 +1,5 @@
 # $File: Makefile
-# $Date: Sun Sep 22 18:43:24 2013 +0800
+# $Date: Sun Sep 22 20:56:38 2013 +0800
 
 OBJ_DIR = build
 TARGET = ray-tracing
@@ -7,14 +7,15 @@ TARGET = ray-tracing
 INCLUDE_DIR = -Iinclude
 DEFINES = -DDEBUG
 
-OPTFLAGS = -Wall -Wextra -O3
+OPTFLAGS = -Wall -Wextra -Ofast
 
 LIBS = opencv
 INCLUDE_DIR += $(shell pkg-config --cflags $(LIBS))
 
-CXXFLAGS = $(INCLUDE_DIR)
+CXXFLAGS = $(DEFINES) -std=c++11 $(OPTFLAGS) -fopenmp -pthread
+CXXFLAGS += $(INCLUDE_DIR)
 CXXFLAGS += $(shell Magick++-config --cxxflags)
-CXXFLAGS += $(DEFINES) -std=c++11 $(OPTFLAGS) -fopenmp -pthread
+
 LDFLAGS = $(shell pkg-config $(LIBS) --libs)
 LDFLAGS += $(OPTFLAGS)
 LDFLAGS += $(shell Magick++-config --ldflags --libs) -fopenmp -pthread
@@ -31,14 +32,15 @@ all: $(TARGET)
 
 sinclude $(DEPFILES)
 
-$(OBJ_DIR)/%.o: %.cc
+$(OBJ_DIR)/%.o: %.cc Makefile
+	@mkdir -p $(dir $@)
 	@echo "[cc] $< ..."
 	@$(CC) -c $< -o $@ $(CXXFLAGS)
 
-$(OBJ_DIR)/%.dep: %.cc  Makefile
+$(OBJ_DIR)/%.dep: %.cc
 	@mkdir -p $(dir $@)
 	@echo "[dep] $< ..."
-	@$(CC) $(CXXFLAGS) $(INCLUDE_DIR) $(DEFINES) -MM -MT "$(OBJ_DIR)/$(<:.cc=.o) $(OBJ_DIR)/$(<:.cc=.dep)" "$<"  > "$@"
+	@$(CC) $(CXXFLAGS) -MM -MT "$(OBJ_DIR)/$(<:.cc=.o) $(OBJ_DIR)/$(<:.cc=.dep)" "$<"  > "$@"
 
 
 $(TARGET): $(OBJS)
