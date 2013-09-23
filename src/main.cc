@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Sun Sep 22 18:38:56 2013 +0800
+// Date: Mon Sep 23 18:45:45 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include <sys/types.h>
 #include <dirent.h>
@@ -18,8 +18,8 @@ const string watermelon_fname = "../resource/watermelon.jpg";
 void all(bool g) {
 	int w = 1366, h = 768;
 	Space s;
-	s.add_light(Light(PureSphere(Vec(+10, 10, 20), 4), Color::WHITE, 6));
-//	s.add_light(Light(PureSphere(Vec(-10, -10, 20), 4), Color::WHITE, 2));
+	s.add_light(Light(PureSphere(Vec(+10, 10, 20), 4), Color::WHITE, 20));
+	s.add_light(Light(PureSphere(Vec(-10, -10, 20), 4), Color::WHITE, 20));
 
 	shared_ptr<Texture> t_diffuse = make_shared<HomoTexture>(Surface::GOOD);
 	shared_ptr<Texture> t_refl = make_shared<HomoTexture>(Surface::GOOD_REFL);
@@ -49,7 +49,7 @@ void all(bool g) {
 	fname = "../resource/models/fixed.perfect.dragon.100K.0.07.obj";
 	mesh = Mesh(fname, Vec(-8, 3, 5), 5);
 	mesh.smooth = false;
-	mesh.set_texture(t_glass);
+	mesh.set_texture(make_shared<HomoTexture>(Surface::MIRROR));
 	mesh.finish();
 	s.add_obj(make_shared<Mesh>(mesh));
 
