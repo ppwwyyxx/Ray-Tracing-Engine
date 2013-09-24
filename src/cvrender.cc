@@ -1,7 +1,8 @@
 // File: cvrender.cc
-// Date: Mon Aug 19 23:06:20 2013 +0800
+// Date: Tue Sep 24 09:18:36 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
+#include <iostream>
 #include <functional>
 #include <opencv2/opencv.hpp>
 #include <omp.h>
@@ -112,8 +113,8 @@ void CVRender::antialias() {
 }
 
 void CVRender::blur() {
-	Mat dst = img;
-	GaussianBlur(dst, img, Size(3, 3), 0.5);
+	Mat dst = img.clone();
+	cv::bilateralFilter(dst, img, -1, 4, 4);
 }
 
 

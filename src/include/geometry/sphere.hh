@@ -1,5 +1,5 @@
 // File: sphere.hh
-// Date: Sun Jun 23 17:35:28 2013 +0800
+// Date: Tue Sep 24 08:19:53 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -10,8 +10,8 @@ class PureSphere {
 		Vec center;
 		real_t r;
 
-		PureSphere(const Vec& m_center, real_t m_r):
-			center(m_center), r(m_r) { }
+		PureSphere(const Vec& _center, real_t _r):
+			center(_center), r(_r) { }
 
 		virtual ~PureSphere(){}
 

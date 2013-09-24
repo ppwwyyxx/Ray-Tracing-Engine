@@ -1,5 +1,5 @@
 // File: geometry.hh
-// Date: Sat Sep 21 11:23:07 2013 +0800
+// Date: Tue Sep 24 08:21:11 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -132,7 +132,7 @@ class Vector {
 
 			real_t cos1 = -dot(v_in);
 			if (cos1 < EPS) return ret; // norm should towards ray dir, so this can only happen with mesh
-			if (cos1 / v_in.mod() < 0.1) return v_in.get_normalized();
+			if (cos1 / v_in.mod() < EPS) return v_in.get_normalized();
 			m_assert(cos1 >= 0);
 			real_t cos2 = 1 - ::sqr(density) * (1 - ::sqr(cos1));
 			if (cos2 < 0) return ret;

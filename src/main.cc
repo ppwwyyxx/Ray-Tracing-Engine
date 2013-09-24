@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Mon Sep 23 18:45:45 2013 +0800
+// Date: Tue Sep 24 14:01:16 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include <sys/types.h>
 #include <dirent.h>
@@ -17,9 +17,10 @@ const string watermelon_fname = "../resource/watermelon.jpg";
 // Complicated Scene
 void all(bool g) {
 	int w = 1366, h = 768;
+	w = 600, h = 380;
 	Space s;
-	s.add_light(Light(PureSphere(Vec(+10, 10, 20), 4), Color::WHITE, 20));
-	s.add_light(Light(PureSphere(Vec(-10, -10, 20), 4), Color::WHITE, 20));
+	s.add_light(Light(PureSphere(Vec(+10, 10, 30), 4), Color::WHITE, 20));
+	s.add_light(Light(PureSphere(Vec(-10, -10, 30), 4), Color::WHITE, 20));
 
 	shared_ptr<Texture> t_diffuse = make_shared<HomoTexture>(Surface::GOOD);
 	shared_ptr<Texture> t_refl = make_shared<HomoTexture>(Surface::GOOD_REFL);
@@ -36,6 +37,7 @@ void all(bool g) {
 	const char* fname = "../resource/models/dinosaur.2k.obj";
 	Mesh mesh(fname, Vec(-3, 0, 3), 9);
 	mesh.set_texture(make_shared<HomoTexture>(HomoTexture::CYAN));
+	mesh.smooth = false;
 	mesh.finish();
 	s.add_obj(make_shared<Mesh>(mesh));
 
@@ -49,7 +51,7 @@ void all(bool g) {
 	fname = "../resource/models/fixed.perfect.dragon.100K.0.07.obj";
 	mesh = Mesh(fname, Vec(-8, 3, 5), 5);
 	mesh.smooth = false;
-	mesh.set_texture(make_shared<HomoTexture>(Surface::MIRROR));
+	mesh.set_texture(t_glass);
 	mesh.finish();
 	s.add_obj(make_shared<Mesh>(mesh));
 
@@ -59,7 +61,8 @@ void all(bool g) {
 	}
 
 	s.finish();
-	View v(s, Vec(-7.8, -7.3, 14.7), Vec(-2.6, 3.20, 3.5), 24.5, Geometry(w, h));
+//	View v(s, Vec(-8.19, -14.3, 24.9), Vec(0.79, 3.70, 5.5), 27, Geometry(w, h));
+	View v(s, Vec(-6.59, -22.3, 12.9), Vec(2.12, 3.20, 5.5), 27, Geometry(w, h));
 	v.use_global = g;
 	if (g)
 		CVViewer viewer(v, "best.png");
