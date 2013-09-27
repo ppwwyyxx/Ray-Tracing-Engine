@@ -1,5 +1,5 @@
 //File: MCPT.cc
-//Date: Fri Sep 27 19:31:50 2013 +0800
+//Date: Fri Sep 27 19:53:27 2013 +0800
 //Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "render/MCPT.hh"
@@ -88,4 +88,16 @@ Color MCPT::do_trace(const Ray& ray, int depth) const {
 	}
 
 	return surf->emission + diffu * (now_diffuse + now_refl + now_transm);
+}
+
+Color MCPT::trace(const Ray& ray) const {
+	Color ret = Color::NONE;
+	REP(n_samp, GLOBAL_ILLU_SAMPLE_CNT) {
+		ret += do_trace_adapter(ray);
+	}
+	ret *= (1.0 / GLOBAL_ILLU_SAMPLE_CNT);
+	ret.normalize();
+#define ppp(x) pow((x < EPS) ? EPS : x > 1 ? 1 - EPS : x, 1.0 / 2.2)
+	return Color(ppp(ret.x), ppp(ret.y), ppp(ret.z));
+#undef ppp
 }

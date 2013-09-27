@@ -1,5 +1,5 @@
 // File: view.cc
-// Date: Fri Sep 27 19:13:25 2013 +0800
+// Date: Fri Sep 27 19:55:15 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "view.hh"
@@ -30,24 +30,13 @@ Color View::render(int i, int j, bool debug) const {
 	if (use_global) {
 		Color ret = Color::NONE;
 		REP(dx, 2) REP(dy, 2) {
-			REP(n_samp, GLOBAL_ILLU_SAMPLE_CNT) {
-				real_t r1 = 2 * drand48(),
-					   r2 = 2 * drand48();
-				r1 = (r1  < 1) ? sqrt(r1) - 1 : 1 - sqrt(2 - r1);
-				r2 = (r2  < 1) ? sqrt(r2) - 1 : 1 - sqrt(2 - r2);
-				Vec new_dest = dest - dir_h * (dx + 0.5 + r1) / 2 + dir_w * (dy + 0.5 + r2) / 2;
-				Ray ray(view_point, new_dest - view_point, 1, true);
-				ret += sp->trace(ray);
-			}
+			Vec new_dest = dest - dir_h * (dx + 0.5) / 2 + dir_w * (dy + 0.5) / 2;
+			Ray ray(view_point, new_dest - view_point, 1, true);
+			ret += sp->trace(ray);
 		}
-
-		ret = ret * (1.0 / 4 / GLOBAL_ILLU_SAMPLE_CNT);
-		ret.normalize();
-#define ppp(x) pow((x < EPS) ? EPS : x > 1 ? 1 - EPS : x, 1.0 / 2.2)
-		return Color(ppp(ret.x), ppp(ret.y), ppp(ret.z));
-#undef ppp
+		ret = ret * (1.0 / 4);
+		return ret;
 	}
-
 
 	if (!use_dof) {
 		Ray ray(view_point, dest - view_point, 1, true);

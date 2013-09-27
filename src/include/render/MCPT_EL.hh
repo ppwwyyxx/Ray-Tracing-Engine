@@ -1,5 +1,5 @@
 //File: MCPT_EL.hh
-//Date: Fri Sep 27 19:39:47 2013 +0800
+//Date: Fri Sep 27 19:48:14 2013 +0800
 //Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -12,7 +12,7 @@ class MCPT_EL : public MCPT {
 
 		Color do_trace(const Ray& ray, int depth = 0, int USE_EMISSION = 1) const;
 
-	public:
-		Color trace(const Ray& ray) const override
+		Color do_trace_adapter(const Ray& ray) const override
 		{ return do_trace(ray); }
+
 };

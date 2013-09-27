@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Fri Sep 27 19:36:56 2013 +0800
+// Date: Fri Sep 27 19:53:49 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include <sys/types.h>
 #include <dirent.h>
