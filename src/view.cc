@@ -1,5 +1,5 @@
 // File: view.cc
-// Date: Fri Sep 27 19:55:15 2013 +0800
+// Date: Fri Sep 27 20:21:34 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "view.hh"
@@ -23,44 +23,45 @@ View::View(const Space* _sp, const Vec& _view_point,
 	resume_dir_vector();
 }
 
-Color View::render(int i, int j, bool debug) const {
-	Vec corner = mid - dir_h * (geo.h / 2) - dir_w * (geo.w / 2);
-	Vec dest = corner + dir_h * (geo.h - 1 - i) + dir_w * j;
+Color View::render_antialias(const Vec& dest, int sample) const {
+	real_t unit = 1.0 / sample, unit2 = unit / 2;
 
-	if (use_global) {
-		Color ret = Color::NONE;
-		REP(dx, 2) REP(dy, 2) {
-			Vec new_dest = dest - dir_h * (dx + 0.5) / 2 + dir_w * (dy + 0.5) / 2;
+	Color ret = Color::NONE;
+	REP(dx, sample) REP(dy, sample) {
+		Vec new_dest = dest - dir_h * (dx * unit + unit2) + dir_w * (dy * unit + unit2);
+
+		if (!use_dof) {
 			Ray ray(view_point, new_dest - view_point, 1, true);
 			ret += sp->trace(ray);
+		} else {
+			ret += render_dof(new_dest);
 		}
-		ret = ret * (1.0 / 4);
-		return ret;
 	}
+	ret = ret * (1.0 / ::sqr(sample));
+	return ret;
+}
 
-	if (!use_dof) {
-		Ray ray(view_point, dest - view_point, 1, true);
-		if (debug) ray.debug = true;
-		return sp->trace(ray);
-	} else {
-		// intersection point with camera screen
-		Vec intersec = view_point + (dest - view_point) * DOF_SCREEN_DIST_FACTOR;
-		real_t theta;
-		Color ret = Color::BLACK;
-		REP(k, DOF_SAMPLE_CNT) {
-			theta = drand48() * 2 * M_PI;
-			Vec diff = dir_w * cos(theta) + dir_w * sin(theta);
-			diff.normalize();
-			diff = diff * (drand48() * DOF_SAMPLE_RADIUS);
+Color View::render_dof(const Vec& dest) const {
+	Vec intersec = view_point + (dest - view_point) * DOF_SCREEN_DIST_FACTOR;
+	real_t theta;
+	Color dof_res = Color::NONE;
+	REP(k, DOF_SAMPLE_CNT) {
+		theta = drand48() * 2 * M_PI;
+		Vec diff = dir_w * cos(theta) + dir_w * sin(theta);
+		diff.normalize();
+		diff = diff * (drand48() * DOF_SAMPLE_RADIUS);
 
-			Vec neworig = intersec + diff;
-//			cout << neworig << endl;
-			Ray ray(neworig, dest - neworig, 1, true);
-			ret = ret + sp->trace(ray);
-		}
-		ret = ret / DOF_SAMPLE_CNT;
-		return ret;
+		Vec neworig = intersec + diff;
+		Ray ray(neworig, dest - neworig, 1, true);
+		dof_res += sp->trace(ray);
 	}
+	dof_res = dof_res * (1.0 / DOF_SAMPLE_CNT);
+	return dof_res;
+}
+
+Color View::render(int i, int j) const {
+	Vec dest = mid + dir_h * (geo.h - 1 - i - geo.h / 2) + dir_w * (j - geo.w / 2);
+	return render_antialias(dest, ANTIALIAS_SAMPLE_CNT);
 }
 
 void View::twist(int angle) {

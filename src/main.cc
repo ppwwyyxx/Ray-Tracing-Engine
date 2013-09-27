@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Fri Sep 27 19:53:49 2013 +0800
+// Date: Fri Sep 27 20:18:33 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include <sys/types.h>
 #include <dirent.h>
@@ -70,7 +70,6 @@ void all(bool g) {
 	/*
 	 *View v(s, Vec(-16.91, -10.5, 14.1), Vec(-1.63, 3.00, 3.0), 22.5, Geometry(w, h));
 	 */
-	v.use_global = g;
 	if (g)
 		CVViewer viewer(v, "best.png");
 	else {
@@ -223,7 +222,6 @@ void global_illu_ball() {
 
 	s.finish();
 	View v(&s, Vec(-5, -1, 4), Vec(0, 0, 2), 8, Geometry(w, h));
-	v.use_global = true;
 	CVViewer viewer(v);
 	viewer.view();
 }
@@ -255,7 +253,6 @@ void global_illu() {
 
 	s.finish();
 	View v(&s, Vec(-5.6, -1.6, 10.1), Vec(-0.8, 1.35, 2.5), 13, Geometry(w, h));
-	v.use_global = true;
 	CVViewer viewer(v, "global_illu.png");
 	viewer.r.finish();
 }
@@ -285,7 +282,6 @@ void glass() {
 
 	s.finish();
 	View v(&s, Vec(-7.6, 6.3, 10.9), Vec(-0.82, 4.32, 2.1), 15.6, Geometry(w, h));
-	v.use_global = true;
 	CVViewer viewer(v, "glass.png");
 	viewer.r.finish();
 }

@@ -1,5 +1,5 @@
 // File: const.hh
-// Date: Fri Sep 27 19:36:53 2013 +0800
+// Date: Fri Sep 27 20:08:57 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -15,6 +15,7 @@
 const real_t DEFAULT_TRACING_WEIGHT_THRESHOLD = 0.001;
 const real_t DEFAULT_REFRACTIVE_INDEX = 1.2;
 const real_t AIR_REFRACTIVE_INDEX = 1;
+const int ANTIALIAS_SAMPLE_CNT = 2;
 const int MAX_PHONG_DEPTH = 4;
 const int MAX_MCPT_DEPTH = 4;
 

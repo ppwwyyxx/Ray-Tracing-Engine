@@ -1,5 +1,5 @@
 // File: view.hh
-// Date: Fri Sep 27 19:26:03 2013 +0800
+// Date: Fri Sep 27 20:21:18 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -33,9 +33,7 @@ class View {
 
 		Vec origin_norm;		// the initial view
 
-		// config
 		bool use_dof = false;
-		bool use_global = false;
 
 		View(const Space* _sp, const Vec& _view_point,
 				const Vec& _mid, real_t w, const Geometry& _geo);
@@ -52,10 +50,14 @@ class View {
 
 		void move_screen(real_t dist);
 
-		Color render(int i, int j, bool debug = false) const;	// i row j column
+		Color render(int i, int j) const;	// i row j column
+
+		Color render_antialias(const Vec& dest, int sample) const; // render with n^2 sample at each pixel
+
+		Color render_dof(const Vec& dest) const;
 
 		const Geometry& get_geo() const
-		{return geo; }
+		{ return geo; }
 
 };
 
