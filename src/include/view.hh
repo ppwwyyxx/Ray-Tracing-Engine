@@ -1,12 +1,12 @@
 // File: view.hh
-// Date: Sat Sep 21 23:27:52 2013 +0800
+// Date: Fri Sep 27 19:26:03 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
 
 #include <memory>
 #include "geometry/geometry.hh"
-#include "space.hh"
+#include "render/space.hh"
 using namespace std;
 
 class View {
@@ -23,7 +23,7 @@ class View {
 			// use either geo.h or geo.w
 		}
 
-		const Space& sp;
+		const Space* sp;
 
 	public:
 		Vec view_point;
@@ -37,7 +37,7 @@ class View {
 		bool use_dof = false;
 		bool use_global = false;
 
-		View(const Space& _sp, const Vec& _view_point,
+		View(const Space* _sp, const Vec& _view_point,
 				const Vec& _mid, real_t w, const Geometry& _geo);
 
 		void zoom(real_t ratio);	// r > 1: zoom in

@@ -1,10 +1,12 @@
 // File: main.cc
-// Date: Tue Sep 24 14:01:16 2013 +0800
+// Date: Fri Sep 27 19:36:56 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include <sys/types.h>
 #include <dirent.h>
 #include "viewer.hh"
-#include "space.hh"
+#include "render/phong.hh"
+#include "render/MCPT.hh"
+#include "render/MCPT_EL.hh"
 #include "renderable/plane.hh"
 #include "renderable/sphere.hh"
 #include "view.hh"
@@ -18,51 +20,56 @@ const string watermelon_fname = "../resource/watermelon.jpg";
 void all(bool g) {
 	int w = 1366, h = 768;
 	w = 600, h = 380;
-	Space s;
-	s.add_light(Light(PureSphere(Vec(+10, 10, 30), 4), Color::WHITE, 20));
-	s.add_light(Light(PureSphere(Vec(-10, -10, 30), 4), Color::WHITE, 20));
+	Space* sp;
+	if (g) sp = new MCPT();
+	else sp = new Phong();
+	sp->add_light(Light(PureSphere(Vec(+10, 10, 30), 1), Color::WHITE, 20));
+	sp->add_light(Light(PureSphere(Vec(-10, -10, 30), 1), Color::WHITE, 20));
 
 	shared_ptr<Texture> t_diffuse = make_shared<HomoTexture>(Surface::GOOD);
 	shared_ptr<Texture> t_refl = make_shared<HomoTexture>(Surface::GOOD_REFL);
 	shared_ptr<Texture> t_glass = make_shared<HomoTexture>(Surface::GLASS);
 	shared_ptr<Texture> tpic = make_shared<ImgTexture>(texture_fname, 100, 0.6);
 	shared_ptr<Texture> t_wtm = make_shared<ImgTexture>(watermelon_fname, 10, 0.6);
-	s.add_obj(make_shared<Plane>(InfPlane::XYPLANE, tpic));
-	s.add_obj(make_shared<Plane>(InfPlane(Vec(0, 1, 0), 20), make_shared<GridTexture>(GridTexture::BLACK_WHITE_REFL)));
-	s.add_obj(make_shared<Plane>(InfPlane(Vec(-3, -1, 0), -16, true), make_shared<HomoTexture>(Surface::MIRROR)));
-	s.add_obj(make_shared<Sphere>(PureSphere(Vec(+5, -6, 2), 1.5), t_glass));
-	s.add_obj(make_shared<Sphere>(PureSphere(Vec(-4, 6, 8), 1.5), t_wtm));
+	sp->add_obj(make_shared<Plane>(InfPlane::XYPLANE, tpic));
+	sp->add_obj(make_shared<Plane>(InfPlane(Vec(0, 1, 0), 20), make_shared<GridTexture>(GridTexture::BLACK_WHITE_REFL)));
+	sp->add_obj(make_shared<Plane>(InfPlane(Vec(-3, -1, 0), -16, true), make_shared<HomoTexture>(Surface::MIRROR)));
+	sp->add_obj(make_shared<Sphere>(PureSphere(Vec(+5, -6, 2), 2), t_glass));
+	sp->add_obj(make_shared<Sphere>(PureSphere(Vec(-4, 6, 8), 1.5), t_wtm));
 
 
 	const char* fname = "../resource/models/dinosaur.2k.obj";
-	Mesh mesh(fname, Vec(-3, 0, 3), 9);
-	mesh.set_texture(make_shared<HomoTexture>(HomoTexture::CYAN));
+	Mesh mesh(fname, Vec(-3, -2, 3), 9);
+	mesh.set_texture(make_shared<HomoTexture>(Surface::CYAN));
 	mesh.smooth = false;
 	mesh.finish();
-	s.add_obj(make_shared<Mesh>(mesh));
+	sp->add_obj(make_shared<Mesh>(mesh));
 
 	fname = "../resource/models/cube.obj";
-	mesh = Mesh(fname, Vec(-12, 7, 5), 4);
+	mesh = Mesh(fname, Vec(-12, 7, 4), 4);
 	mesh.smooth = false;
-	mesh.set_texture(make_shared<HomoTexture>(HomoTexture::BLUE));
+	mesh.set_texture(make_shared<HomoTexture>(Surface::BLUE));
 	mesh.finish();
-	s.add_obj(make_shared<Mesh>(mesh));
+	sp->add_obj(make_shared<Mesh>(mesh));
 
-	fname = "../resource/models/fixed.perfect.dragon.100K.0.07.obj";
-	mesh = Mesh(fname, Vec(-8, 3, 5), 5);
+	fname = "../resource/models/horse.fine.90k.obj";
+	mesh = Mesh(fname, Vec(-8, 3, 5), 8);
 	mesh.smooth = false;
-	mesh.set_texture(t_glass);
+	mesh.set_texture(make_shared<HomoTexture>(Surface::GREEN));
 	mesh.finish();
-	s.add_obj(make_shared<Mesh>(mesh));
+	sp->add_obj(make_shared<Mesh>(mesh));
 
 	REP(i, 2) {
-		s.add_obj(make_shared<Sphere>(PureSphere(Vec(0 + 3, i * 4.2 + 1, 1.5), 1.5), (drand48() < 0.5 ? t_diffuse : t_glass)));
-		s.add_obj(make_shared<Sphere>(PureSphere(Vec(3 + 5, i * 3.2 + 1, 1.5), 1.5), t_refl));
+		sp->add_obj(make_shared<Sphere>(PureSphere(Vec(0 + 3, i * 4.2 + 1, 1.5), 1.5), (drand48() < 0.5 ? t_diffuse : t_glass)));
+		sp->add_obj(make_shared<Sphere>(PureSphere(Vec(3 + 5, i * 3.2 + 1, 1.5), 1.5), t_refl));
 	}
 
-	s.finish();
-//	View v(s, Vec(-8.19, -14.3, 24.9), Vec(0.79, 3.70, 5.5), 27, Geometry(w, h));
-	View v(s, Vec(-6.59, -22.3, 12.9), Vec(2.12, 3.20, 5.5), 27, Geometry(w, h));
+	sp->finish();
+	View v(sp, Vec(-8.19, -14.3, 24.9), Vec(0.79, 3.70, 5.5), 27, Geometry(w, h));
+//	View v(s, Vec(-6.59, -22.3, 12.9), Vec(2.12, 3.20, 5.5), 27, Geometry(w, h));
+	/*
+	 *View v(s, Vec(-16.91, -10.5, 14.1), Vec(-1.63, 3.00, 3.0), 22.5, Geometry(w, h));
+	 */
 	v.use_global = g;
 	if (g)
 		CVViewer viewer(v, "best.png");
@@ -75,15 +82,15 @@ void all(bool g) {
 // test soft shadow
 void test_shadow() {
 	int w = 500, h = 500;
-	Space s; s.use_soft_shadow = true;
+	Phong s; s.use_soft_shadow = true;
 	s.add_light(Light(Vec(0, -10, 12), Color::WHITE, 6.0));
 
-	shared_ptr<Texture> t2 = make_shared<HomoTexture>(HomoTexture::BLUE);
+	shared_ptr<Texture> t2 = make_shared<HomoTexture>(Surface::BLUE);
 	shared_ptr<Texture> tpic = make_shared<ImgTexture>(texture_fname, 100, 0.6);
 	s.add_obj(make_shared<Plane>(InfPlane::XYPLANE, tpic));
 	s.add_obj(make_shared<Sphere>(PureSphere::TestSphere, t2));
 	s.finish();
-	View v(s, Vec(-8.7, 4.58, 3.75), Vec(-0.30, -0.31, 1.5), 8, Geometry(w, h));
+	View v(&s, Vec(-8.7, 4.58, 3.75), Vec(-0.30, -0.31, 1.5), 8, Geometry(w, h));
 	CVViewer viewer(v);
 	viewer.view();
 }
@@ -91,7 +98,7 @@ void test_shadow() {
 // test depth of field
 void dof_ball_scene() {
 	int w = 500, h = 500;
-	Space s;
+	Phong s;
 	s.add_light(Light(Vec(0, -10, 12), Color::WHITE, 6.0));
 	s.add_light(Light(Vec(9, 2, 50), Color::WHITE, 6.0));
 	s.add_light(Light(Vec(-9, 2, 50), Color::WHITE, 6.0));
@@ -107,7 +114,7 @@ void dof_ball_scene() {
 
 	REP(i, 10) REP(j, 2) s.add_obj(make_shared<Sphere>(PureSphere(Vec(j * 6, 1, i * 3), 1), tball));
 	s.finish();
-	View v(s, Vec(11, -13.3, 39.75), Vec(5.4, -1, 22.8), 16, Geometry(w, h));
+	View v(&s, Vec(11, -13.3, 39.75), Vec(5.4, -1, 22.8), 16, Geometry(w, h));
 	v.use_dof = true;
 	CVViewer viewer(v);
 	viewer.view();
@@ -116,7 +123,7 @@ void dof_ball_scene() {
 // generate lots of pictures for video
 void generate_dof_video() {
 	int w = 1000, h = 1000;
-	Space s;
+	Phong s;
 	s.add_light(Light(Vec(0, -10, 12), Color::WHITE, 6.0));
 	s.add_light(Light(Vec(9, 2, 50), Color::WHITE, 6.0));
 	s.add_light(Light(Vec(-9, 2, 50), Color::WHITE, 6.0));
@@ -131,7 +138,7 @@ void generate_dof_video() {
 
 	REP(i, 10) REP(j, 2) s.add_obj(make_shared<Sphere>(PureSphere(Vec(j * 6, 1, i * 3), 1), tball));
 	s.finish();
-	View v(s, Vec(11, -13.3, 39.75), Vec(5.4, -1, 22.8), 16, Geometry(w, h));
+	View v(&s, Vec(11, -13.3, 39.75), Vec(5.4, -1, 22.8), 16, Geometry(w, h));
 	v.use_dof = true;
 
 
@@ -146,20 +153,20 @@ void generate_dof_video() {
 // test kd tree
 void test_kdtree() {
 	int w = 500, h = 500;
-	Space s;
+	Phong s;
 	s.add_light(Light(Vec(0, -10, 12), Color::WHITE, 6.0));
 	s.add_light(Light(Vec(0, 10, 8), Color::WHITE, 6.0));
 	const char* fname = "../resource/models/fixed.perfect.dragon.100K.0.07.obj";
 	Mesh mesh(fname, Vec(0, 0, 2), 5);
 
 	mesh.smooth = true;
-	mesh.set_texture(make_shared<HomoTexture>(HomoTexture::CYAN));
+	mesh.set_texture(make_shared<HomoTexture>(Surface::CYAN));
 	mesh.finish();
 	s.add_obj(make_shared<Mesh>(mesh));
 	shared_ptr<Texture> t1 = make_shared<GridTexture>(GridTexture::BLACK_WHITE_REFL);
 	s.add_obj(make_shared<Plane>(InfPlane::XYPLANE, t1));
 	s.finish();
-	View v(s, Vec(0, 0, 12), Vec(0, 0, 2), 15, Geometry(w, h));
+	View v(&s, Vec(0, 0, 12), Vec(0, 0, 2), 15, Geometry(w, h));
 	CVViewer viewer(v);
 	viewer.view();
 }
@@ -170,16 +177,16 @@ void test_simplify() {
 	const char* fname = "../resource/models/fixed.perfect.dragon.100K.0.07.obj";
 	Mesh mesh(fname, Vec(0, 0, 2), 5);
 	mesh.smooth = true;
-	mesh.set_texture(make_shared<HomoTexture>(HomoTexture::CYAN));
+	mesh.set_texture(make_shared<HomoTexture>(Surface::CYAN));
 	mesh.simplify(0.5);
 	mesh.finish();
 
-	Space s;
+	Phong s;
 	s.add_light(Light(Vec(0, -10, 12), Color::WHITE, 6.0));
 	s.add_light(Light(Vec(0, 10, 8), Color::WHITE, 6.0));
 	s.add_obj(make_shared<Mesh>(mesh));
 	s.finish();
-	View v(s, Vec(0, 0, 12), Vec(0, 0, 2), 15, Geometry(w, h));
+	View v(&s, Vec(0, 0, 12), Vec(0, 0, 2), 15, Geometry(w, h));
 	CVViewer viewer(v);
 	viewer.view();
 }
@@ -187,17 +194,17 @@ void test_simplify() {
 // simple ball
 void ball() {
 	int w = 500, h = 500;
-	Space s;
+	Phong s;
 	s.add_light(Light(Vec(0, -10, 12), Color::WHITE, 7));
 
-	shared_ptr<Texture> t2 = make_shared<HomoTexture>(HomoTexture::BLUE);
+	shared_ptr<Texture> t2 = make_shared<HomoTexture>(Surface::BLUE);
 //	shared_ptr<Texture> t2 = make_shared<ImgTexture>(watermelon_fname, 10, 0.6);
 	shared_ptr<Texture> tpic = make_shared<ImgTexture>(texture_fname, 100, 0.6);
 	s.add_obj(make_shared<Plane>(InfPlane::XYPLANE, tpic));//make_shared<Plane>(Plane())?
 	s.add_obj(make_shared<Sphere>(PureSphere::TestSphere, t2));
 
 	s.finish();
-	View v(s, Vec(-5, -1, 4), Vec(0, 0, 2), 8, Geometry(w, h));
+	View v(&s, Vec(-5, -1, 4), Vec(0, 0, 2), 8, Geometry(w, h));
 	CVViewer viewer(v);
 	viewer.view();
 }
@@ -205,7 +212,7 @@ void ball() {
 // simple ball
 void global_illu_ball() {
 	int w = 500, h = 500;
-	Space s;
+	MCPT_EL s;
 	s.add_light(Light(PureSphere(Vec(0, -10, 12), 4), Color::WHITE, 8));
 
 	shared_ptr<Texture> t2 = make_shared<HomoTexture>(Surface::GOOD);
@@ -215,7 +222,7 @@ void global_illu_ball() {
 	s.add_obj(make_shared<Sphere>(PureSphere::TestSphere, t2));
 
 	s.finish();
-	View v(s, Vec(-5, -1, 4), Vec(0, 0, 2), 8, Geometry(w, h));
+	View v(&s, Vec(-5, -1, 4), Vec(0, 0, 2), 8, Geometry(w, h));
 	v.use_global = true;
 	CVViewer viewer(v);
 	viewer.view();
@@ -224,7 +231,7 @@ void global_illu_ball() {
 // test global illumination with diffuse and reflection
 void global_illu() {
 	int w = 500, h = 500;
-	Space s;
+	MCPT s;
 	s.add_light(Light(PureSphere(Vec(+10, 10, 10), 4), Color::WHITE, 12));
 
 	shared_ptr<Texture> t_diffuse = make_shared<HomoTexture>(Surface::GOOD);
@@ -236,7 +243,7 @@ void global_illu() {
 	const char* fname = "../resource/models/fixed.perfect.dragon.100K.0.07.obj";
 	Mesh mesh(fname, Vec(-3, +5, 2), 5);
 	mesh.smooth = true;
-	mesh.set_texture(make_shared<HomoTexture>(HomoTexture::CYAN));
+	mesh.set_texture(make_shared<HomoTexture>(Surface::CYAN));
 	mesh.simplify(0.4);
 	mesh.finish();
 	s.add_obj(make_shared<Mesh>(mesh));
@@ -247,7 +254,7 @@ void global_illu() {
 	}
 
 	s.finish();
-	View v(s, Vec(-5.6, -1.6, 10.1), Vec(-0.8, 1.35, 2.5), 13, Geometry(w, h));
+	View v(&s, Vec(-5.6, -1.6, 10.1), Vec(-0.8, 1.35, 2.5), 13, Geometry(w, h));
 	v.use_global = true;
 	CVViewer viewer(v, "global_illu.png");
 	viewer.r.finish();
@@ -256,7 +263,7 @@ void global_illu() {
 // test glass ball effect
 void glass() {
 	int w = 500, h = 500;
-	Space s;
+	MCPT s;
 	s.add_light(Light(PureSphere(Vec(+5, 0, 13), 4), Color::WHITE, 13));
 
 	shared_ptr<Texture> t1 = make_shared<GridTexture>(GridTexture::BLACK_WHITE);
@@ -269,7 +276,7 @@ void glass() {
 	const char* fname = "../resource/models/fixed.perfect.dragon.100K.0.07.obj";
 	Mesh mesh(fname, Vec(-3, +5, 2), 5);
 	mesh.smooth = true;
-	mesh.set_texture(make_shared<HomoTexture>(HomoTexture::CYAN));
+	mesh.set_texture(make_shared<HomoTexture>(Surface::CYAN));
 	mesh.simplify(0.2);
 	mesh.finish();
 	s.add_obj(make_shared<Mesh>(mesh));
@@ -277,7 +284,7 @@ void glass() {
 	REP(i, 5) REP(j, 2) s.add_obj(make_shared<Sphere>(PureSphere(Vec(j * 3 + 3, i * 3 + 3, 1), 1), t2));
 
 	s.finish();
-	View v(s, Vec(-7.6, 6.3, 10.9), Vec(-0.82, 4.32, 2.1), 15.6, Geometry(w, h));
+	View v(&s, Vec(-7.6, 6.3, 10.9), Vec(-0.82, 4.32, 2.1), 15.6, Geometry(w, h));
 	v.use_global = true;
 	CVViewer viewer(v, "glass.png");
 	viewer.r.finish();
@@ -286,12 +293,12 @@ void glass() {
 // lots of obj
 void obj_scene() {
 	int w = 500, h = 500;
-	Space s;
+	Phong s;
 	s.add_light(Light(Vec(0, -10, 12), Color::WHITE, 6.0));
 	s.add_light(Light(Vec(0, 10, 8), Color::WHITE, 6.0));
 	const char* fname = "../resource/models/Arma.obj";
 	Mesh mesh(fname, Vec(0, -8, 2), 5);
-	mesh.set_texture(make_shared<HomoTexture>(HomoTexture::CYAN));
+	mesh.set_texture(make_shared<HomoTexture>(Surface::CYAN));
 	mesh.finish();
 	s.add_obj(make_shared<Mesh>(mesh));
 
@@ -303,7 +310,7 @@ void obj_scene() {
 
 	fname = "../resource/models/bunny.fine.obj";
 	mesh = Mesh(fname, Vec(0, 8, 3), 5);
-	mesh.set_texture(make_shared<HomoTexture>(HomoTexture::BLUE));
+	mesh.set_texture(make_shared<HomoTexture>(Surface::BLUE));
 	mesh.finish();
 	s.add_obj(make_shared<Mesh>(mesh));
 
@@ -328,7 +335,7 @@ void obj_scene() {
 	shared_ptr<Texture> t1 = make_shared<ImgTexture>(texture_fname, 100, 0.6);
 	s.add_obj(make_shared<Plane>(InfPlane::XYPLANE, t1));
 	s.finish();
-	View v(s, Vec(0, 0, 2), Vec(0, 5, 3), 15, Geometry(w, h));
+	View v(&s, Vec(0, 0, 2), Vec(0, 5, 3), 15, Geometry(w, h));
 
 	CVViewer viewer(v);
 	viewer.view();
@@ -348,11 +355,11 @@ void generate_simplified_pictures() {
 		REP(k, 5) {
 			Mesh mesh("../resource/models/" + fname, Vec(0, 0, 2), 5);
 			mesh.smooth = true;
-			mesh.set_texture(make_shared<HomoTexture>(HomoTexture::CYAN));
+			mesh.set_texture(make_shared<HomoTexture>(Surface::CYAN));
 			mesh.simplify(ratio[k]);
 			mesh.finish();
 
-			Space s;
+			Phong s;
 			s.add_light(Light(Vec(0, -10, 12), Color::WHITE, 6.0));
 			s.add_light(Light(Vec(0, 10, 8), Color::WHITE, 6.0));
 			s.add_obj(make_shared<Mesh>(mesh));
@@ -360,7 +367,7 @@ void generate_simplified_pictures() {
 			shared_ptr<Texture> tpic = make_shared<ImgTexture>(texture_fname, 100, 0.6);
 			s.add_obj(make_shared<Plane>(InfPlane::XYPLANE, tpic));
 			s.finish();
-			View v(s, Vec(0, 0, 10), Vec(0, 0, 0), 12, Geometry(w, h));
+			View v(&s, Vec(0, 0, 10), Vec(0, 0, 0), 12, Geometry(w, h));
 			CVViewer viewer(v, "output/" + string_format("%s_%lf.png", fname.c_str(), ratio[k]));
 		}
 	}
@@ -389,7 +396,7 @@ int main(int argc, char* argv[]) {
 		case 4:
 			test_simplify();
 			break;
-			case 5:
+		case 5:
 			test_shadow();
 			break;
 		case 6:

@@ -1,5 +1,5 @@
 // File: const.hh
-// Date: Sun Sep 22 20:56:21 2013 +0800
+// Date: Fri Sep 27 19:36:53 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -16,7 +16,7 @@ const real_t DEFAULT_TRACING_WEIGHT_THRESHOLD = 0.001;
 const real_t DEFAULT_REFRACTIVE_INDEX = 1.2;
 const real_t AIR_REFRACTIVE_INDEX = 1;
 const int MAX_PHONG_DEPTH = 4;
-const int MAX_GLOBAL_DEPTH = 4;
+const int MAX_MCPT_DEPTH = 4;
 
 // color blending
 const real_t AMBIENT_FACTOR = 0.01;
@@ -37,4 +37,4 @@ const real_t SOFT_SHADOW_RADIUS = 0.8;
 const int KDTREE_MAX_DEPTH = 100;
 const int KDTREE_TERMINATE_OBJ_CNT = 20;
 
-const int GLOBAL_ILLU_SAMPLE_CNT = 700;
+const int GLOBAL_ILLU_SAMPLE_CNT = 20;

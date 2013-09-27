@@ -1,5 +1,5 @@
 // File: light.hh
-// Date: Sat Sep 21 11:56:37 2013 +0800
+// Date: Fri Sep 27 17:22:17 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -28,4 +28,7 @@ class Light : public Sphere {
 
 		Vec get_src() const
 		{ return sphere.center; }
+
+		real_t get_size() const
+		{ return sphere.r; }
 };

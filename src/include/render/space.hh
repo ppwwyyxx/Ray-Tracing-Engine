@@ -1,5 +1,5 @@
 // File: space.hh
-// Date: Sun Jun 23 17:00:07 2013 +0800
+// Date: Fri Sep 27 19:25:21 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -16,11 +16,9 @@ using std::shared_ptr;
 using std::make_shared;
 
 class Space {
-	private:
+	protected:
 		vector<shared_ptr<Light>>  lights;
 		vector<rdptr> objs;
-
-		Color ambient;		// ambient in this space
 
 		Vec bound_min = Vec::max(), bound_max = -Vec::max();
 
@@ -28,33 +26,27 @@ class Space {
 
 		bool find_any(const Ray& ray, real_t dist) const; // is there any obj on the ray within the dist?
 
-		static Color blend(const Color& amb,
-				const Color& phong, const Color& refl, const Color& transm);
-
 	public:
 		// config
 		bool use_tree = true;
 		bool use_soft_shadow = false;
-		int max_phong_depth = MAX_PHONG_DEPTH;
-		int max_global_depth = MAX_GLOBAL_DEPTH;
-		real_t weight_threshold = DEFAULT_TRACING_WEIGHT_THRESHOLD;
 
 		Space(){ }
 
-		~Space(){}
+		virtual ~Space(){}
 
 		void add_light(const Light& light);
 
 		void add_obj(const rdptr& objptr);
 
 		// useful, keep lights
-		void clear()
+		virtual void clear()
 		{ objs.clear(); bound_min = Vec::max(), bound_max = -Vec::max(); }
 
-		void finish();
+		virtual void finish();
 
-		Color trace(const Ray& ray, real_t dist = 0, int depth = 0) const;
+		void build_tree();
 
-		Color global_trace(const Ray& ray, int depth = 0) const;
+		virtual Color trace(const Ray& ray) const = 0;
 };
 

@@ -1,5 +1,5 @@
 // File: renderable.hh
-// Date: Sat Sep 21 11:15:51 2013 +0800
+// Date: Fri Sep 27 17:36:33 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 
@@ -43,10 +43,8 @@ class Renderable {
 		virtual shared_ptr<Trace> get_trace(const Ray& ray, real_t max_dist) const = 0;
 		// judge visibility and return ptr if visible
 
-		/*
-		 *shared_ptr<Trace> get_trace(const Ray& ray) const
-		 *{ return get_trace(ray, -1); }
-		 */
+		shared_ptr<Trace> get_trace(const Ray& ray) const
+		{ return get_trace(ray, -1); }
 
 		virtual AABB get_aabb() const = 0;
 };
@@ -98,5 +96,4 @@ class Trace {
 			return transform_get_property();
 		}
 };
-
 

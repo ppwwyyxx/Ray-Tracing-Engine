@@ -1,11 +1,11 @@
 // File: viewer.hh
-// Date: Mon Aug 19 23:47:01 2013 +0800
+// Date: Fri Sep 27 19:24:15 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
 #include <cstring>
 #include <thread>
-#include "render/cvrender.hh"
+#include "librender/cvrender.hh"
 #include "view.hh"
 
 class Viewer {

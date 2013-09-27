@@ -1,9 +1,9 @@
 // File: Magick.hh
-// Date: Wed Apr 10 19:22:58 2013 +0800
+// Date: Fri Sep 27 19:24:24 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
-#include "render/render.hh"
+#include "librender/render.hh"
 #include <Magick++.h>
 #include <cstring>
 using namespace Magick;

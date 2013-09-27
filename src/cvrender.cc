@@ -1,5 +1,5 @@
 // File: cvrender.cc
-// Date: Tue Sep 24 09:18:36 2013 +0800
+// Date: Fri Sep 27 19:27:53 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <iostream>
@@ -9,7 +9,7 @@
 #include <mutex>
 #include <algorithm>
 
-#include "render/cvrender.hh"
+#include "librender/cvrender.hh"
 #include "viewer.hh"
 #include "lib/utils.hh"
 #include "lib/Timer.hh"
@@ -55,7 +55,8 @@ int CVRender::finish() {
 	return k;
 }
 
-void CVRender::save(const char* fname) { imwrite(fname, img); }
+void CVRender::save(const char* fname)
+{ imwrite(fname, img); }
 
 void CVRender::_write(int x, int y, const Color& c) {
 	// bgr color space
@@ -114,7 +115,7 @@ void CVRender::antialias() {
 
 void CVRender::blur() {
 	Mat dst = img.clone();
-	cv::bilateralFilter(dst, img, -1, 4, 4);
+	cv::bilateralFilter(dst, img, -1, 15, 15);
 }
 
 
