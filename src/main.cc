@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Fri Sep 27 20:18:33 2013 +0800
+// Date: Sat Sep 28 22:45:59 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include <sys/types.h>
 #include <dirent.h>
@@ -19,7 +19,6 @@ const string watermelon_fname = "../resource/watermelon.jpg";
 // Complicated Scene
 void all(bool g) {
 	int w = 1366, h = 768;
-	w = 600, h = 380;
 	Space* sp;
 	if (g) sp = new MCPT();
 	else sp = new Phong();

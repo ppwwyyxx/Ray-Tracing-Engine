@@ -1,5 +1,5 @@
 // File: light.hh
-// Date: Fri Sep 27 17:22:17 2013 +0800
+// Date: Sat Sep 28 18:53:37 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -11,17 +11,19 @@
 
 class Light : public Sphere {
 	private:
-		Surface surf;
+		shared_ptr<Surface> surf;
+		// surf must stay in the **same** place as long as this light is alive or **copied** !
 
 	public:
 		Color color;
 		real_t intensity;
 
 		Light(const PureSphere& _sphere, const Color& _col, real_t _intense):
-			Sphere(_sphere),
-			surf(Surface(0, 0, 0, Color::NONE, 0, _col * _intense)),
-			color(_col), intensity(_intense)
-		{ set_texture(make_shared<HomoTexture>(surf)); };
+			Sphere(_sphere), color(_col), intensity(_intense)
+		{
+			surf = make_shared<Surface>(0, 0, 0, Color::NONE, 0, _col * _intense);
+			set_texture(make_shared<HomoTexture>(*surf));
+		}
 
 		Light(const Vec& src, const Color& _col, real_t _intense):
 			Light(PureSphere(src, 0.1), _col, _intense) {};
