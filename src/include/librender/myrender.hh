@@ -1,5 +1,5 @@
-// File: cvrender.hh
-// Date: Thu Jun 20 11:25:55 2013 +0800
+// File: myrender.hh
+// Date: Sat Sep 28 23:52:29 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 
@@ -8,7 +8,7 @@
 
 #include "render.hh"
 
-class CVRender: public RenderBase {
+class MyRender: public RenderBase {
 	cv::Mat img;
 
 	public:
@@ -16,21 +16,23 @@ class CVRender: public RenderBase {
 
 		void save(const char* fname = "output.png");
 
-		CVRender(const Geometry &m_g);
+		MyRender(const Geometry &_g);
 
-		CVRender(int w, int h):
-			CVRender(Geometry(w, h)){}
+		MyRender(int w, int h):
+			MyRender(Geometry(w, h)){}
 
-		~CVRender() {}
+		~MyRender() {}
 
 		void antialias();
 
 		void blur();
 
-		Color get(const cv::Mat& img, int x, int y) const;
+		void gamma_correction();
+
+		static Color get(const cv::Mat& img, int x, int y);
 
 		Color get(int x, int y) const
-		{ return get(img, x, y); }
+		{ return MyRender::get(img, x, y); }
 
 	protected:
 		void _write(int x, int y, const Color& c) override;

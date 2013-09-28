@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Sat Sep 28 22:45:59 2013 +0800
+// Date: Sun Sep 29 00:05:58 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include <sys/types.h>
 #include <dirent.h>
@@ -19,11 +19,12 @@ const string watermelon_fname = "../resource/watermelon.jpg";
 // Complicated Scene
 void all(bool g) {
 	int w = 1366, h = 768;
+	w = 300, h = 190;
 	Space* sp;
 	if (g) sp = new MCPT();
 	else sp = new Phong();
-	sp->add_light(Light(PureSphere(Vec(+10, 10, 30), 1), Color::WHITE, 20));
-	sp->add_light(Light(PureSphere(Vec(-10, -10, 30), 1), Color::WHITE, 20));
+	sp->add_light(Light(PureSphere(Vec(+10, 10, 30), 3), Color::WHITE, 30));
+	sp->add_light(Light(PureSphere(Vec(-10, -10, 30), 3), Color::WHITE, 30));
 
 	shared_ptr<Texture> t_diffuse = make_shared<HomoTexture>(Surface::GOOD);
 	shared_ptr<Texture> t_refl = make_shared<HomoTexture>(Surface::GOOD_REFL);

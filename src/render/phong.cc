@@ -1,11 +1,11 @@
 //File: phong.cc
-//Date: Fri Sep 27 19:25:36 2013 +0800
+//Date: Sun Sep 29 00:06:02 2013 +0800
 //Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "render/phong.hh"
 
 Color Phong::blend(const Color& amb, const Color& phong, const Color& refl, const Color& transm) {
-	Color ret = (amb + phong + refl + transm * 1.5) * 0.25;
+	Color ret = (amb + phong + refl + transm * 1.5) / 20;
 	ret.normalize();
 	return ret;
 }

@@ -1,11 +1,11 @@
 // File: viewer.hh
-// Date: Fri Sep 27 19:24:15 2013 +0800
+// Date: Sat Sep 28 23:50:09 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
-#include <cstring>
+#include <string>
 #include <thread>
-#include "librender/cvrender.hh"
+#include "librender/myrender.hh"
 #include "view.hh"
 
 class Viewer {
@@ -30,7 +30,7 @@ class Viewer {
 
 class CVViewer : public Viewer {
 	public:
-		CVRender r;
+		MyRender r;
 
 		CVViewer(View& _v):
 			Viewer(_v), r(_v.get_geo()) { }

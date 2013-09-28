@@ -1,5 +1,5 @@
-// File: cvrender.cc
-// Date: Fri Sep 27 19:27:53 2013 +0800
+// File: myrender.cc
+// Date: Sat Sep 28 23:58:40 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <iostream>
@@ -9,12 +9,11 @@
 #include <mutex>
 #include <algorithm>
 
-#include "librender/cvrender.hh"
+#include "librender/myrender.hh"
 #include "viewer.hh"
 #include "lib/utils.hh"
 #include "lib/Timer.hh"
 using namespace cv;
-
 
 #define KEY_EXIT -1
 #define KEY_ESC 27
@@ -43,35 +42,36 @@ using namespace cv;
 #define SHIFT_SCREEN 4
 
 
-CVRender::CVRender(const Geometry &m_g):
+MyRender::MyRender(const Geometry &m_g):
 	RenderBase(m_g) {
 		img.create(m_g.h, m_g.w, CV_8UC3);
 		img.setTo(Scalar(0, 0, 0));
 }
 
-int CVRender::finish() {
+int MyRender::finish() {
 	imshow("show", img);
 	int k = waitKey(0);
 	return k;
 }
 
-void CVRender::save(const char* fname)
+void MyRender::save(const char* fname)
 { imwrite(fname, img); }
 
-void CVRender::_write(int x, int y, const Color& c) {
+void MyRender::_write(int x, int y, const Color& c) {
 	// bgr color space
 	img.ptr<uchar>(y)[x * 3] = c.z * 255;
 	img.ptr<uchar>(y)[x * 3 + 1] = c.y * 255;
 	img.ptr<uchar>(y)[x * 3 + 2] = c.x * 255;
 }
 
-Color CVRender::get(const Mat& img, int i, int j) const
-{ return Color(img.ptr<uchar>(j)[i * 3 + 2] / 255.0,
+Color MyRender::get(const Mat& img, int i, int j) {
+	return Color(img.ptr<uchar>(j)[i * 3 + 2] / 255.0,
 		img.ptr<uchar>(j)[i * 3 + 1] / 255.0,
-		img.ptr<uchar>(j)[i * 3] / 255.0); }
+		img.ptr<uchar>(j)[i * 3] / 255.0);
+}
 
 /*
- *void CVRender::antialias() {
+ *void MyRender::antialias() {
  *    float kernel[9] = {1, 2, 1,
  *                     2, 4, 2,
  *                     1, 2, 1};
@@ -86,7 +86,7 @@ Color CVRender::get(const Mat& img, int i, int j) const
  *}
  */
 
-void CVRender::antialias() {
+void MyRender::antialias() {
 	float kernel[9] = {1, 2, 1,
 					 2, 4, 2,
 					 1, 2, 1};
@@ -113,11 +113,19 @@ void CVRender::antialias() {
 	}
 }
 
-void CVRender::blur() {
+void MyRender::gamma_correction() {
+	REPL(i, 1, img.size().width - 1) REPL(j, 1, img.size().height - 1) {
+		Color col = get(img, i, j);
+#define ppp(x) pow((x < EPS) ? EPS : x > 1 ? 1 - EPS : x, 1.0 / 2.2)
+		_write(i, j, Color(ppp(col.x), ppp(col.y), ppp(col.z)));
+#undef ppp
+	}
+}
+
+void MyRender::blur() {
 	Mat dst = img.clone();
 	cv::bilateralFilter(dst, img, -1, 15, 15);
 }
-
 
 void render_and_set(int* line_cnt, View* v, RenderBase* r) {
 	static mutex line_cnt_mutex;
@@ -166,6 +174,7 @@ void CVViewer::render_all() {
 	printf("Render spends %lf seconds\n", timer.get_time());
 //	r.antialias();
 	if (v.use_dof) r.blur();
+	r.gamma_correction();
 }
 
 void CVViewer::view() {
