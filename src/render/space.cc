@@ -1,5 +1,5 @@
 // File: space.cc
-// Date: Fri Sep 27 19:25:43 2013 +0800
+// Date: Sat Sep 28 00:50:40 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <limits>
@@ -16,11 +16,9 @@ void Space::add_light(const Light& light) {
 		REP(k, SOFT_SHADOW_LIGHT) {
 			Vec diff = Vec(cos(theta), sin(theta), 0) * SOFT_SHADOW_RADIUS;
 			theta += delta_theta;
-
 			Light newlight(light.get_src() + diff, light.color, light.intensity / SOFT_SHADOW_LIGHT);
 			lights.push_back(make_shared<Light>(newlight));
 		}
-
 	} else
 		lights.push_back(make_shared<Light>(light));
 }
@@ -48,9 +46,9 @@ void Space::build_tree() {
 			infinite_obj.push_back(k);
 
 	objs.erase(remove_if(begin(objs), end(objs),
-				[](const rdptr& p) {
+			[](const rdptr& p) {
 				return p->infinity();
-				}), objs.end());
+			}), objs.end());
 
 	if (objs.size())
 		infinite_obj.push_back(rdptr(new KDTree(objs, AABB(bound_min, bound_max))));

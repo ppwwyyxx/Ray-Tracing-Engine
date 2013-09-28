@@ -1,11 +1,11 @@
 //File: MCPT_EL.cc
-//Date: Fri Sep 27 19:32:08 2013 +0800
+//Date: Sat Sep 28 12:29:44 2013 +0800
 //Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "render/MCPT_EL.hh"
 
 Color MCPT_EL::do_trace(const Ray& ray, int depth, int USE_EMISSION) const {
-	if (depth > max_depth) return Color::BLACK;		// TODO add new depth thres
+	if (depth > max_depth) return Color::BLACK;
 	m_assert(fabs(ray.dir.sqr() - 1) < EPS);
 
 	auto first_trace = find_first(ray, true);

@@ -1,5 +1,5 @@
-// File: mainwindow.h
-// Date: Thu Jun 20 16:27:23 2013 +0800
+// File: window.hh
+// Date: Sat Sep 28 12:31:26 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -37,7 +37,7 @@
 #include "renderable/sphere.hh"
 #include "renderable/mesh.hh"
 #include "view.hh"
-#include "space.hh"
+#include "render/phong.hh"
 
 
 using namespace std;
@@ -73,7 +73,7 @@ class MainWindow : public QMainWindow {
 		QLineEdit *target_rate;
 
 		bool done_load = false;
-		Space space;
+		Phong space;
 		View* view = nullptr;
 		CVViewer* viewer = nullptr;
 

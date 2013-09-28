@@ -1,5 +1,5 @@
 # File: objviewer.pro
-# Date: Sat Jun 22 23:09:36 2013 +0800
+# Date: Sat Sep 28 12:32:56 2013 +0800
 # Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 QT       += core gui
@@ -17,10 +17,10 @@ LIBS += `Magick++-config --libs` `pkg-config --libs opencv` -fopenmp
 SOURCES += main.cxx window.cxx\
 		../static_const.cc\
 		../lib/*.cc ../renderable/*.cc\
-		../space.cc ../view.cc ../mesh_simplifier.cc ../cvrender.cc ../kdtree.cc
+		../render/*.cc ../view.cc ../mesh_simplifier.cc ../cvrender.cc ../kdtree.cc
 
 HEADERS  += window.hh ../include/geometry/*.hh ../include/material/*.hh\
-	../include/renderable/*.hh ../include/*.hh
+	../include/renderable/*.hh ../include/*.hh ../include/render/*.hh ../include/librender/*.hh
 
 FORMS    += window.ui
 

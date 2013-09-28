@@ -1,5 +1,5 @@
 // File: window.cxx
-// Date: Sun Jun 23 23:15:53 2013 +0800
+// Date: Sat Sep 28 12:32:09 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <sstream>
@@ -64,7 +64,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	space.add_light(Light(Vec(9, 2, 30), Color::WHITE, 3.0));
 	space.add_light(Light(Vec(-9, 2, 30), Color::WHITE, 3.0));
 	space.finish();
-	view = new View(space, Vec(0, 0, 12), Vec(0, 0, 2), 15, Geometry(pixmap->width(), pixmap->height()));
+	view = new View(&space, Vec(0, 0, 12), Vec(0, 0, 2), 15, Geometry(pixmap->width(), pixmap->height()));
 	viewer = new CVViewer(*view);
 	do_trace();
 	done_load = false;
@@ -96,7 +96,7 @@ void MainWindow::do_open() {
 		now_fname = fname.toStdString();
 		Mesh mesh(fname.toStdString().c_str(), Vec(0, 0, 2), 5);
 		mesh.smooth = smooth->isChecked();
-		shared_ptr<Texture> tred = make_shared<HomoTexture>(HomoTexture::CYAN);
+		shared_ptr<Texture> tred = make_shared<HomoTexture>(Surface::CYAN);
 		mesh.set_texture(tred);
 		mesh.finish();
 		space.clear();
@@ -119,7 +119,7 @@ void MainWindow::update_mesh() {
 
 	Mesh mesh(now_fname.c_str(), Vec(0, 0, 2), 5);
 	mesh.smooth = smooth->isChecked();
-	shared_ptr<Texture> tred = make_shared<HomoTexture>(HomoTexture::CYAN);
+	shared_ptr<Texture> tred = make_shared<HomoTexture>(Surface::CYAN);
 	mesh.set_texture(tred);
 
 	stringstream text(target_rate->text().toStdString());
