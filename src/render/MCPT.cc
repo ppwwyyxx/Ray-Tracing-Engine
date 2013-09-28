@@ -1,5 +1,5 @@
 //File: MCPT.cc
-//Date: Sat Sep 28 00:51:27 2013 +0800
+//Date: Sat Sep 28 13:46:43 2013 +0800
 //Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "render/MCPT.hh"
@@ -70,6 +70,7 @@ Color MCPT::do_trace(const Ray& ray, int depth) const {
 			Ray new_ray(inter_point + ray.dir * EPS, tr_dir, forward_density);
 			new_ray.debug = ray.debug;
 
+			// Frensel's Law
 			real_t F0 = sqr(0.5) / sqr(ray.density + forward_density);
 			real_t theta = first_trace->contain() ? tr_dir.dot(norm) : ray.dir.dot(norm);
 			real_t Fr = F0 + (1 - F0) * pow(1 + theta, 5);
