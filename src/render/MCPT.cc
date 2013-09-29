@@ -1,5 +1,5 @@
 //File: MCPT.cc
-//Date: Sun Sep 29 15:50:46 2013 +0800
+//Date: Sun Sep 29 21:12:01 2013 +0800
 //Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "render/MCPT.hh"
@@ -62,7 +62,7 @@ Color MCPT::diffuse(const IntersectInfo& info, const Ray& ray, int depth) const 
 
 		// generate random reflected ray by sampling unit hemisphere (cosine(r2) weighted)
 		Vec sample_dir = ((u * cos(r1) + v * sin(r1)) * sqrt(r2) + info.norm * sqrt(1 - r2)).get_normalized();
-		return do_trace(Ray(info.inter_point - ray.dir * EPS, sample_dir), depth + 1);
+		return do_trace(Ray(info.inter_point - ray.dir * EPS, sample_dir), depth + 1) * diffuse_weight;
 	}
 	return Color::BLACK;
 }

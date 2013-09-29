@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Sun Sep 29 10:24:46 2013 +0800
+// Date: Mon Sep 30 00:36:12 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include <sys/types.h>
 #include <dirent.h>
@@ -23,8 +23,8 @@ void all(bool g) {
 	Space* sp;
 	if (g) sp = new MCPT();
 	else sp = new Phong();
-	sp->add_light(Light(PureSphere(Vec(+10, 10, 30), 3), Color::WHITE, 30));
-	sp->add_light(Light(PureSphere(Vec(-10, -10, 30), 3), Color::WHITE, 30));
+	sp->add_light(Light(PureSphere(Vec(+10, 10, 30), 1.5), Color::WHITE, g ? 60 : 12));
+	sp->add_light(Light(PureSphere(Vec(-10, -10, 30), 1.5), Color::WHITE, g ? 50 : 10));
 
 	shared_ptr<Texture> t_diffuse = make_shared<HomoTexture>(Surface::GOOD);
 	shared_ptr<Texture> t_refl = make_shared<HomoTexture>(Surface::GOOD_REFL);
@@ -97,6 +97,7 @@ void test_shadow() {
 // test depth of field
 void dof_ball_scene() {
 	int w = 500, h = 500;
+	w = 300, h = 300;
 	Phong s;
 	s.add_light(Light(Vec(0, -10, 12), Color::WHITE, 6.0));
 	s.add_light(Light(Vec(9, 2, 50), Color::WHITE, 6.0));
@@ -104,7 +105,7 @@ void dof_ball_scene() {
 	s.add_light(Light(Vec(-9, -2, 50), Color::WHITE, 6.0));
 	s.add_light(Light(Vec(9, -2, 50), Color::WHITE, 6.0));
 
-	Surface surf(0, 40, 0.5, Color::CYAN * 0.9, DEFAULT_SPECULAR);
+	Surface surf(0, 20, 0.5, Color::CYAN * 0.9, DEFAULT_SPECULAR);
 
 	shared_ptr<Texture> tpic = make_shared<ImgTexture>(texture_fname, 100, 0.6);
 	shared_ptr<Texture> tball(make_shared<HomoTexture>(surf));

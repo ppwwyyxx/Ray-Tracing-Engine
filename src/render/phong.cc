@@ -1,11 +1,11 @@
 //File: phong.cc
-//Date: Sun Sep 29 00:06:02 2013 +0800
+//Date: Mon Sep 30 00:35:55 2013 +0800
 //Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "render/phong.hh"
 
 Color Phong::blend(const Color& amb, const Color& phong, const Color& refl, const Color& transm) {
-	Color ret = (amb + phong + refl + transm * 1.5) / 20;
+	Color ret = (amb + phong + refl + transm) / 4;
 	ret.normalize();
 	return ret;
 }
@@ -55,15 +55,13 @@ Color Phong::do_trace(const Ray& ray, real_t dist, int depth) const {
 
 		// shadow if not visible to this light
 		// go foward a little
-		if (find_any(Ray(inter_point + lm * (2 * EPS), lm), dist_to_light)) {
-			// if (lmn > 0) ret += surf->diffuse * ambient * REFL_DECAY;
-			continue;
-		}
+		if (find_any(Ray(inter_point + lm * (2 * EPS), lm), dist_to_light)) { continue; }
 
 		real_t damping = pow(M_E, -dist_to_light * AIR_BEER_DENSITY);
 
-		// diffuse
-		if (lmn > 0)
+		//	diffuse
+		real_t diffuse_weight = min(1 - surf->specular, 1 - surf->transparency);
+		if (lmn > 0 && diffuse_weight > EPS)
 			now_col += surf->diffuse * i->color * (i->intensity * damping * lmn);		// add beer
 
 		// specular
