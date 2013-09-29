@@ -1,8 +1,9 @@
 //File: MCPT.cc
-//Date: Sun Sep 29 11:02:54 2013 +0800
+//Date: Sun Sep 29 15:13:31 2013 +0800
 //Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "render/MCPT.hh"
+#include <random>
 
 Color MCPT::do_trace(const Ray& ray, int depth) const {
 	if (depth > max_depth) return Color::BLACK;
@@ -43,7 +44,7 @@ Color MCPT::do_trace(const Ray& ray, int depth) const {
 		v = norm.cross(u);
 
 	// generate random reflected ray by sampling unit hemisphere (cosine(r2) weighted)
-	Vec d = ((u * cos(r1) + v * sin(r1)) * sqrt(r2) + norm * (sqrt(1 - r2))).get_normalized();
+	Vec d = ((u * cos(r1) + v * sin(r1)) * sqrt(r2) + norm * sqrt(1 - r2)).get_normalized();
 	Color now_diffuse = Color::BLACK;
 	real_t diffuse_weight = min(1 - surf->specular, 1 - surf->transparency);
 	if (diffuse_weight > EPS)
