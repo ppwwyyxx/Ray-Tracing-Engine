@@ -1,5 +1,5 @@
 //File: MCPT.cc
-//Date: Sat Sep 28 23:59:06 2013 +0800
+//Date: Sun Sep 29 11:02:54 2013 +0800
 //Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "render/MCPT.hh"
@@ -34,21 +34,24 @@ Color MCPT::do_trace(const Ray& ray, int depth) const {
 
 	// diffuse
 	real_t r1 = 2 * M_PI * drand48(),
-		   r2 = drand48(),
-		   r2s = sqrt(r2);
+		   r2 = drand48();
+	// need smaller r2, sample better (cosine weighted sample)
+	while (drand48() < r2) r2 = drand48();
 
 	// norm, u, v -> ortho
 	Vec u = ((fabs(norm.x) > 0.1 ? Vec(0, 1, 0) : Vec(1, 0, 0)).cross(norm)).get_normalized(),
 		v = norm.cross(u);
 
-	// generate random reflected ray by sampling unit hemisphere
-	Vec d = ((u * cos(r1)) * r2s + v * sin(r1) * r2s + norm * (sqrt(1 - r2))).get_normalized();
-	Color now_diffuse = do_trace(Ray(inter_point - ray.dir * EPS, d), depth + 1) *
-		min(1 - surf->specular, 1 - surf->transparency);
+	// generate random reflected ray by sampling unit hemisphere (cosine(r2) weighted)
+	Vec d = ((u * cos(r1) + v * sin(r1)) * sqrt(r2) + norm * (sqrt(1 - r2))).get_normalized();
+	Color now_diffuse = Color::BLACK;
+	real_t diffuse_weight = min(1 - surf->specular, 1 - surf->transparency);
+	if (diffuse_weight > EPS)
+		now_diffuse += do_trace(Ray(inter_point - ray.dir * EPS, d), depth + 1);
 
 	// reflection
 	Color now_refl = Color::BLACK;
-	if (surf->specular > 0 && !(first_trace->contain())) {
+	if (surf->specular > EPS && !(first_trace->contain())) {
 		// reflected ray : go back a little, same density
 		Ray new_ray(inter_point - ray.dir * EPS, -norm.reflection(ray.dir), ray.density);
 		m_assert(fabs((-norm.reflection(ray.dir)).sqr() - 1) < EPS);
