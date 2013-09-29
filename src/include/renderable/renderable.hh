@@ -1,5 +1,5 @@
 // File: renderable.hh
-// Date: Fri Sep 27 17:36:33 2013 +0800
+// Date: Sun Sep 29 15:33:07 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 
@@ -49,6 +49,14 @@ class Renderable {
 		virtual AABB get_aabb() const = 0;
 };
 
+struct IntersectInfo {
+	Vec norm, inter_point;
+	shared_ptr<Surface> surf;
+
+	real_t forward_density, inter_dist;
+	bool contain;
+};
+
 // a combination of renderable object and a ray, to integrate some calculations
 class Trace {
 	protected:
@@ -94,6 +102,15 @@ class Trace {
 			shared_ptr<Surface> ret = get_obj()->get_texture()->get_property();
 			if (ret) return move(ret);
 			return transform_get_property();
+		}
+
+		virtual IntersectInfo get_intersect_info() const {
+			return IntersectInfo{normal(),
+					intersection_point(),
+					get_property(),
+					get_forward_density(),
+					intersection_dist(),
+					contain()};
 		}
 };
 

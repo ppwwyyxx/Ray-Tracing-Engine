@@ -1,5 +1,5 @@
 //File: MCPT.hh
-//Date: Fri Sep 27 19:47:50 2013 +0800
+//Date: Sun Sep 29 15:40:48 2013 +0800
 //Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -12,6 +12,12 @@ class MCPT : public Space {
 
 		virtual Color do_trace_adapter(const Ray& ray) const
 		{ return do_trace(ray); }
+
+		virtual Color diffuse(const IntersectInfo& info, const Ray& ray, int depth) const;
+
+		virtual Color reflection(const IntersectInfo& info, const Ray& ray, int depth) const;
+
+		virtual Color transmission(const IntersectInfo& info, const Ray& ray, int depth) const;
 
 	public:
 		int max_depth = MAX_MCPT_DEPTH;
