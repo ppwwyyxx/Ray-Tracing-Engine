@@ -1,5 +1,5 @@
 //File: phong.cc
-//Date: Mon Sep 30 00:35:55 2013 +0800
+//Date: Mon Sep 30 01:26:17 2013 +0800
 //Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "render/phong.hh"
@@ -26,86 +26,90 @@ Color Phong::do_trace(const Ray& ray, real_t dist, int depth) const {
 	m_assert(fabs(ray.dir.sqr() - 1) < EPS);
 
 	auto first_trace = find_first(ray);
-	if (!first_trace) { return Color::BLACK; }
+	if (!first_trace) return Color::BLACK;
 
-	// reach the first object
-	real_t inter_dist = first_trace->intersection_dist();
-	Vec norm = first_trace->normal(),
-		inter_point = first_trace->intersection_point();
-	auto surf = first_trace->get_property();
-	real_t forward_density = first_trace->get_forward_density();
+	auto intersect_info = first_trace->get_intersect_info();
 
-	if (fabs(norm.sqr() - 1) >= EPS)
-		cout << norm << "  " << norm.sqr() << endl;
-	m_assert((fabs(norm.sqr() - 1) < EPS));
-
+	m_assert((fabs(intersect_info.norm.sqr() - 1) < EPS));
 	if (ray.debug)
-		print_debug("debug ray: arrive point (%lf, %lf, %lf) \n", inter_point.x, inter_point.y, inter_point.z);
+		print_debug("debug ray: arrive point (%lf, %lf, %lf) \n", intersect_info.inter_point.x, intersect_info.inter_point.y, intersect_info.inter_point.z);
 
 	// phong model
 	// http://en.wikipedia.org/wiki/Phong_reflection_model
 	// ambient
-	Color now_amb = ambient * (surf->diffuse + Color::WHITE) * surf->ambient * 0.5;
+	Color now_amb = ambient * (intersect_info.surf->diffuse + Color::WHITE) * intersect_info.surf->ambient * 0.5;
 
-	Color now_col = Color::BLACK;
+	// diffuse + specular
+	Color now_col = phong_local(intersect_info, ray, depth);
+
+	// Beer-Lambert's Law
+	dist += intersect_info.inter_dist;
+	now_col = now_col * pow(M_E, -dist * AIR_BEER_DENSITY);
+
+	m_assert(fabs(ray.dir.sqr() - 1) < EPS);
+
+	// reflection
+	Color now_refl = reflection(intersect_info, ray, dist, depth);
+	// transmission
+	Color now_transm = transmission(intersect_info, ray, dist, depth);
+	return Phong::blend(now_amb, now_col, now_refl, now_transm);
+}
+
+Color Phong::transmission(const IntersectInfo& info, const Ray& ray, real_t dist, int depth) const {
+	if (info.surf->transparency > EPS) {
+		Vec tr_dir = info.norm.transmission(ray.dir, ray.density / info.forward_density);
+		if (isnormal(tr_dir.x)) { // have transmission
+			// transmission ray : go forward a little
+			Ray new_ray(info.inter_point + ray.dir * EPS, tr_dir, info.forward_density);
+			new_ray.debug = ray.debug;
+			Color transm = do_trace(new_ray, dist, depth + 1);
+			return (transm + transm * info.surf->diffuse * TRANSM_DIFFUSE_FACTOR) *
+				info.surf->transparency;
+		}
+	}
+	return Color::BLACK;
+}
+
+Color Phong::reflection(const IntersectInfo& info, const Ray& ray, real_t dist, int depth) const {
+	// do reflection if specular > 0
+	// inner surface don't reflect
+	if (info.surf->specular > 0 && !(info.contain)) {
+		// reflected ray : go back a little, same density
+		Ray new_ray(info.inter_point - ray.dir * EPS, -info.norm.reflection(ray.dir), ray.density);
+		//m_assert(fabs((-info.norm.reflection(ray.dir)).sqr() - 1) < EPS);
+
+		real_t lmn = fabs(new_ray.dir.dot(info.norm));
+
+		new_ray.debug = ray.debug;
+		Color refl = do_trace(new_ray, dist, depth + 1);
+		return (refl + refl * info.surf->diffuse * REFL_DIFFUSE_FACTOR) *
+			(REFL_DECAY * info.surf->specular * info.surf->shininess * lmn);
+	}
+	return Color::BLACK;
+}
+
+Color Phong::phong_local(const IntersectInfo& info, const Ray& ray, int depth) const {
+	Color ret(Color::BLACK);
 	for (auto &i : lights) {
-		Vec lm = (i->get_src() - inter_point).get_normalized();
-		real_t lmn = lm.dot(norm);
-		real_t dist_to_light = (i->get_src() - inter_point).mod();
+		Vec lm = (i->get_src() - info.inter_point).get_normalized();
+		real_t lmn = lm.dot(info.norm);
+		real_t dist_to_light = (i->get_src() - info.inter_point).mod();
 
 		// shadow if not visible to this light
 		// go foward a little
-		if (find_any(Ray(inter_point + lm * (2 * EPS), lm), dist_to_light)) { continue; }
+		if (find_any(Ray(info.inter_point + lm * (2 * EPS), lm), dist_to_light)) { continue; }
 
 		real_t damping = pow(M_E, -dist_to_light * AIR_BEER_DENSITY);
 
 		//	diffuse
-		real_t diffuse_weight = min(1 - surf->specular, 1 - surf->transparency);
+		real_t diffuse_weight = min(1 - info.surf->specular, 1 - info.surf->transparency);
 		if (lmn > 0 && diffuse_weight > EPS)
-			now_col += surf->diffuse * i->color * (i->intensity * damping * lmn);		// add beer
+			ret += info.surf->diffuse * i->color * (i->intensity * damping * lmn);		// add beer
 
 		// specular
-		real_t rmv = -norm.reflection(lm).dot(ray.dir);
+		real_t rmv = -info.norm.reflection(lm).dot(ray.dir);
 		if (rmv > 0)
-			now_col += i->color * (i->intensity * damping * surf->specular * pow(rmv, surf->shininess));
+			ret += i->color * (i->intensity * damping * info.surf->specular * pow(rmv, info.surf->shininess));
 	}
-
-	// Beer-Lambert's Law
-	dist += inter_dist;
-	now_col = now_col * pow(M_E, -dist * AIR_BEER_DENSITY);
-
-	m_assert(fabs(ray.dir.sqr() - 1) < EPS);
-	Color now_refl = Color::BLACK;
-
-	// do reflection if specular > 0
-	// inner surface don't reflect
-	if (surf->specular > 0 && !(first_trace->contain())) {
-		// reflected ray : go back a little, same density
-		Ray new_ray(inter_point - ray.dir * EPS, -norm.reflection(ray.dir), ray.density);
-		m_assert(fabs((-norm.reflection(ray.dir)).sqr() - 1) < EPS);
-
-
-		real_t lmn = fabs(new_ray.dir.dot(norm));
-
-		new_ray.debug = ray.debug;
-		Color refl = do_trace(new_ray, dist, depth + 1);
-		now_refl = (refl + refl * surf->diffuse * REFL_DIFFUSE_FACTOR) *
-			(REFL_DECAY * surf->specular * surf->shininess * lmn);
-	}
-
-	// transmission
-	Color now_transm = Color::BLACK;
-	if (surf->transparency > EPS) {
-		Vec tr_dir = norm.transmission(ray.dir, ray.density / forward_density);
-		if (isnormal(tr_dir.x)) { // have transmission
-			// transmission ray : go forward a little
-			Ray new_ray(inter_point + ray.dir * EPS, tr_dir, forward_density);
-			new_ray.debug = ray.debug;
-			Color transm = do_trace(new_ray, dist, depth + 1);
-			now_transm = (transm + transm * surf->diffuse * TRANSM_DIFFUSE_FACTOR) *
-				surf->transparency;
-		}
-	}
-
-	return Phong::blend(now_amb, now_col, now_refl, now_transm);
+	return ret;
 }

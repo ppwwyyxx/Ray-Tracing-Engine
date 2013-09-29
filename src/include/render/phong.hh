@@ -1,5 +1,5 @@
 //File: phong.hh
-//Date: Fri Sep 27 19:25:14 2013 +0800
+//Date: Mon Sep 30 01:27:24 2013 +0800
 //Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -14,6 +14,12 @@ class Phong : public Space {
 				const Color& phong, const Color& refl, const Color& transm);
 
 		Color do_trace(const Ray& ray, real_t dist = 0, int depth = 0) const;
+
+		Color reflection(const IntersectInfo& info, const Ray& ray, real_t dist, int depth) const;
+
+		Color transmission(const IntersectInfo& info, const Ray& ray, real_t dist, int depth) const;
+
+		Color phong_local(const IntersectInfo& info, const Ray& ray, int depth) const;
 
 	public:
 		int max_depth = MAX_PHONG_DEPTH;

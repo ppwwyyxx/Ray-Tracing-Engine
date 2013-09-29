@@ -1,16 +1,15 @@
 //File: MCPT_EL.cc
-//Date: Sat Sep 28 12:29:44 2013 +0800
+//Date: Mon Sep 30 01:26:57 2013 +0800
 //Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "render/MCPT_EL.hh"
 
-Color MCPT_EL::do_trace(const Ray& ray, int depth, int USE_EMISSION) const {
+Color MCPT_EL::do_trace(const Ray& ray, int depth, int use_emission) const {
 	if (depth > max_depth) return Color::BLACK;
 	m_assert(fabs(ray.dir.sqr() - 1) < EPS);
 
 	auto first_trace = find_first(ray, true);
-	if (!first_trace)
-		return Color::BLACK;
+	if (!first_trace) return Color::BLACK;
 
 	// reach the first object, could be a light
 	Vec norm = first_trace->normal(),			// already oriented
@@ -29,7 +28,7 @@ Color MCPT_EL::do_trace(const Ray& ray, int depth, int USE_EMISSION) const {
 		if (drand48() < max_color_comp)		// Russian Roulette
 			diffu = diffu * (1.0 / max_color_comp);
 		else
-			return surf->emission * USE_EMISSION;
+			return surf->emission * use_emission;
 	}
 
 	// diffuse
@@ -112,7 +111,7 @@ Color MCPT_EL::do_trace(const Ray& ray, int depth, int USE_EMISSION) const {
 		}
 	}
 
-	return surf->emission * USE_EMISSION + diffu * (now_diffuse + now_refl + now_transm) + diffu * lighting;
+	return surf->emission * use_emission + diffu * (now_diffuse + now_refl + now_transm) + diffu * lighting;
 }
 
 // check if the ray will directly see the light
