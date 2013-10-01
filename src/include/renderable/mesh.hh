@@ -1,5 +1,5 @@
 // File: mesh.hh
-// Date: Sat Sep 21 01:31:36 2013 +0800
+
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once

@@ -1,5 +1,5 @@
 // File: matrix.hh
-// Date: Sat Jun 22 13:24:36 2013 +0800
+
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once

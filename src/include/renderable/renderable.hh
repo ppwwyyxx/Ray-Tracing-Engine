@@ -1,7 +1,5 @@
 // File: renderable.hh
-// Date: Sun Sep 29 15:33:07 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
-
 
 #pragma once
 

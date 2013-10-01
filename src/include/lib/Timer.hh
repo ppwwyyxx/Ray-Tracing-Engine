@@ -1,5 +1,5 @@
 // File: Timer.h
-// Date: Thu Jun 06 11:39:00 2013 +0800
+
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once

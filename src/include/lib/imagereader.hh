@@ -1,5 +1,5 @@
 // File: imagereader.hh
-// Date: Mon Sep 23 01:25:01 2013 +0800
+
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once

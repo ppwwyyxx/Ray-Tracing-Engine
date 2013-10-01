@@ -1,5 +1,5 @@
 // File: mesh.cc
-// Date: Wed Sep 25 18:10:42 2013 +0800
+
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <algorithm>

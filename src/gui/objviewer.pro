@@ -1,5 +1,5 @@
 # File: objviewer.pro
-# Date: Sat Sep 28 23:50:20 2013 +0800
+
 # Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 QT       += core gui

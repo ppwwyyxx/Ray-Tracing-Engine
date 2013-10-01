@@ -1,5 +1,5 @@
 // File: view.hh
-// Date: Fri Sep 27 20:21:18 2013 +0800
+
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once

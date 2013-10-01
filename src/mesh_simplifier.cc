@@ -1,5 +1,5 @@
 // File: mesh_simplifier.cc
-// Date: Wed Sep 11 20:08:33 2013 +0800
+
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <list>

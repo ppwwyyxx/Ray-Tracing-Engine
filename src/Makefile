@@ -1,5 +1,5 @@
 # $File: Makefile
-# $Date: Fri Sep 27 17:48:38 2013 +0800
+
 
 OBJ_DIR = build
 TARGET = ray-tracing

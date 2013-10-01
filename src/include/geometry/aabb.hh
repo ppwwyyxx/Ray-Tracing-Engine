@@ -1,5 +1,5 @@
 // File: aabb.hh
-// Date: Sat Sep 21 11:24:41 2013 +0800
+
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once

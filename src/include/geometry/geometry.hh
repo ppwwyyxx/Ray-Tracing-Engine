@@ -1,5 +1,5 @@
 // File: geometry.hh
-// Date: Tue Sep 24 08:21:11 2013 +0800
+
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once

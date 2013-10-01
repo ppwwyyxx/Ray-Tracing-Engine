@@ -1,5 +1,5 @@
 // File: space.cc
-// Date: Sat Sep 28 00:50:40 2013 +0800
+
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <limits>
@@ -16,8 +16,8 @@ void Space::add_light(const Light& light) {
 		REP(k, SOFT_SHADOW_LIGHT) {
 			Vec diff = Vec(cos(theta), sin(theta), 0) * SOFT_SHADOW_RADIUS;
 			theta += delta_theta;
-			Light newlight(light.get_src() + diff, light.color, light.intensity / SOFT_SHADOW_LIGHT);
-			lights.push_back(make_shared<Light>(newlight));
+			lights.push_back(make_shared<Light>(
+						light.get_src() + diff, light.color, light.intensity / SOFT_SHADOW_LIGHT));
 		}
 	} else
 		lights.push_back(make_shared<Light>(light));

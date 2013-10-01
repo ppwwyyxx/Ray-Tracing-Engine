@@ -1,5 +1,5 @@
 // File: utils.cc
-// Date: Mon Jun 17 18:05:43 2013 +0800
+
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "lib/utils.hh"

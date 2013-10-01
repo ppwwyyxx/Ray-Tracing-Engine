@@ -1,5 +1,5 @@
 // File: texture.hh
-// Date: Wed Sep 25 18:51:08 2013 +0800
+
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once

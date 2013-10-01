@@ -1,5 +1,5 @@
 // File: space.hh
-// Date: Fri Sep 27 19:25:21 2013 +0800
+
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once

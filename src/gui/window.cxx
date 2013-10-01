@@ -1,5 +1,4 @@
 // File: window.cxx
-// Date: Sat Sep 28 12:32:09 2013 +0800
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <sstream>
@@ -12,7 +11,8 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow) {
+    ui(new Ui::MainWindow)
+{
 
     ui->setupUi(this);
     this->setFixedSize(this->width(),this->height());

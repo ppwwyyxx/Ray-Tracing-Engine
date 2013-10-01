@@ -1,5 +1,5 @@
 // File: infplane.hh
-// Date: Sun Jun 23 20:03:06 2013 +0800
+
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 

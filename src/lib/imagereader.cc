@@ -1,5 +1,5 @@
 // File: imagereader.cc
-// Date: Mon Sep 23 01:24:36 2013 +0800
+
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "lib/imagereader.hh"

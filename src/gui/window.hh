@@ -1,5 +1,5 @@
 // File: window.hh
-// Date: Sat Sep 28 12:31:26 2013 +0800
+
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once
@@ -62,7 +62,6 @@ class MainWindow : public QMainWindow {
 		QGraphicsScene *scene;
 		QPixmap *pixmap;
 		QImage *image;
-
 
 		QCheckBox *smooth;
 

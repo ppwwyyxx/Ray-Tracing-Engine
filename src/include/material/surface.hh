@@ -1,5 +1,5 @@
 // File: surface.hh
-// Date: Wed Sep 25 18:22:34 2013 +0800
+
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once

@@ -1,5 +1,5 @@
 // File: myrender.hh
-// Date: Sat Sep 28 23:52:29 2013 +0800
+
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 

@@ -1,5 +1,5 @@
 // File: plane.hh
-// Date: Mon Sep 23 01:28:55 2013 +0800
+
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once

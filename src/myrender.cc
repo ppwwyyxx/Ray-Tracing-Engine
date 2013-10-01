@@ -1,5 +1,5 @@
 // File: myrender.cc
-// Date: Sat Sep 28 23:58:40 2013 +0800
+
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include <iostream>

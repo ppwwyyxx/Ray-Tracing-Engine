@@ -1,5 +1,5 @@
 // File: Timer.cc
-// Date: Mon Jun 17 18:05:36 2013 +0800
+
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 

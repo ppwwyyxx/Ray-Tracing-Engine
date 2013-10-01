@@ -1,5 +1,5 @@
 //File: MCPT.hh
-//Date: Sun Sep 29 15:40:48 2013 +0800
+
 //Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once

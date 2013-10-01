@@ -1,5 +1,5 @@
 // File: render.hh
-// Date: Sat Jun 22 13:23:56 2013 +0800
+
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 

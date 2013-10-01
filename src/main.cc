@@ -1,5 +1,5 @@
 // File: main.cc
-// Date: Mon Sep 30 00:36:12 2013 +0800
+
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include <sys/types.h>
 #include <dirent.h>
@@ -23,8 +23,8 @@ void all(bool g) {
 	Space* sp;
 	if (g) sp = new MCPT();
 	else sp = new Phong();
-	sp->add_light(Light(PureSphere(Vec(+10, 10, 30), 1.5), Color::WHITE, g ? 60 : 12));
-	sp->add_light(Light(PureSphere(Vec(-10, -10, 30), 1.5), Color::WHITE, g ? 50 : 10));
+	sp->add_light(Light(PureSphere(Vec(+10, 10, 30), 3), Color::WHITE, g ? 50 : 12));
+	sp->add_light(Light(PureSphere(Vec(-10, -10, 30), 3), Color::WHITE, g ? 40 : 10));
 
 	shared_ptr<Texture> t_diffuse = make_shared<HomoTexture>(Surface::GOOD);
 	shared_ptr<Texture> t_refl = make_shared<HomoTexture>(Surface::GOOD_REFL);

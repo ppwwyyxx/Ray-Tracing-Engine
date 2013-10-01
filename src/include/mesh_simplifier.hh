@@ -1,5 +1,5 @@
 // File: mesh_simplifier.hh
-// Date: Wed Sep 11 20:13:35 2013 +0800
+
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once

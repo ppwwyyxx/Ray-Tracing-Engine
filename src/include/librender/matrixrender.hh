@@ -1,5 +1,5 @@
 // File: matrixrender.hh
-// Date: Fri Apr 05 17:12:28 2013 +0800
+
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once

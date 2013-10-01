@@ -1,5 +1,5 @@
 //File: MCPT_EL.cc
-//Date: Mon Sep 30 01:26:57 2013 +0800
+
 //Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "render/MCPT_EL.hh"

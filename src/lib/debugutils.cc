@@ -1,5 +1,5 @@
 // File: debugutils.cc
-// Date: Thu Jun 13 13:22:46 2013 +0800
+
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 

@@ -1,5 +1,5 @@
 // File: color.hh
-// Date: Sun Jun 23 12:52:48 2013 +0800
+
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #pragma once

@@ -1,5 +1,5 @@
 //File: phong.cc
-//Date: Mon Sep 30 01:26:17 2013 +0800
+
 //Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "render/phong.hh"
@@ -40,7 +40,7 @@ Color Phong::do_trace(const Ray& ray, real_t dist, int depth) const {
 	Color now_amb = ambient * (intersect_info.surf->diffuse + Color::WHITE) * intersect_info.surf->ambient * 0.5;
 
 	// diffuse + specular
-	Color now_col = phong_local(intersect_info, ray, depth);
+	Color now_col = phong_local(intersect_info, ray);
 
 	// Beer-Lambert's Law
 	dist += intersect_info.inter_dist;
@@ -88,7 +88,7 @@ Color Phong::reflection(const IntersectInfo& info, const Ray& ray, real_t dist, 
 	return Color::BLACK;
 }
 
-Color Phong::phong_local(const IntersectInfo& info, const Ray& ray, int depth) const {
+Color Phong::phong_local(const IntersectInfo& info, const Ray& ray) const {
 	Color ret(Color::BLACK);
 	for (auto &i : lights) {
 		Vec lm = (i->get_src() - info.inter_point).get_normalized();
