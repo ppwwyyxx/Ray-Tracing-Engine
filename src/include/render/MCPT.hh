@@ -13,7 +13,7 @@ class MCPT : public Space {
 		virtual Color do_trace_adapter(const Ray& ray) const
 		{ return do_trace(ray); }
 
-		virtual Color diffuse(const IntersectInfo& info, const Ray& ray, int depth) const;
+		virtual Color diffuse(const IntersectInfo& info, int depth) const;
 
 		virtual Color reflection(const IntersectInfo& info, const Ray& ray, int depth) const;
 

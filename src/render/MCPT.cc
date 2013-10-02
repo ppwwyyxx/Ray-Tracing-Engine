@@ -30,7 +30,7 @@ Color MCPT::do_trace(const Ray& ray, int depth) const {
 	}
 
 	// diffuse
-	Color now_diffuse = diffuse(intersect_info, ray, depth);
+	Color now_diffuse = diffuse(intersect_info, depth);
 	// reflection
 	Color now_refl = reflection(intersect_info, ray, depth);
 	// transmission
@@ -48,7 +48,7 @@ Color MCPT::trace(const Ray& ray) const {
 	return ret;
 }
 
-Color MCPT::diffuse(const IntersectInfo& info, const Ray& ray, int depth) const {
+Color MCPT::diffuse(const IntersectInfo& info, int depth) const {
 	real_t diffuse_weight = min(1 - info.surf->specular, 1 - info.surf->transparency);
 	if (diffuse_weight > EPS) {
 		real_t r1 = 2 * M_PI * drand48(),
