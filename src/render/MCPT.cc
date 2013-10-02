@@ -62,7 +62,7 @@ Color MCPT::diffuse(const IntersectInfo& info, const Ray& ray, int depth) const 
 
 		// generate random reflected ray by sampling unit hemisphere (cosine(r2) weighted)
 		Vec sample_dir = ((u * cos(r1) + v * sin(r1)) * sqrt(r2) + info.norm * sqrt(1 - r2)).get_normalized();
-		return do_trace(Ray(info.inter_point - ray.dir * EPS, sample_dir), depth + 1) * diffuse_weight;
+		return do_trace(Ray(info.inter_point + sample_dir * EPS, sample_dir), depth + 1) * diffuse_weight;
 	}
 	return Color::BLACK;
 }
@@ -70,7 +70,8 @@ Color MCPT::diffuse(const IntersectInfo& info, const Ray& ray, int depth) const 
 Color MCPT::reflection(const IntersectInfo& info, const Ray& ray, int depth) const {
 	if (info.surf->specular > EPS && !(info.contain)) {
 		// reflected ray : go back a little, same density
-		Ray new_ray(info.inter_point - ray.dir * EPS, -info.norm.reflection(ray.dir), ray.density);
+		Vec refl_ray_dir = -info.norm.reflection(ray.dir);
+		Ray new_ray(info.inter_point + refl_ray_dir * EPS, refl_ray_dir, ray.density);
 		m_assert(fabs((-info.norm.reflection(ray.dir)).sqr() - 1) < EPS);
 
 		new_ray.debug = ray.debug;
@@ -84,13 +85,14 @@ Color MCPT::transmission(const IntersectInfo& info, const Ray& ray, int depth) c
 	const Vec & inter_point = info.inter_point;
 	const Vec & norm = info.norm;
 	if (info.surf->transparency > EPS) {
-		Ray refl_ray(inter_point - ray.dir * EPS, -norm.reflection(ray.dir), ray.density);
+		Vec refl_ray_dir = -info.norm.reflection(ray.dir);
+		Ray refl_ray(inter_point + refl_ray_dir * EPS, refl_ray_dir, ray.density);
 		refl_ray.debug = ray.debug;
 
 		Vec tr_dir = norm.transmission(ray.dir, ray.density / info.forward_density);
 		if (isfinite(tr_dir.x)) {  //have transmission
 			//transmission ray : go forward a little
-			Ray new_ray(inter_point + ray.dir * EPS, tr_dir, info.forward_density);
+			Ray new_ray(inter_point + tr_dir * EPS, tr_dir, info.forward_density);
 			new_ray.debug = ray.debug;
 
 			// Fresnel's Law

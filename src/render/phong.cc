@@ -21,7 +21,7 @@ void Phong::finish() {
 	Space::finish();
 }
 
-Color Phong::do_trace(const Ray& ray, real_t dist, int depth) const {
+Color Phong::do_trace(DistRay& ray, int depth) const {
 	if (depth > max_depth) return Color::BLACK;
 	m_assert(fabs(ray.dir.sqr() - 1) < EPS);
 
@@ -43,26 +43,28 @@ Color Phong::do_trace(const Ray& ray, real_t dist, int depth) const {
 	Color now_col = phong_local(intersect_info, ray);
 
 	// Beer-Lambert's Law
-	dist += intersect_info.inter_dist;
-	now_col = now_col * pow(M_E, -dist * AIR_BEER_DENSITY);
+	ray.dist += intersect_info.inter_dist;
+	now_col = now_col * pow(M_E, -ray.dist * AIR_BEER_DENSITY);
 
 	m_assert(fabs(ray.dir.sqr() - 1) < EPS);
 
 	// reflection
-	Color now_refl = reflection(intersect_info, ray, dist, depth);
+	Color now_refl = reflection(intersect_info, ray, depth);
 	// transmission
-	Color now_transm = transmission(intersect_info, ray, dist, depth);
+	Color now_transm = transmission(intersect_info, ray, depth);
 	return Phong::blend(now_amb, now_col, now_refl, now_transm);
 }
 
-Color Phong::transmission(const IntersectInfo& info, const Ray& ray, real_t dist, int depth) const {
+Color Phong::transmission(const IntersectInfo& info, const DistRay& ray, int depth) const {
 	if (info.surf->transparency > EPS) {
 		Vec tr_dir = info.norm.transmission(ray.dir, ray.density / info.forward_density);
 		if (isnormal(tr_dir.x)) { // have transmission
 			// transmission ray : go forward a little
-			Ray new_ray(info.inter_point + ray.dir * EPS, tr_dir, info.forward_density);
+			DistRay new_ray(info.inter_point + tr_dir * EPS, tr_dir, info.forward_density);
+			new_ray.dist = ray.dist;
 			new_ray.debug = ray.debug;
-			Color transm = do_trace(new_ray, dist, depth + 1);
+
+			Color transm = do_trace(new_ray, depth + 1);
 			return (transm + transm * info.surf->diffuse * TRANSM_DIFFUSE_FACTOR) *
 				info.surf->transparency;
 		}
@@ -70,25 +72,27 @@ Color Phong::transmission(const IntersectInfo& info, const Ray& ray, real_t dist
 	return Color::BLACK;
 }
 
-Color Phong::reflection(const IntersectInfo& info, const Ray& ray, real_t dist, int depth) const {
+Color Phong::reflection(const IntersectInfo& info, const DistRay& ray, int depth) const {
 	// do reflection if specular > 0
 	// inner surface don't reflect
 	if (info.surf->specular > 0 && !(info.contain)) {
 		// reflected ray : go back a little, same density
-		Ray new_ray(info.inter_point - ray.dir * EPS, -info.norm.reflection(ray.dir), ray.density);
+		Vec new_ray_dir = -info.norm.reflection(ray.dir);
+		DistRay new_ray(info.inter_point + new_ray_dir * EPS, new_ray_dir, ray.density);
+		new_ray.dist = ray.dist;
+		new_ray.debug = ray.debug;
 		//m_assert(fabs((-info.norm.reflection(ray.dir)).sqr() - 1) < EPS);
 
 		real_t lmn = fabs(new_ray.dir.dot(info.norm));
 
-		new_ray.debug = ray.debug;
-		Color refl = do_trace(new_ray, dist, depth + 1);
+		Color refl = do_trace(new_ray, depth + 1);
 		return (refl + refl * info.surf->diffuse * REFL_DIFFUSE_FACTOR) *
 			(REFL_DECAY * info.surf->specular * info.surf->shininess * lmn);
 	}
 	return Color::BLACK;
 }
 
-Color Phong::phong_local(const IntersectInfo& info, const Ray& ray) const {
+Color Phong::phong_local(const IntersectInfo& info, const DistRay& ray) const {
 	Color ret(Color::BLACK);
 	for (auto &i : lights) {
 		Vec lm = (i->get_src() - info.inter_point).get_normalized();

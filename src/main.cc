@@ -34,7 +34,7 @@ void all(bool g) {
 	sp->add_obj(make_shared<Plane>(InfPlane::XYPLANE, tpic));
 	sp->add_obj(make_shared<Plane>(InfPlane(Vec(0, 1, 0), 20), make_shared<GridTexture>(GridTexture::BLACK_WHITE_REFL)));
 	sp->add_obj(make_shared<Plane>(InfPlane(Vec(-3, -1, 0), -16, true), make_shared<HomoTexture>(Surface::MIRROR)));
-	sp->add_obj(make_shared<Sphere>(PureSphere(Vec(+5, -6, 2), 2), t_glass));
+	sp->add_obj(make_shared<Sphere>(PureSphere(Vec(+5, -6, 2.5), 2), t_glass));
 	sp->add_obj(make_shared<Sphere>(PureSphere(Vec(-4, 6, 8), 1.5), t_wtm));
 
 
@@ -65,8 +65,8 @@ void all(bool g) {
 	}
 
 	sp->finish();
-	View v(sp, Vec(-8.19, -14.3, 24.9), Vec(0.79, 3.70, 5.5), 27, Geometry(w, h));
-//	View v(s, Vec(-6.59, -22.3, 12.9), Vec(2.12, 3.20, 5.5), 27, Geometry(w, h));
+//	View v(sp, Vec(-8.19, -14.3, 24.9), Vec(0.79, 3.70, 5.5), 27, Geometry(w, h));
+	View v(sp, Vec(-6.59, -22.3, 12.9), Vec(2.12, 3.20, 5.5), 27, Geometry(w, h));
 	/*
 	 *View v(s, Vec(-16.91, -10.5, 14.1), Vec(-1.63, 3.00, 3.0), 22.5, Geometry(w, h));
 	 */
