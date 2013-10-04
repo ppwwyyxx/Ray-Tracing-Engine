@@ -59,9 +59,9 @@ void MyRender::save(const char* fname)
 
 void MyRender::_write(int x, int y, const Color& c) {
 	// bgr color space
-	img.ptr<uchar>(y)[x * 3] = c.z * 255;
-	img.ptr<uchar>(y)[x * 3 + 1] = c.y * 255;
-	img.ptr<uchar>(y)[x * 3 + 2] = c.x * 255;
+	img.ptr<uchar>(y)[x * 3] = c.b * 255;
+	img.ptr<uchar>(y)[x * 3 + 1] = c.g * 255;
+	img.ptr<uchar>(y)[x * 3 + 2] = c.r * 255;
 }
 
 Color MyRender::get(const Mat& img, int i, int j) {
@@ -100,8 +100,9 @@ void MyRender::antialias() {
 		real_t s = 0;
 		for (int di : {-1, 0, 1}) for (int dj : {-1, 0, 1}) {
 			Color newcol = get(img, i + di, j + dj);
-			s += (newcol - col).sqr();
-		}
+			Color diff = newcol - col;
+			s += ::sqr(diff.r) + ::sqr(diff.g) + ::sqr(diff.b);
+			}
 		if (s > 5) cand.push_back(Coor(i, j));
 	}
 	Mat dst = img;
@@ -117,7 +118,7 @@ void MyRender::gamma_correction() {
 	REPL(i, 1, img.size().width - 1) REPL(j, 1, img.size().height - 1) {
 		Color col = get(img, i, j);
 #define ppp(x) pow((x < EPS) ? EPS : x > 1 ? 1 - EPS : x, 1.0 / 2.2)
-		_write(i, j, Color(ppp(col.x), ppp(col.y), ppp(col.z)));
+		_write(i, j, Color(ppp(col.r), ppp(col.g), ppp(col.b)));
 #undef ppp
 	}
 }

@@ -30,8 +30,7 @@ class Mesh: public Renderable {
 
 		Mesh() {}
 
-		Mesh(const Mesh& r):Renderable(r.get_texture())
-		{
+		Mesh(const Mesh& r):Renderable(r.get_texture()) {
 			smooth = r.smooth;
 			mapped = r.mapped;
 			use_tree = r.use_tree;

@@ -35,11 +35,14 @@ Color MCPT::do_trace(const Ray& ray, int depth) const {
 	Color now_refl = reflection(intersect_info, ray, depth);
 	// transmission
 	Color now_transm = transmission(intersect_info, ray, depth);
+
 	return emission + diffu * (now_diffuse + now_refl + now_transm);
+	// here the result is likely to be extreamly large (due to strong light),
+	// but that's ok, since we are sampling :)
 }
 
 Color MCPT::trace(const Ray& ray) const {
-	Color ret = Color::NONE;
+	Color ret = Color::BLACK;
 	REP(n_samp, GLOBAL_ILLU_SAMPLE_CNT) {
 		ret += do_trace_adapter(ray);
 	}

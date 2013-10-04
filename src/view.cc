@@ -32,7 +32,8 @@ Color View::render_antialias(const Vec& dest, int sample) const {
 
 		if (!use_dof) {
 			Ray ray(view_point, new_dest - view_point, 1, true);
-			ret += sp->trace(ray);
+			Color diff = sp->trace(ray);
+			ret += diff;
 		} else {
 			ret += render_dof(new_dest);
 		}

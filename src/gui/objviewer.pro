@@ -1,5 +1,4 @@
 # File: objviewer.pro
-
 # Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 QT       += core gui
@@ -19,10 +18,10 @@ SOURCES += main.cxx window.cxx\
 		../lib/*.cc ../renderable/*.cc\
 		../render/*.cc ../view.cc ../mesh_simplifier.cc ../myrender.cc ../kdtree.cc
 
-HEADERS  += window.hh ../include/geometry/*.hh ../include/material/*.hh\
+HEADERS += window.hh ../include/geometry/*.hh ../include/material/*.hh\
 	../include/renderable/*.hh ../include/*.hh ../include/render/*.hh ../include/librender/*.hh
 
-FORMS    += window.ui
+FORMS   += window.ui
 
 DESTDIR = ../
 OBJECTS_DIR = ../build/obj

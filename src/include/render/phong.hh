@@ -10,7 +10,7 @@ class DistRay : public Ray {
 	public:
 		real_t dist = 0;
 
-		DistRay(const Ray& ray): Ray(ray) { }
+		explicit DistRay(const Ray& ray): Ray(ray) { }
 
 		DistRay(const Vec & _orig, const Vec& _dir, real_t _density = 1, bool normalize = false):
 			Ray(_orig, _dir, _density, normalize) { }

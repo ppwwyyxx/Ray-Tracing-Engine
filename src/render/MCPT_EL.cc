@@ -19,6 +19,7 @@ Color MCPT_EL::do_trace(const Ray& ray, int depth, int use_emission) const {
 	real_t forward_density = first_trace->get_forward_density();
 
 	m_assert((fabs(norm.sqr() - 1) < EPS));
+	m_assert(norm.dot(ray.dir) <= 0);
 
 	if (ray.debug)
 		print_debug("debug ray: arrive point (%lf, %lf, %lf) \n", inter_point.x, inter_point.y, inter_point.z);
@@ -42,8 +43,8 @@ Color MCPT_EL::do_trace(const Ray& ray, int depth, int use_emission) const {
 
 	// generate random reflected ray by sampling unit hemisphere
 	Vec d = ((u * cos(r1)) * r2s + v * sin(r1) * r2s + norm * (sqrt(1 - r2))).get_normalized();
-	Color now_diffuse = do_trace(Ray(inter_point - ray.dir * EPS, d), depth + 1) *
-		min(1 - surf->specular, 1 - surf->transparency);
+	real_t diffuse_weight = min(1 - surf->specular, 1 - surf->transparency);	// probably negative ?
+	Color now_diffuse = do_trace(Ray(inter_point - ray.dir * EPS, d), depth + 1) * diffuse_weight;
 
 	// explicit lighting
 	real_t lighting = 0;
@@ -62,13 +63,16 @@ Color MCPT_EL::do_trace(const Ray& ray, int depth, int use_emission) const {
 			   sin_a = sqrt(1 - ::sqr(cos_a)),
 			   phi = 2 * M_PI * eps2;
 		Vec dir = su * cos(phi) * sin_a + sv * sin(phi) * sin_a + sw * cos_a;
+		if (dir.dot(norm) < 0) continue;
 		dir.normalize();
 		if (check_shadow_ray(Ray(inter_point + dir * EPS, dir), light)) {
 			real_t omega = 2 * M_PI * (1 - cos_a_max);
 			lighting += light->intensity * dir.dot(norm) * omega * M_1_PI;
 		}
 	}
-	lighting *= min(1 - surf->specular, 1 - surf->transparency);
+	lighting *= diffuse_weight;
+	m_assert(diffuse_weight >= 0);
+	m_assert(lighting >= 0);
 
 	// reflection
 	Color now_refl = Color::BLACK;

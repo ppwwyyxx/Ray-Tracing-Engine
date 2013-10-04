@@ -16,7 +16,7 @@ class MyRender: public RenderBase {
 
 		void save(const char* fname = "output.png");
 
-		MyRender(const Geometry &_g);
+		explicit MyRender(const Geometry &_g);
 
 		MyRender(int w, int h):
 			MyRender(Geometry(w, h)){}

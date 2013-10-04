@@ -16,7 +16,7 @@ class Geometry {
 	public:
 		int w, h;
 
-		Geometry(int m_w = 0, int m_h = 0):
+		explicit Geometry(int m_w = 0, int m_h = 0):
 			w(m_w), h(m_h) {}
 
 		inline int area() const

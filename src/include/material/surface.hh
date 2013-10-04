@@ -22,7 +22,7 @@ class Surface {
 				real_t _ambient, const Color& _diffuse, real_t _specular, const Color& _emission = Color::NONE):
 			transparency(_transparency), shininess(_shininess),
 			ambient(_ambient), specular(_specular), diffuse(_diffuse),
-			emission(_emission) {}
+			emission(_emission) { }
 
 		static const Surface BLACK, WHITE, WHITE_REFL, BLACK_REFL, BLUE, CYAN,
 					 GOOD, GOOD_REFL, GLASS, MIRROR, GREEN;

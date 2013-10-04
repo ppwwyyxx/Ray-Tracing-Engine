@@ -49,7 +49,6 @@ class RenderBase {
 	protected:
 		Geometry geo;
 		virtual void _write(int x, int y, const Color &c) = 0;
-
 };
 
 

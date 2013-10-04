@@ -21,7 +21,7 @@ void all(bool g) {
 	int w = 1366, h = 768;
 	w = 500, h = 350;
 	Space* sp;
-	if (g) sp = new MCPT();
+	if (g) sp = new MCPT_EL();
 	else sp = new Phong();
 	sp->add_light(Light(PureSphere(Vec(+10, 10, 30), 3), Color::WHITE, g ? 50 : 12));
 	sp->add_light(Light(PureSphere(Vec(-10, -10, 30), 3), Color::WHITE, g ? 40 : 10));

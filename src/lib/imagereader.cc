@@ -1,11 +1,9 @@
 // File: imagereader.cc
-
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "lib/imagereader.hh"
-using namespace std;
-
 #include <Magick++.h>
+using namespace std;
 using namespace Magick;
 
 MagickReader::MagickReader(const char* fname) {
@@ -18,9 +16,9 @@ MagickReader::MagickReader(const char* fname) {
 
 	const PixelPacket* src = img.getConstPixels(0, 0, size.w, size.h);
 	REP(y, size.h) REP(x, size.w) {
-		dest->x = double(src->red) / QuantumRange;
-		dest->y = double(src->green) / QuantumRange;
-		dest->z = double(src->blue) / QuantumRange;
+		dest->r = double(src->red) / QuantumRange;
+		dest->g = double(src->green) / QuantumRange;
+		dest->b = double(src->blue) / QuantumRange;
 		dest ++;
 		src ++;
 	}
