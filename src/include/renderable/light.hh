@@ -21,7 +21,7 @@ class Light : public Sphere {
 		Light(const PureSphere& _sphere, const Color& _col, real_t _intense):
 			Sphere(_sphere),
 			surf(make_shared<Surface>(
-						0, 0, 0, Color::NONE, 0, _col * _intense)),
+						0, 0, 0, Color::WHITE, 0, _col * _intense)),
 			 color(_col), intensity(_intense)
 		{ set_texture(make_shared<HomoTexture>(*surf)); }
 

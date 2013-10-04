@@ -38,4 +38,4 @@ const real_t SOFT_SHADOW_RADIUS = 0.8;
 const int KDTREE_MAX_DEPTH = 100;
 const int KDTREE_TERMINATE_OBJ_CNT = 10;
 
-const int GLOBAL_ILLU_SAMPLE_CNT = 20;
+const int GLOBAL_ILLU_SAMPLE_CNT = 400;

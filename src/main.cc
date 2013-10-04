@@ -19,7 +19,6 @@ const string watermelon_fname = "../resource/watermelon.jpg";
 // Complicated Scene
 void all(bool g) {
 	int w = 1366, h = 768;
-	w = 500, h = 350;
 	Space* sp;
 	if (g) sp = new MCPT_EL();
 	else sp = new Phong();

@@ -57,6 +57,7 @@ Color MCPT_EL::do_trace(const Ray& ray, int depth, int use_emission) const {
 			su = (fabs(sw.x) > 0.1 ? Vec(0, 1, 0) : Vec(1, 0, 0)).get_normalized(),
 			sv = sw.cross(su);
 		real_t cos_a_max = sqrt(1 - ::sqr(l_size) / sw.sqr());
+		if (!isnormal(cos_a_max)) cos_a_max = 0;		// l_size^2 might be slightly smaller than sw.sqr()
 		real_t eps1 = drand48(),
 			   eps2 = drand48();
 		real_t cos_a = 1 - eps1 + eps1 * cos_a_max,
@@ -70,7 +71,7 @@ Color MCPT_EL::do_trace(const Ray& ray, int depth, int use_emission) const {
 			lighting += light->intensity * dir.dot(norm) * omega * M_1_PI;
 		}
 	}
-	lighting *= diffuse_weight;
+	lighting *= diffuse_weight / 6;
 	m_assert(diffuse_weight >= 0);
 	m_assert(lighting >= 0);
 
