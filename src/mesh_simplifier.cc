@@ -92,7 +92,7 @@ void MeshSimplifier::update_cost(Vertex* u) {
 	u->candidate = nullptr;
 
 	for (auto & uvtx : u->adj_vtx) {
-		if (uvtx->erased) m_assert(false);
+		if (uvtx->erased) { m_assert(false);}
 		if (update_min(min, cost(u, uvtx)))
 			u->candidate = uvtx;
 	}
@@ -184,7 +184,7 @@ void MeshSimplifier::write_back() {		// write vtxs and face_ids
 		bool erased = false;
 		REP(k, 3) if (!f.vtx[k] || f.vtx[k]->erased) erased = true;
 		if (erased) continue;
-		REP(k, 3) if (f.vtx[k]->id == -1) m_assert(false);
+		REP(k, 3) if (f.vtx[k]->id == -1) { m_assert(false);}
 
 		mesh.add_faceid(f.vtx[0]->id, f.vtx[1]->id, f.vtx[2]->id);
 	}

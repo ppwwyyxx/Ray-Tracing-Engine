@@ -31,8 +31,9 @@ Color Phong::do_trace(DistRay& ray, int depth) const {
 	auto intersect_info = first_trace->get_intersect_info();
 
 	m_assert((fabs(intersect_info.norm.sqr() - 1) < EPS));
-	if (ray.debug)
+	if (ray.debug) {
 		print_debug("debug ray: arrive point (%lf, %lf, %lf) \n", intersect_info.inter_point.x, intersect_info.inter_point.y, intersect_info.inter_point.z);
+	}
 
 	// phong model
 	// http://en.wikipedia.org/wiki/Phong_reflection_model

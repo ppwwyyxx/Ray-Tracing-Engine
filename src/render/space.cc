@@ -63,7 +63,7 @@ shared_ptr<Trace> Space::find_first(const Ray& ray, bool include_light) const {
 		auto tmp = obj->get_trace(ray, min == numeric_limits<real_t>::max() ? -1 : min);
 		if (tmp) {
 			real_t d = tmp->intersection_dist();
-			if (update_min(min, d)) ret = tmp;
+			if (update_min(min, d)) ret = move(tmp);
 		}
 	}
 

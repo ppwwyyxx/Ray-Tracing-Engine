@@ -18,9 +18,9 @@ Color MCPT::do_trace(const Ray& ray, int depth) const {
 		  emission = intersect_info.surf->emission;
 
 	m_assert((fabs(intersect_info.norm.sqr() - 1) < EPS));
-	if (ray.debug)
+	if (ray.debug) {
 		print_debug("debug ray: arrive point (%lf, %lf, %lf) \n", intersect_info.inter_point.x, intersect_info.inter_point.y, intersect_info.inter_point.z);
-
+	}
 	real_t max_color_comp = diffu.get_max();
 	if (depth > 5 || fabs(max_color_comp) < EPS) {		// for light, max_color_comp = 0
 		if (drand48() < max_color_comp)		// Russian Roulette

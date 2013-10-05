@@ -1,5 +1,4 @@
 // File: plane.cc
-
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "renderable/plane.hh"
@@ -8,13 +7,13 @@ using namespace std;
 shared_ptr<Trace> Plane::get_trace(const Ray& ray, real_t dist) const {
 	shared_ptr<Trace> ret = make_shared<PlaneTrace>(*this, ray);
 	if (ret->intersect()) {
-		if (dist == -1 || ret->intersection_dist() < dist)
-			return ret;
+		if (fabs(dist + 1) < EPS || ret->intersection_dist() < dist)
+			return move(ret);
 	}
 	return nullptr;
 }
 
-AABB Plane::get_aabb() const { error_exit("shoudl not be here"); }
+AABB Plane::get_aabb() const { error_exit("shoudl not be here"); exit(0); }
 
 Vec Plane::surf_dir() const {
 	Vec ret(plane.norm.y, -plane.norm.x, 0);

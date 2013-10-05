@@ -28,8 +28,7 @@ class HomoTexture :public Texture {
 		HomoTexture(const Surface& m_pty):
 			pty(m_pty){}
 
-		shared_ptr<Surface> get_property(real_t x, real_t y) const override {
-			print_debug("%lf, %lf\n", x, y);
+		shared_ptr<Surface> get_property(real_t, real_t) const override {
 			error_exit("should not be here");
 		}
 

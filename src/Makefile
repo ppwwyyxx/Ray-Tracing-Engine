@@ -5,7 +5,7 @@ OBJ_DIR = build
 TARGET = ray-tracing
 
 INCLUDE_DIR = -Iinclude
-DEFINES = -DDEBUG
+#DEFINES = -DDEBUG
 
 OPTFLAGS = -Wall -Wextra -g    #-Ofast -fno-finite-math-only
 

@@ -21,8 +21,9 @@ Color MCPT_EL::do_trace(const Ray& ray, int depth, int use_emission) const {
 	m_assert((fabs(norm.sqr() - 1) < EPS));
 	m_assert(norm.dot(ray.dir) <= 0);
 
-	if (ray.debug)
+	if (ray.debug) {
 		print_debug("debug ray: arrive point (%lf, %lf, %lf) \n", inter_point.x, inter_point.y, inter_point.z);
+	}
 
 	real_t max_color_comp = diffu.get_max();
 	if (depth > 5 || fabs(max_color_comp) < EPS) {		// for light, max_color_comp = 0
