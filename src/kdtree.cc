@@ -25,9 +25,6 @@ class KDTree::Node {
 		bool leaf() const
 		{ return child[0] == nullptr && child[1] == nullptr; }
 
-		void set_objs(const vector<rdptr>& _objs)
-		{ objs = _objs; }
-
 		void add_obj(rdptr obj)
 		{ objs.push_back(obj); }
 
@@ -271,6 +268,6 @@ KDTree::Node* KDTree::build(const vector<RenderWrapper>& objs, const AABB& box, 
 
 	return ret;
 #undef ADDOBJ
-#undef GET_CAND_LIST
+#undef GEN_CAND_LIST
 }
 

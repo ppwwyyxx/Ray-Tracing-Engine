@@ -131,8 +131,8 @@ void MyRender::blur() {
 void render_and_set(int* line_cnt, View* v, RenderBase* r) {
 	static mutex line_cnt_mutex;
 	static const int w = r->get_geo().w, h = r->get_geo().h;
-	int now_num;
 	do {
+		int now_num;
 		{
 			std::lock_guard<std::mutex> lock(line_cnt_mutex);
 			now_num = (*line_cnt);

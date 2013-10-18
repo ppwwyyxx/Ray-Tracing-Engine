@@ -28,7 +28,7 @@ Color View::render_antialias(const Vec& dest, int sample) const {
 
 	Color ret = Color::NONE;
 	REP(dx, sample) REP(dy, sample) {
-		Vec new_dest = dest - dir_h * (dx * unit + unit2) + dir_w * (dy * unit + unit2);
+		Vec new_dest = dest - dir_h * (dx * unit + drand48() * unit2) + dir_w * (dy * unit + drand48() * unit2);
 
 		if (!use_dof) {
 			Ray ray(view_point, new_dest - view_point, 1, true);

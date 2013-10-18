@@ -20,7 +20,7 @@ const string watermelon_fname = "../resource/watermelon.jpg";
 void all(bool g) {
 	int w = 1366, h = 768;
 	Space* sp;
-	if (g) sp = new MCPT_EL();
+	if (g) sp = new MCPT();
 	else sp = new Phong();
 	sp->add_light(Light(PureSphere(Vec(+10, 10, 30), 3), Color::WHITE, g ? 50 : 12));
 	sp->add_light(Light(PureSphere(Vec(-10, -10, 30), 3), Color::WHITE, g ? 40 : 10));
@@ -96,7 +96,6 @@ void test_shadow() {
 // test depth of field
 void dof_ball_scene() {
 	int w = 500, h = 500;
-	w = 300, h = 300;
 	Phong s;
 	s.add_light(Light(Vec(0, -10, 12), Color::WHITE, 6.0));
 	s.add_light(Light(Vec(9, 2, 50), Color::WHITE, 6.0));
