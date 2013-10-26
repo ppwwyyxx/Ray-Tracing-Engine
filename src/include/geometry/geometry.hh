@@ -56,7 +56,7 @@ class Vector {
 		real_t dot(const Vector &v) const
 		{ return x * v.x + y * v.y + z * v.z; }
 
-		Vector cross(const Vector &v) const
+		Vector cross(const Vector &v) const		// this cross v
 		{ return Vector(y * v.z - z * v.y, z * v.x - x * v.z, x * v.y - y * v.x); }
 
 		Vector& operator = (const Vector& v)
@@ -172,6 +172,9 @@ class Vector {
 
 		friend std::ostream & operator << (std::ostream &os, const Vector& vec)
 		{ return os << vec.x << " " << vec.y << " " << vec.z;}
+
+		friend Vector operator * (real_t x, const Vector& vec)
+		{ return vec * x; }
 };
 
 

@@ -18,8 +18,6 @@ View::View(const Space* _sp, const Vec& _view_point,
 		tmp = Vec(-norm.z, 0, norm.x);
 	dir_w = tmp;
 	dir_h = norm.cross(dir_w);
-	m_assert(fabs(dir_h.sqr()) - 1 < EPS);
-
 	resume_dir_vector();
 }
 
@@ -61,8 +59,32 @@ Color View::render_dof(const Vec& dest) const {
 }
 
 Color View::render(int i, int j) const {
+	if (use_bended_screen)
+		return render_bended(i, j);
 	Vec dest = mid + dir_h * (geo.h - 1 - i - geo.h / 2) + dir_w * (j - geo.w / 2);
 	return render_antialias(dest, ANTIALIAS_SAMPLE_CNT);
+}
+
+Color View::render_bended(int i, int j) const {
+	Vec left_mid = mid - geo.w * dir_w / 2,
+		up_mid = mid - geo.h * dir_h / 2,
+		dir = (mid - view_point).get_normalized(),
+		point_to_left = left_mid - view_point,
+		point_to_up = up_mid - view_point;
+
+	real_t dtheta = acos(dir.dot(point_to_left.get_normalized()));
+	dtheta /= geo.w / 2;
+	real_t dphi = acos(dir.dot(point_to_up.get_normalized()));
+	dphi /= geo.h / 2;
+
+	real_t theta = (j - geo.w / 2) * dtheta;
+	real_t phi = (geo.h / 2 - i) * dphi;
+	real_t r = (mid - view_point).mod();
+
+	Vec new_norm = dir * cos(theta) + dir_w.get_normalized() * sin(theta);
+	new_norm = new_norm * cos(phi) + dir_h.get_normalized() * sin(phi);
+	Vec dest = view_point + new_norm.get_normalized() * r;
+	return render_antialias(dest, 1);
 }
 
 void View::twist(int angle) {

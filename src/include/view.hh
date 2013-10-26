@@ -18,8 +18,8 @@ class View {
 
 		inline void resume_dir_vector() {
 			// NEED explanation here!
-			dir_w = dir_w.get_normalized() * (size / geo.h);
-			dir_h = dir_h.get_normalized() * (size / geo.h);
+			dir_w = dir_w.get_normalized() * (size / geo.w);
+			dir_h = dir_h.get_normalized() * (size / geo.w);
 			// use either geo.h or geo.w
 		}
 
@@ -34,6 +34,7 @@ class View {
 		Vec origin_norm;		// the initial view
 
 		bool use_dof = false;
+		bool use_bended_screen = false;
 
 		View(const Space* _sp, const Vec& _view_point,
 				const Vec& _mid, real_t w, const Geometry& _geo);
@@ -51,6 +52,7 @@ class View {
 		void move_screen(real_t dist);
 
 		Color render(int i, int j) const;	// i row j column
+		Color render_bended(int i, int j) const;
 
 		Color render_antialias(const Vec& dest, int sample) const; // render with n^2 sample at each pixel
 

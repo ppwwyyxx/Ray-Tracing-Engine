@@ -32,7 +32,7 @@ inline real_t sqr(real_t x) { return x * x; }
 #define REPD(x, y, z) for (int x = y; x >= (z); x --)
 
 #define P(a) std::cout << (a) << std::endl
-#define PP(s, a) std::cout << s << " " << (a) << std::endl
+#define PP(a) std::cout << #a << " " << (a) << std::endl
 
 template <typename T>
 inline void free_2d(T** ptr, int w) {
