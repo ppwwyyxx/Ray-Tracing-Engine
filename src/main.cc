@@ -18,7 +18,7 @@ const string watermelon_fname = "../resource/watermelon.jpg";
 
 // Complicated Scene
 void all(bool g) {
-	int w = 700, h = 200;
+	int w = 339, h = 195;
 	Space* sp;
 	if (g) sp = new MCPT();
 	else sp = new Phong();
@@ -64,12 +64,9 @@ void all(bool g) {
 	}
 
 	sp->finish();
-//	View v(sp, Vec(-8.19, -14.3, 24.9), Vec(0.79, 3.70, 5.5), 27, Geometry(w, h));
-	View v(sp, Vec(-10.49, -33.3, 16.1), Vec(2.12, 3.20, 5.5), 47, Geometry(w, h)); // leave away further
-	//v.use_bended_screen = true;
-	/*
-	 *View v(s, Vec(-16.91, -10.5, 14.1), Vec(-1.63, 3.00, 3.0), 22.5, Geometry(w, h));
-	 */
+	//View v(sp, Vec(-14.01, -50.0, 20.1), Vec(4.19, 2.40, 5.5), 45, Geometry(w, h)); // leave away further
+	//View v(sp, Vec(-28.01, -20.3, 22.18), Vec(-1.63, 3.00, 3.0), 32.5, Geometry(w, h));
+	View v(sp, Vec(-8.91, -16.3, 36.88), Vec(-1.22, 1.55, 1.8), 32.5, Geometry(w, h));
 	if (g)
 		CVViewer viewer(v, "best.png");
 	else {

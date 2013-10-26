@@ -17,10 +17,10 @@ class View {
 		{ dir_w.normalize(); dir_h.normalize(); }
 
 		inline void resume_dir_vector() {
-			// NEED explanation here!
+			//  we should have:  |dir_w| * geo.w  == size
+			//  as well as:		 |dir_w| == |dir_h|
 			dir_w = dir_w.get_normalized() * (size / geo.w);
 			dir_h = dir_h.get_normalized() * (size / geo.w);
-			// use either geo.h or geo.w
 		}
 
 		const Space* sp;
