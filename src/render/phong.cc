@@ -3,6 +3,7 @@
 //Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "render/phong.hh"
+using namespace std;
 
 Color Phong::blend(const Color& amb, const Color& phong, const Color& refl, const Color& transm) {
 	Color ret = (amb + phong + refl + transm) / 4;

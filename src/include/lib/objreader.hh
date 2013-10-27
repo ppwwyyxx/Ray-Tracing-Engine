@@ -12,7 +12,7 @@ class ObjReader {
 
 	public:
 		static void read_in(std::string fname, Mesh* mesh) {
-			ifstream fin(fname);
+			std::ifstream fin(fname);
 			if (!fin.is_open()) { error_exit("obj file not found"); }
 			static char input[LINE_MAX_LEN];
 			while (fin.getline(input, LINE_MAX_LEN, '\n')) {
@@ -31,7 +31,7 @@ class ObjReader {
 								//mesh->set_norm(nnorm++, Vec(x, y, z));
 								//don't use vn
 							} else {
-								cout << input << endl;
+								std::cout << input << std::endl;
 								error_exit("unrecognized format");
 							}
 							break;
@@ -48,7 +48,6 @@ class ObjReader {
 					case 'm':
 						break;
 					default:
-						//				cout << input << endl;
 						break;
 				}
 			}

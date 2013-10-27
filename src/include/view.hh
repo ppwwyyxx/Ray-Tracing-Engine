@@ -7,7 +7,6 @@
 #include <memory>
 #include "geometry/geometry.hh"
 #include "render/space.hh"
-using namespace std;
 
 class View {
 	private:

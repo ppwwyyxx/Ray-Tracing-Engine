@@ -41,6 +41,7 @@ using namespace cv;
 #define SHIFT_DISTANCE 20
 #define SHIFT_SCREEN 4
 
+using namespace std;
 
 MyRender::MyRender(const Geometry &m_g):
 	RenderBase(m_g) {
@@ -117,9 +118,9 @@ void MyRender::antialias() {
 void MyRender::gamma_correction() {
 	REPL(i, 1, img.size().width - 1) REPL(j, 1, img.size().height - 1) {
 		Color col = get(img, i, j);
-#define ppp(x) pow((x < EPS) ? EPS : x > 1 ? 1 - EPS : x, 1.0 / 2.2)
-		_write(i, j, Color(ppp(col.r), ppp(col.g), ppp(col.b)));
-#undef ppp
+#define gamma(x) pow((x < EPS) ? EPS : x > 1 ? 1 - EPS : x, 1.0 / 2.2)
+		_write(i, j, Color(gamma(col.r), gamma(col.g), gamma(col.b)));
+#undef gamma
 	}
 }
 

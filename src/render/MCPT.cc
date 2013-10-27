@@ -4,6 +4,7 @@
 
 #include "render/MCPT.hh"
 #include <random>
+using namespace std;
 
 Color MCPT::do_trace(const Ray& ray, int depth) const {
 	if (depth > max_depth) return Color::BLACK;

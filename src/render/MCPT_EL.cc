@@ -3,6 +3,7 @@
 //Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "render/MCPT_EL.hh"
+using namespace std;
 
 Color MCPT_EL::do_trace(const Ray& ray, int depth, int use_emission) const {
 	if (depth > max_depth) return Color::BLACK;

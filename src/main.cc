@@ -64,9 +64,9 @@ void all(bool g) {
 	}
 
 	sp->finish();
-	//View v(sp, Vec(-14.01, -50.0, 20.1), Vec(4.19, 2.40, 5.5), 45, Geometry(w, h)); // leave away further
+	View v(sp, Vec(-14.01, -50.0, 20.1), Vec(4.19, 2.40, 5.5), 45, Geometry(w, h)); // leave away further
 	//View v(sp, Vec(-28.01, -20.3, 22.18), Vec(-1.63, 3.00, 3.0), 32.5, Geometry(w, h));
-	View v(sp, Vec(-8.91, -16.3, 36.88), Vec(-1.22, 1.55, 1.8), 32.5, Geometry(w, h));
+	//View v(sp, Vec(-8.91, -16.3, 36.88), Vec(-1.22, 1.55, 1.8), 32.5, Geometry(w, h));
 	if (g)
 		CVViewer viewer(v, "best.png");
 	else {

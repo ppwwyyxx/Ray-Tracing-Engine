@@ -9,8 +9,8 @@
 #include "lib/debugutils.hh"
 #include "renderable/renderable.hh"
 #include "geometry/geometry.hh"
-using std::tuple;
 using std::vector;
+using std::array;
 using std::shared_ptr;
 
 class Triangle {

@@ -64,10 +64,12 @@ MeshSimplifier::MeshSimplifier(Mesh& _mesh, real_t ratio): mesh(_mesh) {
 
 real_t MeshSimplifier::cost(Vertex* u, Vertex* v) const {
 	list<Face*> common_faces;
-	for (const auto & uface : u->adj_face)
-		if (v->adj_face.find(uface) != v->adj_face.end())
-			// a common adj triangle
-			common_faces.push_back(uface);
+	// common adj triangle of u and v
+	copy_if(u->adj_face.begin(), u->adj_face.end(),
+			back_inserter(common_faces),
+			[&v](Face* f) -> bool {
+				return v->adj_face.find(f) != v->adj_face.end();
+			});
 
 	real_t max = 0;
 	for (const auto & uface : u->adj_face) {

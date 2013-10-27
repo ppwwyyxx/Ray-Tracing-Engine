@@ -3,6 +3,7 @@
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 #include "lib/utils.hh"
+using namespace std;
 
 string TERM_COLOR(int k) {
 	// k = 0 ~ 4

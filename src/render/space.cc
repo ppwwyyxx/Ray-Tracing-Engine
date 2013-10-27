@@ -39,19 +39,19 @@ void Space::finish() {		// called from View::View()
 
 void Space::build_tree() {
 	// the final objs contains a kdtree and all the infinite obj
-	vector<rdptr> infinite_obj;
-	// TODO use a better stl function? e.g. remove_copy_if
-	for (auto &k : objs)
-		if (k->infinity())
-			infinite_obj.push_back(k);
-
-	objs.erase(remove_if(begin(objs), end(objs),
+	list<rdptr> infinite_obj;
+	copy_if(objs.begin(), objs.end(), back_inserter(infinite_obj),
 			[](const rdptr& p) {
 				return p->infinity();
-			}), objs.end());
+			});
+
+	objs.remove_if(
+			[](const rdptr& p) {
+				return p->infinity();
+			});
 
 	if (objs.size())
-		infinite_obj.push_back(rdptr(new KDTree(objs, AABB(bound_min, bound_max))));
+		infinite_obj.emplace_back(rdptr(new KDTree(objs, AABB(bound_min, bound_max))));
 	objs = move(infinite_obj);
 }
 

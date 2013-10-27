@@ -5,6 +5,7 @@
 #pragma once
 
 #include <vector>
+#include <list>
 #include <memory>
 
 #include "renderable/renderable.hh"
@@ -12,13 +13,14 @@
 #include "kdtree.hh"
 #include "const.hh"
 using std::vector;
+using std::list;
 using std::shared_ptr;
 using std::make_shared;
 
 class Space {
 	protected:
 		vector<shared_ptr<Light>>  lights;
-		vector<rdptr> objs;
+		list<rdptr> objs;
 
 		Vec bound_min = Vec::max(), bound_max = -Vec::max();
 

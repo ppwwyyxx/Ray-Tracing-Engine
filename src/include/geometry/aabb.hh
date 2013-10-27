@@ -97,7 +97,7 @@ class AABB {
 			if (t_min < 0) mind = t_max, inside = true;
 			else mind = t_min, inside = false;
 			if (ray.debug)
-				cout << "intersect with box " << (*this) << " at " << mind << ", inside: " << inside << endl;
+				std::cout << "intersect with box " << (*this) << " at " << mind << ", inside: " << inside << std::endl;
 			return true;
 		}
 

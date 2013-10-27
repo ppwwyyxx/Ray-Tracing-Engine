@@ -100,16 +100,16 @@ class KDTree::Node {
 		}
 
 	private:
-		vector<rdptr> objs;
+		list<rdptr> objs;
 
 };
 
-KDTree::KDTree(const vector<rdptr>& objs, const AABB& space) {
-	vector<RenderWrapper> objlist;
+KDTree::KDTree(const list<rdptr>& objs, const AABB& space) {
+	list<RenderWrapper> objlist;
 	for (auto & obj : objs) {
 		m_assert(!obj->infinity());
 		AABB aabb = obj->get_aabb();
-		objlist.push_back(RenderWrapper(obj, aabb));
+		objlist.emplace_back(RenderWrapper(obj, aabb));
 		bound_min.update_min(aabb.min), bound_max.update_max(aabb.max);
 	}
 	Timer timer;
@@ -127,7 +127,7 @@ shared_ptr<Trace> KDTree::get_trace(const Ray& ray, real_t max_dist) const {
 	return root->get_trace(ray, mind, max_dist);
 }
 
-AAPlane KDTree::cut(const vector<RenderWrapper>& objs, int depth) const {
+AAPlane KDTree::cut(const list<RenderWrapper>& objs, int depth) const {
 	AAPlane ret(depth % 3, 0);
 
 	vector<real_t> min_list;
@@ -140,7 +140,7 @@ AAPlane KDTree::cut(const vector<RenderWrapper>& objs, int depth) const {
 	return ret;
 }
 
-KDTree::Node* KDTree::build(const vector<RenderWrapper>& objs, const AABB& box, int depth) {
+KDTree::Node* KDTree::build(const list<RenderWrapper>& objs, const AABB& box, int depth) {
 	if (objs.size() == 0) return nullptr;
 
 #define ADDOBJ for (auto& obj : objs) ret->add_obj(obj.obj)
@@ -243,7 +243,7 @@ KDTree::Node* KDTree::build(const vector<RenderWrapper>& objs, const AABB& box, 
 
 	ret->pl = best_pl;
 	par = box.cut(best_pl);
-    vector<RenderWrapper> objl, objr;
+    list<RenderWrapper> objl, objr;
 	for (auto & obj : objs) {
 		if (obj.box.max[best_pl.axis] >= best_pl.pos) objr.push_back(obj);
 		if (obj.box.min[best_pl.axis] <= best_pl.pos) objl.push_back(obj);

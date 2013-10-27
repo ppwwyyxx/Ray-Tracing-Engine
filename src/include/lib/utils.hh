@@ -9,9 +9,8 @@
 #include <cstdlib>
 #include <string>
 #include <sstream>
-using namespace std;
 
-string TERM_COLOR(int k);
+std::string TERM_COLOR(int k);
 
 #define COLOR_RED     "\x1b[31m"
 #define COLOR_GREEN   "\x1b[32m"
