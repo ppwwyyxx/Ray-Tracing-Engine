@@ -6,6 +6,7 @@
 #pragma once
 #include <opencv2/opencv.hpp>
 
+#include <string>
 #include "render.hh"
 
 class MyRender: public RenderBase {
@@ -14,7 +15,7 @@ class MyRender: public RenderBase {
 	public:
 		int finish() override;
 
-		void save(const char* fname = "output.png");
+		void save(std::string fname = "output.png");
 
 		explicit MyRender(const Geometry &_g);
 

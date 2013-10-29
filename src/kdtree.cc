@@ -25,7 +25,7 @@ class KDTree::Node {
 		bool leaf() const
 		{ return child[0] == nullptr && child[1] == nullptr; }
 
-		void add_obj(rdptr obj)
+		void add_obj(const rdptr& obj)
 		{ objs.push_back(obj); }
 
 		shared_ptr<Trace> get_trace(const Ray& ray, real_t inter_dist, real_t max_dist = -1) const {
@@ -142,12 +142,11 @@ AAPlane KDTree::cut(const list<RenderWrapper>& objs, int depth) const {
 
 KDTree::Node* KDTree::build(const list<RenderWrapper>& objs, const AABB& box, int depth) {
 	if (objs.size() == 0) return nullptr;
+	if (depth > KDTREE_MAX_DEPTH) return nullptr;
 
 #define ADDOBJ for (auto& obj : objs) ret->add_obj(obj.obj)
-
 	Node* ret = new Node(box);
 
-	if (depth > KDTREE_MAX_DEPTH) return nullptr;
 	if (objs.size() <= KDTREE_TERMINATE_OBJ_CNT) {
 		ADDOBJ;
 		return ret;

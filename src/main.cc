@@ -18,12 +18,12 @@ const string watermelon_fname = "../resource/watermelon.jpg";
 
 // Complicated Scene
 void all(bool g) {
-	int w = 339, h = 195;
+	int w = 1366, h = 768;
 	Space* sp;
 	if (g) sp = new MCPT();
 	else sp = new Phong();
-	sp->add_light(Light(PureSphere(Vec(+10, 10, 30), 3), Color::WHITE, g ? 50 : 12));
-	sp->add_light(Light(PureSphere(Vec(-10, -10, 30), 3), Color::WHITE, g ? 40 : 10));
+	sp->add_light(Light(PureSphere(Vec(+10, 10, 60), 3), Color::WHITE, g ? 50 : 12));
+	sp->add_light(Light(PureSphere(Vec(-10, -10, 60), 3), Color::WHITE, g ? 40 : 10));
 
 	shared_ptr<Texture> t_diffuse = make_shared<HomoTexture>(Surface::GOOD);
 	shared_ptr<Texture> t_refl = make_shared<HomoTexture>(Surface::GOOD_REFL);
@@ -37,7 +37,7 @@ void all(bool g) {
 	sp->add_obj(make_shared<Sphere>(PureSphere(Vec(-4, 6, 8), 1.5), t_wtm));
 
 
-	const char* fname = "../resource/models/dinosaur.2k.obj";
+	string fname = "../resource/models/dinosaur.2k.obj";
 	Mesh mesh(fname, Vec(-3, -2, 3), 9);
 	mesh.set_texture(make_shared<HomoTexture>(Surface::CYAN));
 	mesh.smooth = false;
@@ -73,6 +73,7 @@ void all(bool g) {
 		CVViewer viewer(v);
 		viewer.view();
 	}
+	delete sp;
 }
 
 // test soft shadow
@@ -152,7 +153,7 @@ void test_kdtree() {
 	Phong s;
 	s.add_light(Light(Vec(0, -10, 12), Color::WHITE, 6.0));
 	s.add_light(Light(Vec(0, 10, 8), Color::WHITE, 6.0));
-	const char* fname = "../resource/models/fixed.perfect.dragon.100K.0.07.obj";
+	string fname = "../resource/models/fixed.perfect.dragon.100K.0.07.obj";
 	Mesh mesh(fname, Vec(0, 0, 2), 5);
 
 	mesh.smooth = true;
@@ -170,7 +171,7 @@ void test_kdtree() {
 // test obj simplify
 void test_simplify() {
 	int w = 500, h = 500;
-	const char* fname = "../resource/models/fixed.perfect.dragon.100K.0.07.obj";
+	string fname = "../resource/models/fixed.perfect.dragon.100K.0.07.obj";
 	Mesh mesh(fname, Vec(0, 0, 2), 5);
 	mesh.smooth = true;
 	mesh.set_texture(make_shared<HomoTexture>(Surface::CYAN));
@@ -235,7 +236,7 @@ void global_illu() {
 	s.add_obj(make_shared<Plane>(InfPlane::XYPLANE, tpic));
 	s.add_obj(make_shared<Sphere>(PureSphere::TestSphere, t_diffuse));
 
-	const char* fname = "../resource/models/fixed.perfect.dragon.100K.0.07.obj";
+	string fname = "../resource/models/fixed.perfect.dragon.100K.0.07.obj";
 	Mesh mesh(fname, Vec(-3, +5, 2), 5);
 	mesh.smooth = true;
 	mesh.set_texture(make_shared<HomoTexture>(Surface::CYAN));
@@ -267,7 +268,7 @@ void glass() {
 	s.add_obj(make_shared<Plane>(InfPlane(Vec(0, 1, 0), -3), tpic));
 	s.add_obj(make_shared<Sphere>(PureSphere::TestSphere, t2));
 
-	const char* fname = "../resource/models/fixed.perfect.dragon.100K.0.07.obj";
+	string fname = "../resource/models/fixed.perfect.dragon.100K.0.07.obj";
 	Mesh mesh(fname, Vec(-3, +5, 2), 5);
 	mesh.smooth = true;
 	mesh.set_texture(make_shared<HomoTexture>(Surface::CYAN));
@@ -289,7 +290,7 @@ void obj_scene() {
 	Phong s;
 	s.add_light(Light(Vec(0, -10, 12), Color::WHITE, 6.0));
 	s.add_light(Light(Vec(0, 10, 8), Color::WHITE, 6.0));
-	const char* fname = "../resource/models/Arma.obj";
+	string fname = "../resource/models/Arma.obj";
 	Mesh mesh(fname, Vec(0, -8, 2), 5);
 	mesh.set_texture(make_shared<HomoTexture>(Surface::CYAN));
 	mesh.finish();

@@ -35,14 +35,11 @@ class CVViewer : public Viewer {
 		CVViewer(View& _v):
 			Viewer(_v), r(_v.get_geo()) { }
 
-		CVViewer(View& _v, const char* fname):
+		CVViewer(View& _v, std::string fname):
 			CVViewer(_v) {
 			render_all();
 			r.save(fname);
 		}
-
-		CVViewer(View& _v, std::string fname):
-			CVViewer(_v, fname.c_str()){}
 
 		void view() override;
 

@@ -55,7 +55,7 @@ int MyRender::finish() {
 	return k;
 }
 
-void MyRender::save(const char* fname)
+void MyRender::save(string fname)
 { imwrite(fname, img); }
 
 void MyRender::_write(int x, int y, const Color& c) {

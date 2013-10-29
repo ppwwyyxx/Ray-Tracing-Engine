@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <string>
+#include <Magick++.h>
 #include "color.hh"
 
 class ImageReader {
@@ -32,5 +34,23 @@ class ImageReader {
 
 class MagickReader : public ImageReader {
 	public:
-		MagickReader(const char* fname);
+		MagickReader(const std::string& fname) {
+
+			Magick::Image img(fname);
+			Magick::Geometry tsize = img.size();
+			init(tsize.width(), tsize.height());
+
+			::Color *dest = pixel;
+
+			const Magick::PixelPacket* src = img.getConstPixels(0, 0, size.w, size.h);
+			REP(y, size.h) REP(x, size.w) {
+				dest->r = double(src->red) / QuantumRange;
+				dest->g = double(src->green) / QuantumRange;
+				dest->b = double(src->blue) / QuantumRange;
+				dest ++;
+				src ++;
+			}
+
+
+		}
 };
