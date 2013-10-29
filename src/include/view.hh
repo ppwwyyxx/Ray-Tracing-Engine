@@ -15,14 +15,14 @@ class View {
 		inline void normalize_dir_vector()
 		{ dir_w.normalize(); dir_h.normalize(); }
 
-		inline void resume_dir_vector() {
+		inline void restore_dir_vector() {
 			//  we should have:  |dir_w| * geo.w  == size
 			//  as well as:		 |dir_w| == |dir_h|
 			dir_w = dir_w.get_normalized() * (size / geo.w);
 			dir_h = dir_h.get_normalized() * (size / geo.w);
 		}
 
-		const Space* sp;
+		const Space& sp;
 
 	public:
 		Vec view_point;
@@ -35,7 +35,7 @@ class View {
 		bool use_dof = false;
 		bool use_bended_screen = false;
 
-		View(const Space* _sp, const Vec& _view_point,
+		View(const Space& _sp, const Vec& _view_point,
 				const Vec& _mid, real_t w, const Geometry& _geo);
 
 		void zoom(real_t ratio);	// r > 1: zoom in

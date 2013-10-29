@@ -6,7 +6,7 @@
 
 using namespace std;
 
-View::View(const Space* _sp, const Vec& _view_point,
+View::View(const Space& _sp, const Vec& _view_point,
 				const Vec& _mid, real_t _size, const Geometry& m_geo):
 			geo(m_geo), sp(_sp), view_point(_view_point), mid(_mid), size(_size) {
 	Vec norm = (view_point - mid).get_normalized();
@@ -18,7 +18,7 @@ View::View(const Space* _sp, const Vec& _view_point,
 		tmp = Vec(-norm.z, 0, norm.x);
 	dir_w = tmp;
 	dir_h = norm.cross(dir_w);
-	resume_dir_vector();
+	restore_dir_vector();
 }
 
 Color View::render_antialias(const Vec& dest, int sample) const {
@@ -30,7 +30,7 @@ Color View::render_antialias(const Vec& dest, int sample) const {
 
 		if (!use_dof) {
 			Ray ray(view_point, new_dest - view_point, 1, true);
-			Color diff = sp->trace(ray);
+			Color diff = sp.trace(ray);
 			ret += diff;
 		} else {
 			ret += render_dof(new_dest);
@@ -52,7 +52,7 @@ Color View::render_dof(const Vec& dest) const {
 
 		Vec neworig = intersec + diff;
 		Ray ray(neworig, dest - neworig, 1, true);
-		dof_res += sp->trace(ray);
+		dof_res += sp.trace(ray);
 	}
 	dof_res = dof_res * (1.0 / DOF_SAMPLE_CNT);
 	return dof_res;
@@ -94,7 +94,7 @@ void View::twist(int angle) {
 	dir_w = dir_w * cos(alpha) + dir_h * sin(alpha);
 	m_assert(fabs(dir_w.sqr() - 1) < EPS);
 	dir_h = norm.cross(dir_w);
-	resume_dir_vector();
+	restore_dir_vector();
 }
 
 void View::zoom(real_t ratio) {
@@ -102,7 +102,7 @@ void View::zoom(real_t ratio) {
 	size *= ratio;
 	Vec dir = (view_point - mid);
 	view_point = mid + dir * ratio;
-	resume_dir_vector();
+	restore_dir_vector();
 }
 
 void View::orbit(int angle) {
@@ -114,7 +114,7 @@ void View::orbit(int angle) {
 	view_point = mid + norm * (view_point - mid).mod();
 	m_assert(fabs(dir_w.sqr()) - 1 < EPS);
 	dir_w = -norm.cross(dir_h);
-	resume_dir_vector();
+	restore_dir_vector();
 }
 
 void View::shift(real_t dist, bool horiz) {
@@ -127,7 +127,7 @@ void View::move_screen(real_t dist) {
 	real_t old_dist_to_screen = (mid - view_point).mod();
 	mid = view_point + (mid - view_point).get_normalized() * (old_dist_to_screen + dist);
 	size *= (old_dist_to_screen + dist) / old_dist_to_screen;
-	resume_dir_vector();
+	restore_dir_vector();
 }
 
 void View::rotate(int angle) {
@@ -138,5 +138,5 @@ void View::rotate(int angle) {
 	mid = view_point + norm * (mid - view_point).mod();
 	m_assert(fabs(dir_w.sqr()) - 1 < EPS);
 	dir_w = norm.cross(dir_h);
-	resume_dir_vector();
+	restore_dir_vector();
 }

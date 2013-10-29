@@ -64,7 +64,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	space.add_light(Light(Vec(9, 2, 30), Color::WHITE, 3.0));
 	space.add_light(Light(Vec(-9, 2, 30), Color::WHITE, 3.0));
 	space.finish();
-	view = new View(&space, Vec(0, 0, 12), Vec(0, 0, 2), 15, Geometry(pixmap->width(), pixmap->height()));
+	view = new View(space, Vec(0, 0, 12), Vec(0, 0, 2), 15, Geometry(pixmap->width(), pixmap->height()));
 	viewer = new CVViewer(*view);
 	do_trace();
 	done_load = false;
@@ -158,6 +158,6 @@ void MainWindow::do_twist_right() { view->twist(-VIEWER_ANGLE); }
 void MainWindow::do_zoom_in() {view->zoom(ZOOMING); };
 void MainWindow::do_zoom_out() {view->zoom(1.0 / ZOOMING); };
 
-MainWindow::~MainWindow() { delete ui; delete view; delete viewer; }
+MainWindow::~MainWindow() { delete ui; delete view; delete viewer; delete scene; delete pixmap; delete image;}
 void MainWindow::do_quit() { qApp->quit(); }
 
