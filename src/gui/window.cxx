@@ -79,7 +79,7 @@ void MainWindow::do_trace() {
 	int w = pixmap->width(), h = pixmap->height();
 	REP(i, w) REP(j, h) {
 		Color col = viewer->r.get(i, j);
-		image->setPixel(i, j, qRgb((int)(col.x * 255), (int)(col.y * 255), (int)(col.z * 255)));
+		image->setPixel(i, j, qRgb((int)(col.r * 255), (int)(col.g * 255), (int)(col.b * 255)));
 	}
 	update_scene();
 }

@@ -61,7 +61,7 @@ class Mesh: public Renderable {
 		 */
 
 		void add_faceid(int a, int b, int c) {
-			m_assert(INRANGE(max(a, max(b, c))));
+			m_assert(INRANGE(std::max(a, std::max(b, c))));
 			face_ids.push_back(array<int, 3>{a, b, c});
 		}
 
@@ -87,7 +87,7 @@ class Mesh: public Renderable {
 
 	protected:
 		void add_face(int a, int b, int c) {
-			m_assert(INRANGE(max(a, max(b, c))));
+			m_assert(INRANGE(std::max(a, std::max(b, c))));
 			Face f(vtxs, a, b, c);
 			f.host = this;
 			faces.push_back(make_shared<Face>(f));

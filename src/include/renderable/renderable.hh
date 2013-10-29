@@ -78,7 +78,7 @@ class Trace {
 		virtual const Renderable* get_obj() const = 0;
 
 		virtual Vec intersection_point() const {
-			m_assert(isfinite(inter_dist) && inter_dist >= 0);
+			m_assert(std::isfinite(inter_dist) && inter_dist >= 0);
 			return ray.get_dist(inter_dist);
 		}
 
