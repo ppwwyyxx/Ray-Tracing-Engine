@@ -34,7 +34,7 @@ $ make gui   (gui)
 
 Command line:
 
-``./ray-tracing <demo id>``, show demo scene defined in ``main.cc``.
+``./ray-tracing <demo/small id>``, show demo/small scene defined in ``main.cc``.
 
 The display is based on OpenCV, allowing keyboard control of the viewpoint:
 
@@ -48,30 +48,30 @@ The display is based on OpenCV, allowing keyboard control of the viewpoint:
 GUI:
 
 GUI is only an objviewer with some simple control.
-![gui](https://github.com/ppwwyyxx/Ray-Tracing-Engine/raw/master/demo/gui.png)
+![gui](https://github.com/ppwwyyxx/Ray-Tracing-Engine/raw/master/demo/small/gui.jpg)
 
 ## Examples
 A simple ball with transmission:
 
-![ball](https://github.com/ppwwyyxx/Ray-Tracing-Engine/raw/master/demo/transmission.png)
+![ball](https://github.com/ppwwyyxx/Ray-Tracing-Engine/raw/master/demo/small/transmission.jpg)
 
 Obj and ground texture:
 
-![pict](https://github.com/ppwwyyxx/Ray-Tracing-Engine/raw/master/demo/pic_texture.png)
+![pict](https://github.com/ppwwyyxx/Ray-Tracing-Engine/raw/master/demo/small/pic_texture.jpg)
 
 Soft shadow:
 
-![soft](https://github.com/ppwwyyxx/Ray-Tracing-Engine/raw/master/demo/soft.png)
+![soft](https://github.com/ppwwyyxx/Ray-Tracing-Engine/raw/master/demo/small/soft.jpg)
 
-Depth of field (There is also a video in `demo/`):
+Depth of field (There is also a video in `demo/small/`):
 
-![dof](https://github.com/ppwwyyxx/Ray-Tracing-Engine/raw/master/demo/dof.png)
+![dof](https://github.com/ppwwyyxx/Ray-Tracing-Engine/raw/master/demo/small/dof.jpg)
 
 Caustic using path tracing:
 
-![caustic](https://github.com/ppwwyyxx/Ray-Tracing-Engine/raw/master/demo/caustic.png)
+![caustic](https://github.com/ppwwyyxx/Ray-Tracing-Engine/raw/master/demo/small/caustic.jpg)
 
 Large scene using Phong Model(first) and Path Tracing(second):
 
-![allph](https://github.com/ppwwyyxx/Ray-Tracing-Engine/raw/master/demo/all_phong.png)
-![allpt](https://github.com/ppwwyyxx/Ray-Tracing-Engine/raw/master/demo/best_light.png)
+![allph](https://github.com/ppwwyyxx/Ray-Tracing-Engine/raw/master/demo/small/all_phong.jpg)
+![allpt](https://github.com/ppwwyyxx/Ray-Tracing-Engine/raw/master/demo/small/best2.jpg)
