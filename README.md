@@ -73,5 +73,5 @@ Caustic using path tracing:
 
 Large scene using Phong Model(first) and Path Tracing(second):
 
-![allph](https://github.com/ppwwyyxx/Ray-Tracing-Engine/raw/master/demo/small/all_phong.jpg)
-![allpt](https://github.com/ppwwyyxx/Ray-Tracing-Engine/raw/master/demo/small/best2.jpg)
+![allph](https://github.com/ppwwyyxx/Ray-Tracing-Engine/raw/master/demo/small/phong.jpg)
+![allpt](https://github.com/ppwwyyxx/Ray-Tracing-Engine/raw/master/demo/small/best.jpg)
