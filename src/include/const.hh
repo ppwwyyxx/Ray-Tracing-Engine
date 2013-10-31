@@ -15,7 +15,6 @@
 const real_t DEFAULT_TRACING_WEIGHT_THRESHOLD = 0.001;
 const real_t DEFAULT_REFRACTIVE_INDEX = 1.2;
 const real_t AIR_REFRACTIVE_INDEX = 1;
-const int ANTIALIAS_SAMPLE_CNT = 2;
 const int MAX_PHONG_DEPTH = 4;
 const int MAX_MCPT_DEPTH = 4;
 
@@ -38,4 +37,5 @@ const real_t SOFT_SHADOW_RADIUS = 0.8;
 const int KDTREE_MAX_DEPTH = 100;
 const int KDTREE_TERMINATE_OBJ_CNT = 10;
 
-const int GLOBAL_ILLU_SAMPLE_CNT = 400;
+const int GLOBAL_ILLU_SAMPLE_CNT = 200;
+const int ANTIALIAS_SAMPLE_CNT = 8;

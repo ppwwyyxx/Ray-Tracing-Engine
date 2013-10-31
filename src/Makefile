@@ -7,7 +7,7 @@ TARGET = ray-tracing
 INCLUDE_DIR = -Iinclude
 #DEFINES = -DDEBUG
 
-OPTFLAGS = -Wall -Wextra -g    #-Ofast -fno-finite-math-only
+OPTFLAGS = -Wall -Wextra -Ofast -fno-finite-math-only
 
 LIBS = opencv
 INCLUDE_DIR += $(shell pkg-config --cflags $(LIBS))

@@ -22,8 +22,8 @@ void all(bool g) {
 	Space* sp;
 	if (g) sp = new MCPT();
 	else sp = new Phong();
-	sp->add_light(Light(PureSphere(Vec(+10, 10, 60), 3), Color::WHITE, g ? 50 : 12));
-	sp->add_light(Light(PureSphere(Vec(-10, -10, 60), 3), Color::WHITE, g ? 40 : 10));
+	sp->add_light(Light(PureSphere(Vec(+10, 10, 60), 4), Color::WHITE, g ? 100 : 12));
+	sp->add_light(Light(PureSphere(Vec(-10, -10, 60), 4), Color::WHITE, g ? 30 : 10));
 
 	shared_ptr<Texture> t_diffuse = make_shared<HomoTexture>(Surface::GOOD);
 	shared_ptr<Texture> t_refl = make_shared<HomoTexture>(Surface::GOOD_REFL);
