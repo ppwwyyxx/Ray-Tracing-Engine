@@ -16,7 +16,7 @@ class ObjReader {
 			if (!fin.is_open()) { error_exit("obj file not found"); }
 			static char input[LINE_MAX_LEN];
 			while (fin.getline(input, LINE_MAX_LEN, '\n')) {
-				if (input[0] == '#' || strlen(input) <= 1)
+				if (input[0] == '#' or strlen(input) <= 1)
 					continue;
 				switch (input[0]) {
 					case 'v':

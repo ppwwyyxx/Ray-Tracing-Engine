@@ -18,7 +18,7 @@ class Sphere : public Renderable {
 			// calculate a new north
 		}
 
-		Sphere(const PureSphere &_sphere, std::shared_ptr<Texture> _texture):
+		Sphere(const PureSphere &_sphere, const std::shared_ptr<Texture>& _texture):
 			Renderable(_texture), sphere(_sphere) {}
 
 		std::shared_ptr<Trace> get_trace(const Ray& ray, real_t max_dist) const override;

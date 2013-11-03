@@ -42,7 +42,7 @@ class KDTree::Node {
 						if (update_min(min, d)) ret = tmp;
 					}
 				}
-				return move(ret);
+				return ret;
 			}
 
 			real_t mind = -1, mind2 = -1;
@@ -51,8 +51,8 @@ class KDTree::Node {
 			int first_met = (int)(pivot > pl.pos);
 
 			Node* ch0 = child[first_met], *ch1 = child[1 - first_met];
-			if (!ch0 || !ch0->box.intersect(ray, mind, inside)) ch0 = nullptr;
-			if (ch0 && (max_dist == -1 || mind < max_dist)) {
+			if (!ch0 or !ch0->box.intersect(ray, mind, inside)) ch0 = nullptr;
+			if (ch0 && (max_dist == -1 or mind < max_dist)) {
 				auto ret = ch0->get_trace(ray, mind, max_dist);
 				if (ret) {
 					if (ray.debug) {
@@ -69,7 +69,7 @@ class KDTree::Node {
 				}
 			}
 
-			if (!ch1 || !ch1->box.intersect(ray, mind2, inside)) ch1 = nullptr;
+			if (!ch1 or !ch1->box.intersect(ray, mind2, inside)) ch1 = nullptr;
 
 			m_assert(!(ch0 && ch1 && mind == -1 && mind2 == -1));
 			/*
@@ -78,7 +78,7 @@ class KDTree::Node {
 			 *    m_assert(false);
 			 *}
 			 */
-			if (ch1 && (max_dist == -1 || mind2 < max_dist)) {
+			if (ch1 && (max_dist == -1 or mind2 < max_dist)) {
 				auto ret = ch1->get_trace(ray, mind2, max_dist);
 				if (ret) {
 					if (ray.debug) {
@@ -151,7 +151,7 @@ KDTree::Node* KDTree::build(const list<RenderWrapper>& objs, const AABB& box, in
 		ADDOBJ;
 		return ret;
 	}
-	int nobj = objs.size();
+	auto nobj = objs.size();
 	pair<AABB, AABB> par;
 	AAPlane best_pl;
 	real_t min_cost = numeric_limits<real_t>::max();
@@ -199,7 +199,7 @@ KDTree::Node* KDTree::build(const list<RenderWrapper>& objs, const AABB& box, in
 					[&objs, dim]() {
 						vector<pair<real_t, bool>> cand_list;
 						GEN_CAND_LIST;
-						return move(cand_list);
+						return cand_list;
 					}
 			);
 	}
@@ -219,7 +219,7 @@ KDTree::Node* KDTree::build(const list<RenderWrapper>& objs, const AABB& box, in
 			try {
 				auto par = box.cut(pl);
 				real_t cost = par.first.area() * lcnt + par.second.area() * rcnt;
-				if (lcnt == 0 || rcnt == 0 || (lcnt + rcnt == nobj - 1 && rcnt == 1))
+				if (lcnt == 0 or rcnt == 0 or (lcnt + rcnt == nobj - 1 && rcnt == 1))
 					cost *= 0.8;		// this is a hack
 				if (update_min(min_cost, cost)) best_pl = pl;
 			} catch (...) {}

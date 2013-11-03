@@ -25,11 +25,11 @@ void all(bool g) {
 	sp->add_light(Light(PureSphere(Vec(+10, 10, 60), 4), Color::WHITE, g ? 100 : 12));
 	sp->add_light(Light(PureSphere(Vec(-10, -10, 60), 4), Color::WHITE, g ? 30 : 10));
 
-	shared_ptr<Texture> t_diffuse = make_shared<HomoTexture>(Surface::GOOD);
-	shared_ptr<Texture> t_refl = make_shared<HomoTexture>(Surface::GOOD_REFL);
-	shared_ptr<Texture> t_glass = make_shared<HomoTexture>(Surface::GLASS);
-	shared_ptr<Texture> tpic = make_shared<ImgTexture>(texture_fname, 100, 0.6);
-	shared_ptr<Texture> t_wtm = make_shared<ImgTexture>(watermelon_fname, 10, 0.6);
+	auto t_diffuse = make_shared<HomoTexture>(Surface::GOOD);
+	auto t_refl = make_shared<HomoTexture>(Surface::GOOD_REFL);
+	auto t_glass = make_shared<HomoTexture>(Surface::GLASS);
+	auto tpic = make_shared<ImgTexture>(texture_fname, 100, 0.6);
+	auto t_wtm = make_shared<ImgTexture>(watermelon_fname, 10, 0.6);
 	sp->add_obj(make_shared<Plane>(InfPlane::XYPLANE, tpic));
 	sp->add_obj(make_shared<Plane>(InfPlane(Vec(0, 1, 0), 20), make_shared<GridTexture>(GridTexture::BLACK_WHITE_REFL)));
 	sp->add_obj(make_shared<Plane>(InfPlane(Vec(-3, -1, 0), -16, true), make_shared<HomoTexture>(Surface::MIRROR)));
@@ -37,22 +37,22 @@ void all(bool g) {
 	sp->add_obj(make_shared<Sphere>(PureSphere(Vec(-4, 6, 8), 1.5), t_wtm));
 
 
-	string fname = "../resource/models/dinosaur.2k.obj";
-	Mesh mesh(fname, Vec(-3, -2, 3), 9);
+	string fname { "../resource/models/dinosaur.2k.obj" };
+	Mesh mesh {fname, Vec(-3, -2, 3), 9};
 	mesh.set_texture(make_shared<HomoTexture>(Surface::CYAN));
 	mesh.smooth = false;
 	mesh.finish();
 	sp->add_obj(make_shared<Mesh>(mesh));
 
 	fname = "../resource/models/cube.obj";
-	mesh = Mesh(fname, Vec(-12, 7, 4), 4);
+	mesh = Mesh{fname, Vec(-12, 7, 4), 4};
 	mesh.smooth = false;
 	mesh.set_texture(make_shared<HomoTexture>(Surface::BLUE));
 	mesh.finish();
 	sp->add_obj(make_shared<Mesh>(mesh));
 
 	fname = "../resource/models/horse.fine.90k.obj";
-	mesh = Mesh(fname, Vec(-8, 3, 5), 8);
+	mesh = Mesh{fname, Vec(-8, 3, 5), 8};
 	mesh.smooth = false;
 	mesh.set_texture(make_shared<HomoTexture>(Surface::GREEN));
 	mesh.finish();
@@ -64,7 +64,7 @@ void all(bool g) {
 	}
 
 	sp->finish();
-	View v(*sp, Vec(-14.01, -50.0, 20.1), Vec(4.19, 2.40, 5.5), 45, Geometry(w, h)); // leave away further
+	View v {*sp, Vec(-14.01, -50.0, 20.1), Vec(4.19, 2.40, 5.5), 45, Geometry(w, h)}; // leave away further
 	//View v(sp, Vec(-28.01, -20.3, 22.18), Vec(-1.63, 3.00, 3.0), 32.5, Geometry(w, h));
 	//View v(sp, Vec(-8.91, -16.3, 36.88), Vec(-1.22, 1.55, 1.8), 32.5, Geometry(w, h));
 	if (g)
@@ -82,12 +82,12 @@ void test_shadow() {
 	Phong s; s.use_soft_shadow = true;
 	s.add_light(Light(Vec(0, -10, 12), Color::WHITE, 6.0));
 
-	shared_ptr<Texture> t2 = make_shared<HomoTexture>(Surface::BLUE);
-	shared_ptr<Texture> tpic = make_shared<ImgTexture>(texture_fname, 100, 0.6);
+	auto t2 = make_shared<HomoTexture>(Surface::BLUE);
+	auto tpic = make_shared<ImgTexture>(texture_fname, 100, 0.6);
 	s.add_obj(make_shared<Plane>(InfPlane::XYPLANE, tpic));
 	s.add_obj(make_shared<Sphere>(PureSphere::TestSphere, t2));
 	s.finish();
-	View v(s, Vec(-8.7, 4.58, 3.75), Vec(-0.30, -0.31, 1.5), 8, Geometry(w, h));
+	View v{s, Vec(-8.7, 4.58, 3.75), Vec(-0.30, -0.31, 1.5), 8, Geometry(w, h)};
 	CVViewer viewer(v);
 	viewer.view();
 }
@@ -104,14 +104,14 @@ void dof_ball_scene() {
 
 	Surface surf(0, 20, 0.5, Color::CYAN * 0.9, DEFAULT_SPECULAR);
 
-	shared_ptr<Texture> tpic = make_shared<ImgTexture>(texture_fname, 100, 0.6);
-	shared_ptr<Texture> tball(make_shared<HomoTexture>(surf));
+	auto tpic = make_shared<ImgTexture>(texture_fname, 100, 0.6);
+	auto tball {make_shared<HomoTexture>(surf)};
 
 	s.add_obj(make_shared<Plane>(InfPlane::XYPLANE, tpic));
 
 	REP(i, 10) REP(j, 2) s.add_obj(make_shared<Sphere>(PureSphere(Vec(j * 6, 1, i * 3), 1), tball));
 	s.finish();
-	View v(s, Vec(11, -13.3, 39.75), Vec(5.4, -1, 22.8), 16, Geometry(w, h));
+	View v {s, Vec(11, -13.3, 39.75), Vec(5.4, -1, 22.8), 16, Geometry(w, h)};
 	v.use_dof = true;
 	CVViewer viewer(v);
 	viewer.view();
@@ -127,11 +127,11 @@ void generate_dof_video() {
 	s.add_light(Light(Vec(-9, -2, 50), Color::WHITE, 6.0));
 	s.add_light(Light(Vec(9, -2, 50), Color::WHITE, 6.0));
 
-	shared_ptr<Texture> tpic = make_shared<ImgTexture>(texture_fname, 100, 0.6);
+	auto tpic = make_shared<ImgTexture>(texture_fname, 100, 0.6);
 	s.add_obj(make_shared<Plane>(InfPlane::XYPLANE, tpic));
 
 	Surface surf(0, 40, 0.5, Color::CYAN * 0.9, DEFAULT_SPECULAR);
-	shared_ptr<Texture> tball(make_shared<HomoTexture>(surf));
+	auto tball = make_shared<HomoTexture>(surf);
 
 	REP(i, 10) REP(j, 2) s.add_obj(make_shared<Sphere>(PureSphere(Vec(j * 6, 1, i * 3), 1), tball));
 	s.finish();
@@ -154,13 +154,13 @@ void test_kdtree() {
 	s.add_light(Light(Vec(0, -10, 12), Color::WHITE, 6.0));
 	s.add_light(Light(Vec(0, 10, 8), Color::WHITE, 6.0));
 	string fname = "../resource/models/fixed.perfect.dragon.100K.0.07.obj";
-	Mesh mesh(fname, Vec(0, 0, 2), 5);
+	Mesh mesh {fname, Vec(0, 0, 2), 5};
 
 	mesh.smooth = true;
 	mesh.set_texture(make_shared<HomoTexture>(Surface::CYAN));
 	mesh.finish();
 	s.add_obj(make_shared<Mesh>(mesh));
-	shared_ptr<Texture> t1 = make_shared<GridTexture>(GridTexture::BLACK_WHITE_REFL);
+	auto t1 = make_shared<GridTexture>(GridTexture::BLACK_WHITE_REFL);
 	s.add_obj(make_shared<Plane>(InfPlane::XYPLANE, t1));
 	s.finish();
 	View v(s, Vec(0, 0, 12), Vec(0, 0, 2), 15, Geometry(w, h));
@@ -194,9 +194,9 @@ void ball() {
 	Phong s;
 	s.add_light(Light(Vec(0, -10, 12), Color::WHITE, 7));
 
-	shared_ptr<Texture> t2 = make_shared<HomoTexture>(Surface::BLUE);
-//	shared_ptr<Texture> t2 = make_shared<ImgTexture>(watermelon_fname, 10, 0.6);
-	shared_ptr<Texture> tpic = make_shared<ImgTexture>(texture_fname, 100, 0.6);
+	auto t2 = make_shared<HomoTexture>(Surface::BLUE);
+//	auto t2 = make_shared<ImgTexture>(watermelon_fname, 10, 0.6);
+	auto tpic = make_shared<ImgTexture>(texture_fname, 100, 0.6);
 	s.add_obj(make_shared<Plane>(InfPlane::XYPLANE, tpic));//make_shared<Plane>(Plane())?
 	s.add_obj(make_shared<Sphere>(PureSphere::TestSphere, t2));
 
@@ -212,9 +212,9 @@ void global_illu_ball() {
 	MCPT_EL s;
 	s.add_light(Light(PureSphere(Vec(0, -10, 12), 4), Color::WHITE, 8));
 
-	shared_ptr<Texture> t2 = make_shared<HomoTexture>(Surface::GOOD);
-//	shared_ptr<Texture> t2 = make_shared<ImgTexture>(watermelon_fname, 10, 0.6);
-	shared_ptr<Texture> tpic = make_shared<ImgTexture>(texture_fname, 100, 0.6);
+	auto t2 = make_shared<HomoTexture>(Surface::GOOD);
+//	auto t2 = make_shared<ImgTexture>(watermelon_fname, 10, 0.6);
+	auto tpic = make_shared<ImgTexture>(texture_fname, 100, 0.6);
 	s.add_obj(make_shared<Plane>(InfPlane::XYPLANE, tpic));//make_shared<Plane>(Plane())?
 	s.add_obj(make_shared<Sphere>(PureSphere::TestSphere, t2));
 
@@ -230,9 +230,9 @@ void global_illu() {
 	MCPT s;
 	s.add_light(Light(PureSphere(Vec(+10, 10, 10), 4), Color::WHITE, 12));
 
-	shared_ptr<Texture> t_diffuse = make_shared<HomoTexture>(Surface::GOOD);
-	shared_ptr<Texture> t_refl = make_shared<HomoTexture>(Surface::GOOD_REFL);
-	shared_ptr<Texture> tpic = make_shared<ImgTexture>(texture_fname, 100, 0.6);
+	auto t_diffuse = make_shared<HomoTexture>(Surface::GOOD);
+	auto t_refl = make_shared<HomoTexture>(Surface::GOOD_REFL);
+	auto tpic = make_shared<ImgTexture>(texture_fname, 100, 0.6);
 	s.add_obj(make_shared<Plane>(InfPlane::XYPLANE, tpic));
 	s.add_obj(make_shared<Sphere>(PureSphere::TestSphere, t_diffuse));
 
@@ -261,9 +261,9 @@ void glass() {
 	MCPT s;
 	s.add_light(Light(PureSphere(Vec(+5, 0, 13), 4), Color::WHITE, 13));
 
-	shared_ptr<Texture> t1 = make_shared<GridTexture>(GridTexture::BLACK_WHITE);
-	shared_ptr<Texture> t2 = make_shared<HomoTexture>(Surface::GLASS);
-	shared_ptr<Texture> tpic = make_shared<ImgTexture>(texture_fname, 100, 0.6);
+	auto t1 = make_shared<GridTexture>(GridTexture::BLACK_WHITE);
+	auto t2 = make_shared<HomoTexture>(Surface::GLASS);
+	auto tpic = make_shared<ImgTexture>(texture_fname, 100, 0.6);
 	s.add_obj(make_shared<Plane>(InfPlane::XYPLANE, t1));
 	s.add_obj(make_shared<Plane>(InfPlane(Vec(0, 1, 0), -3), tpic));
 	s.add_obj(make_shared<Sphere>(PureSphere::TestSphere, t2));
@@ -326,7 +326,7 @@ void obj_scene() {
 	mesh.finish();
 	s.add_obj(make_shared<Mesh>(mesh));
 
-	shared_ptr<Texture> t1 = make_shared<ImgTexture>(texture_fname, 100, 0.6);
+	auto t1 = make_shared<ImgTexture>(texture_fname, 100, 0.6);
 	s.add_obj(make_shared<Plane>(InfPlane::XYPLANE, t1));
 	s.finish();
 	View v(s, Vec(0, 0, 2), Vec(0, 5, 3), 15, Geometry(w, h));
@@ -358,7 +358,7 @@ void generate_simplified_pictures() {
 			s.add_light(Light(Vec(0, 10, 8), Color::WHITE, 6.0));
 			s.add_obj(make_shared<Mesh>(mesh));
 
-			shared_ptr<Texture> tpic = make_shared<ImgTexture>(texture_fname, 100, 0.6);
+			auto tpic = make_shared<ImgTexture>(texture_fname, 100, 0.6);
 			s.add_obj(make_shared<Plane>(InfPlane::XYPLANE, tpic));
 			s.finish();
 			View v(s, Vec(0, 0, 10), Vec(0, 0, 0), 12, Geometry(w, h));

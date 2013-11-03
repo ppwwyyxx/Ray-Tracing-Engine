@@ -98,7 +98,7 @@ class Trace {
 
 		virtual shared_ptr<Surface> get_property() const {
 			shared_ptr<Surface> ret = get_obj()->get_texture()->get_property();
-			if (ret) return move(ret);
+			if (ret) return ret;
 			return transform_get_property();
 		}
 

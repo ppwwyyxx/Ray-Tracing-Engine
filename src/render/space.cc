@@ -76,7 +76,7 @@ shared_ptr<Trace> Space::find_first(const Ray& ray, bool include_light) const {
 			}
 		}
 	}
-	return move(ret);
+	return ret;
 }
 
 bool Space::find_any(const Ray& ray, real_t max_dist) const {

@@ -109,7 +109,7 @@ class Vector {
 		{ return x < v.x + EPS && y < v.y + EPS && z < v.z + EPS; }
 
 		bool operator != (const Vector &v) const
-		{ return fabs(x - v.x) >= EPS || fabs(y - v.y) >= EPS || fabs(z - v.z) >= EPS; }
+		{ return fabs(x - v.x) >= EPS or fabs(y - v.y) >= EPS or fabs(z - v.z) >= EPS; }
 
 		const real_t& operator [](int c) const
 		{ return c == 0 ? x : c == 1 ? y : z; }

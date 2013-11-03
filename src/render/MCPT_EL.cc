@@ -27,7 +27,7 @@ Color MCPT_EL::do_trace(const Ray& ray, int depth, int use_emission) const {
 	}
 
 	real_t max_color_comp = diffu.get_max();
-	if (depth > 5 || fabs(max_color_comp) < EPS) {		// for light, max_color_comp = 0
+	if (depth > 5 or fabs(max_color_comp) < EPS) {		// for light, max_color_comp = 0
 		if (drand48() < max_color_comp)		// Russian Roulette
 			diffu = diffu * (1.0 / max_color_comp);
 		else

@@ -96,7 +96,7 @@ void MainWindow::do_open() {
 		now_fname = fname.toStdString();
 		Mesh mesh(fname.toStdString().c_str(), Vec(0, 0, 2), 5);
 		mesh.smooth = smooth->isChecked();
-		shared_ptr<Texture> tred = make_shared<HomoTexture>(Surface::CYAN);
+		auto tred = make_shared<HomoTexture>(Surface::CYAN);
 		mesh.set_texture(tred);
 		mesh.finish();
 		space.clear();
@@ -119,7 +119,7 @@ void MainWindow::update_mesh() {
 
 	Mesh mesh(now_fname.c_str(), Vec(0, 0, 2), 5);
 	mesh.smooth = smooth->isChecked();
-	shared_ptr<Texture> tred = make_shared<HomoTexture>(Surface::CYAN);
+	auto tred = make_shared<HomoTexture>(Surface::CYAN);
 	mesh.set_texture(tred);
 
 	stringstream text(target_rate->text().toStdString());

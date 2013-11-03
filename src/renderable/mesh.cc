@@ -82,5 +82,5 @@ shared_ptr<Trace> Mesh::get_trace(const Ray& ray, real_t dist) const {
 		if (tmp && update_min(min, tmp->intersection_dist()))
 			ret = tmp;
 	}
-	return move(ret);
+	return ret;
 }

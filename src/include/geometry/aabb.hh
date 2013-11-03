@@ -37,7 +37,7 @@ class AABB {
 
 		void set(const Vec& vmin, const Vec& vmax) { min = vmin, max = vmax; }
 		Vec size() const { return max - min; }
-		bool empty() const { return (min.x >= max.x || min.y >= max.y || min.z >= max.z); }
+		bool empty() const { return (min.x >= max.x or min.y >= max.y or min.z >= max.z); }
 		real_t area() const { return (max - min).area(); }
 		bool contain(const Vec& p) const { return p < max && min < p; }
 		// override >

@@ -12,7 +12,7 @@ View::View(const Space& _sp, const Vec& _view_point,
 	Vec norm = (view_point - mid).get_normalized();
 	origin_norm = norm;
 	Vec tmp;
-	if ((fabs(norm.y) > EPS) || (fabs(norm.x) > EPS))
+	if ((fabs(norm.y) > EPS) or (fabs(norm.x) > EPS))
 		tmp = Vec(-norm.y, norm.x, 0);
 	else
 		tmp = Vec(-norm.z, 0, norm.x);

@@ -184,7 +184,7 @@ void MeshSimplifier::write_back() {		// write vtxs and face_ids
 
 	for (auto & f : faces) {
 		bool erased = false;
-		REP(k, 3) if (!f.vtx[k] || f.vtx[k]->erased) erased = true;
+		REP(k, 3) if (!f.vtx[k] or f.vtx[k]->erased) erased = true;
 		if (erased) continue;
 		REP(k, 3) if (f.vtx[k]->id == -1) { m_assert(false);}
 

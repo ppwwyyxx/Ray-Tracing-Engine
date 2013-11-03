@@ -27,9 +27,9 @@ real_t Triangle::get_intersect(const Ray& ray, real_t& gx, real_t& gy) const {
 	if (dist < 0) return -1;
 
 	gx = -line_r.dot(e2) * inv;
-	if (gx < -EPS || gx > 1 + EPS) return -1;
+	if (gx < -EPS or gx > 1 + EPS) return -1;
 	gy = line_r.dot(e1) * inv;
-	if (gy < -EPS || gx + gy > 1 + EPS) return -1;
+	if (gy < -EPS or gx + gy > 1 + EPS) return -1;
 	// now definitely inside triangle
 
 	m_assert((ray.get_dist(dist) - (v * (1 - gx - gy) + (v + e1) * gx + (v + e2) * gy)).sqr() < EPS);	 // check coordinates
@@ -39,7 +39,7 @@ real_t Triangle::get_intersect(const Ray& ray, real_t& gx, real_t& gy) const {
 shared_ptr<Trace> Face::get_trace(const Ray& ray, real_t dist) const {
 	shared_ptr<Trace> ret = shared_ptr<FaceTrace>(new FaceTrace(*this, ray));
 	if (ret->intersect()) {
-		if (dist == -1 || ret->intersection_dist() < dist)
+		if (dist == -1 or ret->intersection_dist() < dist)
 			return ret;
 	}
 	return nullptr;

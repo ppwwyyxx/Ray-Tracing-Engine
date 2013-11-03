@@ -5,10 +5,10 @@
 using namespace std;
 
 shared_ptr<Trace> Plane::get_trace(const Ray& ray, real_t dist) const {
-	shared_ptr<Trace> ret = make_shared<PlaneTrace>(*this, ray);
+	auto ret = make_shared<PlaneTrace>(*this, ray);
 	if (ret->intersect()) {
-		if (fabs(dist + 1) < EPS || ret->intersection_dist() < dist)
-			return move(ret);
+		if (fabs(dist + 1) < EPS or ret->intersection_dist() < dist)
+			return ret;
 	}
 	return nullptr;
 }
