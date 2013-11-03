@@ -13,13 +13,10 @@ class Sphere : public Renderable {
 
 		const PureSphere sphere;
 
-		Sphere(const PureSphere& _sphere):
-			sphere(_sphere) {
+		Sphere(const PureSphere &_sphere, const std::shared_ptr<Texture>& _texture):
+			Renderable(_texture), sphere(_sphere) {
 			// calculate a new north
 		}
-
-		Sphere(const PureSphere &_sphere, const std::shared_ptr<Texture>& _texture):
-			Renderable(_texture), sphere(_sphere) {}
 
 		std::shared_ptr<Trace> get_trace(const Ray& ray, real_t max_dist) const override;
 

@@ -58,8 +58,10 @@ MeshSimplifier::MeshSimplifier(Mesh& _mesh, real_t ratio): mesh(_mesh) {
 		vtxs[c].add_face(&faces[k]);
 	}
 
-#pragma omp parallel for schedule(dynamic)
-	REP(k, nvtx) update_cost(&vtxs[k]);
+//#pragma omp parallel for schedule(dynamic)
+//	REP(k, nvtx) update_cost(&vtxs[k]);
+	for (auto & vtx: vtxs)
+		update_cost(&vtx);
 }
 
 real_t MeshSimplifier::cost(Vertex* u, Vertex* v) const {

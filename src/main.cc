@@ -105,7 +105,7 @@ void dof_ball_scene() {
 	Surface surf(0, 20, 0.5, Color::CYAN * 0.9, DEFAULT_SPECULAR);
 
 	auto tpic = make_shared<ImgTexture>(texture_fname, 100, 0.6);
-	auto tball {make_shared<HomoTexture>(surf)};
+	auto tball = make_shared<HomoTexture>(surf);
 
 	s.add_obj(make_shared<Plane>(InfPlane::XYPLANE, tpic));
 

@@ -6,7 +6,7 @@
 #include "material/surface.hh"
 #include "material/texture.hh"
 #include "renderable/plane.hh"
-#include "renderable/sphere.hh"
+#include "geometry/sphere.hh"
 #include "const.hh"
 using namespace std;
 

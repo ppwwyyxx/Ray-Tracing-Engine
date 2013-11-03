@@ -17,16 +17,10 @@ class Plane : public Renderable {
 
 		const InfPlane plane;
 
-		Plane(const InfPlane& _plane):
-			plane(_plane) {
-			surfdir = surf_dir();
-			center = surf_point();
-		}
-		// can later set_texture
-
 		Plane(const InfPlane& _plane, const shared_ptr<Texture>& _texture):
-			Plane(_plane) {
-				set_texture(_texture);
+			Renderable(_texture), plane(_plane) {
+				surfdir = surf_dir();
+				center = surf_point();
 			}
 
 		bool have_inside() const override

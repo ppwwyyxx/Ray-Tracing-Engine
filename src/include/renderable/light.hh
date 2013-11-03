@@ -19,7 +19,7 @@ class Light : public Sphere {
 		real_t intensity;
 
 		Light(const PureSphere& _sphere, const Color& _col, real_t _intense):
-			Sphere(_sphere),
+			Sphere(_sphere, nullptr),
 			surf(make_shared<Surface>(
 						0, 0, 0, Color::WHITE, 0, _col * _intense)),
 			 color(_col), intensity(_intense)
