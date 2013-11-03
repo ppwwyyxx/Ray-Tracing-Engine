@@ -3,7 +3,6 @@
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include <algorithm>
 #include <future>
-#include <omp.h>
 
 #include "kdtree.hh"
 #include "const.hh"
@@ -151,7 +150,7 @@ KDTree::Node* KDTree::build(const list<RenderWrapper>& objs, const AABB& box, in
 		ADDOBJ;
 		return ret;
 	}
-	auto nobj = objs.size();
+	int nobj = objs.size();
 	pair<AABB, AABB> par;
 	AAPlane best_pl;
 	real_t min_cost = numeric_limits<real_t>::max();

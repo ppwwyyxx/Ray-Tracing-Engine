@@ -7,6 +7,7 @@
 
 #include <cstdarg>
 #include <cstdlib>
+#include <type_traits>
 #include <string>
 #include <sstream>
 
@@ -26,9 +27,9 @@ const real_t EPS = 1e-6;
 inline real_t sqr(real_t x) { return x * x; }
 
 #define BETW(a, b, c) ((a >= b) && (a <= c))
-#define REP(x, y) for (int x = 0; x < (y); x ++)
-#define REPL(x, y, z) for (int x = y; x < (z); x ++)
-#define REPD(x, y, z) for (int x = y; x >= (z); x --)
+#define REP(x, y) for (auto x = decltype(y){0}; x < (y); x ++)
+#define REPL(x, y, z) for (auto x = decltype(z){y}; x < (z); x ++)
+#define REPD(x, y, z) for (auto x = decltype(z){y}; x >= (z); x --)
 
 #define P(a) std::cout << (a) << std::endl
 #define PP(a) std::cout << #a << " " << (a) << std::endl

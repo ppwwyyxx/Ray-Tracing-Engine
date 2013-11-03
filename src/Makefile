@@ -12,13 +12,13 @@ OPTFLAGS = -Wall -Wextra -Ofast -fno-finite-math-only
 LIBS = opencv
 INCLUDE_DIR += $(shell pkg-config --cflags $(LIBS))
 
-CXXFLAGS = $(DEFINES) -std=c++11 $(OPTFLAGS) -fopenmp -pthread
+CXXFLAGS = $(DEFINES) -std=c++11 $(OPTFLAGS) -pthread
 CXXFLAGS += $(INCLUDE_DIR)
 CXXFLAGS += $(shell Magick++-config --cxxflags)
 
 LDFLAGS = $(shell pkg-config $(LIBS) --libs)
 LDFLAGS += $(OPTFLAGS)
-LDFLAGS += $(shell Magick++-config --ldflags --libs) -fopenmp -pthread
+LDFLAGS += $(shell Magick++-config --ldflags --libs) -pthread
 
 CC = g++
 SHELL = bash

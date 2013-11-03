@@ -69,6 +69,6 @@ class ImgTexture : public Texture {
 		shared_ptr<Surface> get_property(real_t x, real_t y) const override {
 			int int_x = round(zfactor * x) - img.size.h / 2, int_y = (zfactor * y) - img.size.w / 2;
 			Color col = img.get((int_x % img.size.h + img.size.h) % img.size.h, (int_y % img.size.w + img.size.w) % img.size.w);
-			return make_shared<Surface>(0, 20, 0.7, col, 0);
+			return make_shared<Surface>(0, 20, 0.7, col * illu, 0);
 		}
 };

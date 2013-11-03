@@ -5,7 +5,6 @@
 #include <iostream>
 #include <functional>
 #include <opencv2/opencv.hpp>
-#include <omp.h>
 #include <mutex>
 #include <algorithm>
 
@@ -153,7 +152,9 @@ void CVViewer::render_all() {
 	Timer timer;
 
 	// use thread
-	int nthread = omp_get_num_procs();
+	unsigned nthread = thread::hardware_concurrency();
+	if (!nthread)
+		error_exit("unable to detect thread !");
 	int render_cnt = 0;
 	thread* th = new thread[nthread];
 	REP(k, nthread) th[k] = thread(render_and_set, &render_cnt, &v, &r);

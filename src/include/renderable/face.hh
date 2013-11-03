@@ -53,7 +53,7 @@ class Face : public Renderable {
 		Face(const vector<Vertex>& _vtxs, int a, int b, int c):
 			tri(_vtxs[a].pos, _vtxs[b].pos, _vtxs[c].pos),
 			norm(tri.norm),
-			vtxid{a, b, c} {
+			vtxid{{a, b, c}} {
 			m_assert(!tri.e1.is_zero());
 		}
 
@@ -79,7 +79,7 @@ class FaceTrace : public Trace {
 
 		shared_ptr<Surface> transform_get_property() const override;
 
-		mutable real_t dist, gx, gy;
+		mutable real_t gx, gy;
 
 	public:
 		FaceTrace(const Face& _face, const Ray& _ray):

@@ -1,10 +1,8 @@
 // File: Timer.cc
-
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 
 #include "lib/Timer.hh"
-using namespace std;
 
 Timer::Timer() {
 #ifdef WIN32

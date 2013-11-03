@@ -5,7 +5,6 @@
 #include <list>
 #include <limits>
 #include <algorithm>
-#include <omp.h>
 #include "lib/Timer.hh"
 #include "mesh_simplifier.hh"
 using namespace std;
@@ -58,8 +57,6 @@ MeshSimplifier::MeshSimplifier(Mesh& _mesh, real_t ratio): mesh(_mesh) {
 		vtxs[c].add_face(&faces[k]);
 	}
 
-//#pragma omp parallel for schedule(dynamic)
-//	REP(k, nvtx) update_cost(&vtxs[k]);
 	for (auto & vtx: vtxs)
 		update_cost(&vtx);
 }
@@ -103,7 +100,6 @@ void MeshSimplifier::update_cost(Vertex* u) {
 	m_assert(u->candidate != nullptr);
 	u->cost = min;
 	u->cost_timestamp ++;
-#pragma omp critical
 	heap.push(u);
 }
 

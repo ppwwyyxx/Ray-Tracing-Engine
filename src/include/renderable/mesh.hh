@@ -62,7 +62,7 @@ class Mesh: public Renderable {
 
 		void add_faceid(int a, int b, int c) {
 			m_assert(INRANGE(std::max(a, std::max(b, c))));
-			face_ids.push_back(array<int, 3>{a, b, c});
+			face_ids.push_back(array<int, 3>{{a, b, c}});
 		}
 
 		void add_face(const array<int, 3>& t)
