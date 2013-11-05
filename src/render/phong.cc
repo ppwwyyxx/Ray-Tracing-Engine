@@ -39,7 +39,7 @@ Color Phong::do_trace(DistRay& ray, int depth) const {
 	// phong model
 	// http://en.wikipedia.org/wiki/Phong_reflection_model
 	// ambient
-	Color now_amb = ambient * (intersect_info.surf->diffuse + Color::WHITE) * intersect_info.surf->ambient * 0.5;
+	Color now_amb = ambient * (intersect_info.surf->diffuse + Color::WHITE) * intersect_info.surf->ambient;
 
 	// diffuse + specular
 	Color now_col = phong_local(intersect_info, ray);

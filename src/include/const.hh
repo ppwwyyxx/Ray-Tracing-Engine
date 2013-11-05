@@ -12,14 +12,14 @@
 
 #include "lib/utils.hh"
 
-const real_t DEFAULT_TRACING_WEIGHT_THRESHOLD = 0.001;
+const real_t DEFAULT_TRACING_WEIGHT_THRESHOLD = 0.0005;
 const real_t DEFAULT_REFRACTIVE_INDEX = 1.2;
 const real_t AIR_REFRACTIVE_INDEX = 1;
 const int MAX_PHONG_DEPTH = 4;
 const int MAX_MCPT_DEPTH = 4;
 
 // color blending
-const real_t AMBIENT_FACTOR = 0.01;
+const real_t AMBIENT_FACTOR = 0.0006;
 const real_t AIR_BEER_DENSITY = 0.03;
 const real_t DEFAULT_SPECULAR = 0.4;
 const real_t REFL_DIFFUSE_FACTOR = 0.5;
@@ -38,4 +38,4 @@ const int KDTREE_MAX_DEPTH = 100;
 const int KDTREE_TERMINATE_OBJ_CNT = 10;
 
 const int GLOBAL_ILLU_SAMPLE_CNT = 200;
-const int ANTIALIAS_SAMPLE_CNT = 8;
+const int ANTIALIAS_SAMPLE_CNT = 4;

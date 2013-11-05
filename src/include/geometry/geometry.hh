@@ -125,16 +125,17 @@ class Vector {
 			return *this * 2 * dot(v) - v;
 		}
 
-		// i'm norm, return norm
+		// i'm norm, return normalized result
 		Vector transmission(const Vector& v_in, real_t density) const {
 			// density = out_dens / in_dens
 			Vector ret = Vector::infinity();
 
 			real_t cos1 = -dot(v_in);
-			if (cos1 < EPS) return ret; // norm should towards ray dir, so this can only happen with mesh
-			if (cos1 / v_in.mod() < EPS) return v_in.get_normalized();
 			m_assert(cos1 >= 0);
+			//if (cos1 < EPS) return ret; // norm should towards ray dir, so this can only happen with mesh
+			//if (cos1 / v_in.mod() < EPS) return v_in.get_normalized();
 			real_t cos2 = 1 - ::sqr(density) * (1 - ::sqr(cos1));
+			m_assert(cos2 >= 0);
 			if (cos2 < 0) return ret;
 			cos2 = sqrt(cos2);
 
