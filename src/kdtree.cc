@@ -44,15 +44,15 @@ class KDTree::Node {
 				return ret;
 			}
 
-			real_t mind = -1, mind2 = -1;
+			real_t min_dist_1 = -1, min_dist_2 = -1;
 			bool inside;
 			real_t pivot = ray.get_dist(inter_dist)[pl.axis];
 			int first_met = (int)(pivot > pl.pos);
 
 			Node* ch0 = child[first_met], *ch1 = child[1 - first_met];
-			if (!ch0 or !ch0->box.intersect(ray, mind, inside)) ch0 = nullptr;
-			if (ch0 && (max_dist == -1 or mind < max_dist)) {
-				auto ret = ch0->get_trace(ray, mind, max_dist);
+			if (!ch0 or !ch0->box.intersect(ray, min_dist_1, inside)) ch0 = nullptr;
+			if (ch0 && (max_dist == -1 or min_dist_1 < max_dist)) {
+				auto ret = ch0->get_trace(ray, min_dist_1, max_dist);
 				if (ret) {
 					if (ray.debug) {
 						cout << "ray intersect with box " << ch0->box << endl;
@@ -68,17 +68,17 @@ class KDTree::Node {
 				}
 			}
 
-			if (!ch1 or !ch1->box.intersect(ray, mind2, inside)) ch1 = nullptr;
+			if (!ch1 or !ch1->box.intersect(ray, min_dist_2, inside)) ch1 = nullptr;
 
-			m_assert(!(ch0 && ch1 && mind == -1 && mind2 == -1));
+			m_assert(!(ch0 && ch1 && min_dist_1 == -1 && min_dist_2 == -1));
 			/*
-			 *if (ch0 && ch1 && mind > mind2 + EPS) {
-			 *    print_debug("%lf, %lf\n", mind, mind2);
+			 *if (ch0 && ch1 && min_dist_1 > min_dist_2 + EPS) {
+			 *    print_debug("%lf, %lf\n", min_dist_1, min_dist_2);
 			 *    m_assert(false);
 			 *}
 			 */
-			if (ch1 && (max_dist == -1 or mind2 < max_dist)) {
-				auto ret = ch1->get_trace(ray, mind2, max_dist);
+			if (ch1 && (max_dist == -1 or min_dist_2 < max_dist)) {
+				auto ret = ch1->get_trace(ray, min_dist_2, max_dist);
 				if (ret) {
 					if (ray.debug) {
 						cout << "ray intersect with box " << ch0->box << endl;
@@ -119,11 +119,11 @@ KDTree::KDTree(const list<rdptr>& objs, const AABB& space) {
 KDTree::~KDTree() { delete root; }
 
 shared_ptr<Trace> KDTree::get_trace(const Ray& ray, real_t max_dist) const {
-	real_t mind; bool inside;
-	if (!(root->box.intersect(ray, mind, inside)))
+	real_t min_dist; bool inside;
+	if (!(root->box.intersect(ray, min_dist, inside)))
 		return nullptr;
-	if (mind > max_dist and max_dist >= 0) return nullptr;
-	return root->get_trace(ray, mind, max_dist);
+	if (min_dist > max_dist and max_dist >= 0) return nullptr;
+	return root->get_trace(ray, min_dist, max_dist);
 }
 
 AAPlane KDTree::cut(const list<RenderWrapper>& objs, int depth) const {
@@ -134,7 +134,7 @@ AAPlane KDTree::cut(const list<RenderWrapper>& objs, int depth) const {
 		min_list.push_back(obj.box.min[ret.axis]);
 	nth_element(min_list.begin(), min_list.begin() + min_list.size() / 2, min_list.end());
 	// partial sort
-	//
+
 	ret.pos = min_list[min_list.size() / 2] + 2 * EPS;		// SEE what happen
 	return ret;
 }
@@ -174,7 +174,7 @@ KDTree::Node* KDTree::build(const list<RenderWrapper>& objs, const AABB& box, in
  */ // end of algo 1
 
 	// algo 2 (SAH kdtree)
-	// On building fast kd-trees for ray tracing, and on doing that in O (N log N)
+	// "On building fast kd-trees for ray tracing, and on doing that in O (N log N)"
 	// Wald, Ingo and Havran, Vlastimil
 	// O(n log^2(n)) build
 
@@ -190,9 +190,9 @@ KDTree::Node* KDTree::build(const list<RenderWrapper>& objs, const AABB& box, in
 	} while (0)
 
 	future<vector<pair<real_t, bool>>> task[3];
-
 	const int THREAD_DEPTH_THRES = 1;
-	if (depth < THREAD_DEPTH_THRES) {
+	bool parallel = depth < THREAD_DEPTH_THRES;
+	if (parallel) {
 		REP(dim, 3)
 			task[dim] = async(launch::async,
 					[&objs, dim]() {
@@ -204,8 +204,8 @@ KDTree::Node* KDTree::build(const list<RenderWrapper>& objs, const AABB& box, in
 	}
 
 	REP(dim, 3) {
-		vector<pair<real_t, bool>> cand_list;		//// true: min, false: max
-		if (depth >= THREAD_DEPTH_THRES)
+		vector<pair<real_t, bool>> cand_list;		// true: min, false: max
+		if (!parallel)
 			GEN_CAND_LIST;
 		else
 			cand_list = move(task[dim].get());
