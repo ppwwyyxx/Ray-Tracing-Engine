@@ -47,12 +47,12 @@ MeshSimplifier::MeshSimplifier(Mesh& _mesh, real_t ratio): mesh(_mesh) {
 	faces.reserve(nface);
 
 	REP(k, nvtx)
-		vtxs.push_back(Vertex(mesh.vtxs[k].pos, k));
+		vtxs.emplace_back(mesh.vtxs[k].pos, k);
 
 	REP(k, nface) {
 		auto & tmp = mesh.face_ids[k];
 		int a = tmp[0], b = tmp[1], c = tmp[2];
-		faces.push_back(Face(&vtxs[a], &vtxs[b], &vtxs[c]));
+		faces.emplace_back(&vtxs[a], &vtxs[b], &vtxs[c]);
 		vtxs[a].add_face(&faces[k]);
 		vtxs[b].add_face(&faces[k]);
 		vtxs[c].add_face(&faces[k]);

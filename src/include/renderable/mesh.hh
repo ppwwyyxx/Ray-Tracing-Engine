@@ -49,7 +49,7 @@ class Mesh: public Renderable {
 				real_t _zsize, const shared_ptr<Texture>& _texture = nullptr);
 
 		void add_vertex(const Vec& p) {
-			vtxs.push_back(Vertex(p));
+			vtxs.emplace_back(p);
 			bound_min.update_min(p - Vec::eps()), bound_max.update_max(p + Vec::eps());
 		}
 
@@ -62,7 +62,7 @@ class Mesh: public Renderable {
 
 		void add_faceid(int a, int b, int c) {
 			m_assert(INRANGE(std::max(a, std::max(b, c))));
-			face_ids.push_back(array<int, 3>{{a, b, c}});
+			face_ids.emplace_back(array<int, 3>{{a, b, c}});
 		}
 
 		void add_face(const array<int, 3>& t)

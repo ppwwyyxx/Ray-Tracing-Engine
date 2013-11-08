@@ -6,7 +6,7 @@ using namespace std;
 
 shared_ptr<Trace> Plane::get_trace(const Ray& ray, real_t dist) const {
 	auto ret = make_shared<PlaneTrace>(*this, ray);
-	if (ret->intersect()) {
+	if (ret->intersect(dist)) {
 		if (fabs(dist + 1) < EPS or ret->intersection_dist() < dist)
 			return ret;
 	}
@@ -26,9 +26,9 @@ Vec Plane::surf_dir() const {
 	return ret;
 }
 
-bool PlaneTrace::intersect() const {
+bool PlaneTrace::intersect(real_t max_dist) const {
 	dist_to_plane = plane.plane.dist(ray.orig);
-	if (fabs(dist_to_plane) < EPS) // source on the plane
+	if (fabs(dist_to_plane) < EPS or dist_to_plane > max_dist) // source on the plane
 		return false;
 	dir_dot_norm = plane.plane.norm.dot(ray.dir);
 	if (fabs(dir_dot_norm) < EPS)  // parallel to plane

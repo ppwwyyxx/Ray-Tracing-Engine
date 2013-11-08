@@ -48,7 +48,7 @@ class SphereTrace : public Trace {
 		const Renderable* get_obj() const override
 		{ return &sphere; }
 
-		bool intersect() const override;
+		bool intersect(real_t) const override;
 
 		Vec intersection_point() const override;
 

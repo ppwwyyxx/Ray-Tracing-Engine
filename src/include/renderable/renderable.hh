@@ -82,7 +82,7 @@ class Trace {
 			return ray.get_dist(inter_dist);
 		}
 
-		virtual bool intersect() const = 0;
+		virtual bool intersect(real_t) const = 0;
 
 		virtual real_t intersection_dist() const = 0;
 

@@ -60,7 +60,7 @@ class PlaneTrace : public Trace {
 		const Renderable* get_obj() const override
 		{ return &plane; }
 
-		bool intersect() const override;
+		bool intersect(real_t) const override;
 
 		real_t intersection_dist() const override;
 

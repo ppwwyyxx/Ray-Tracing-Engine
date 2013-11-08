@@ -108,7 +108,7 @@ KDTree::KDTree(const list<rdptr>& objs, const AABB& space) {
 	for (auto & obj : objs) {
 		m_assert(!obj->infinity());
 		AABB aabb = obj->get_aabb();
-		objlist.emplace_back(RenderWrapper(obj, aabb));
+		objlist.emplace_back(obj, aabb);
 		bound_min.update_min(aabb.min), bound_max.update_max(aabb.max);
 	}
 	Timer timer;
@@ -122,7 +122,7 @@ shared_ptr<Trace> KDTree::get_trace(const Ray& ray, real_t max_dist) const {
 	real_t mind; bool inside;
 	if (!(root->box.intersect(ray, mind, inside)))
 		return nullptr;
-	if (mind > max_dist && max_dist != -1) return nullptr;
+	if (mind > max_dist and max_dist >= 0) return nullptr;
 	return root->get_trace(ray, mind, max_dist);
 }
 
@@ -181,8 +181,8 @@ KDTree::Node* KDTree::build(const list<RenderWrapper>& objs, const AABB& box, in
 #define GEN_CAND_LIST \
 	do { \
 		for (auto & obj: objs) \
-			cand_list.push_back(make_pair(obj.box.min[dim] - EPS, true)), \
-				cand_list.push_back(make_pair(obj.box.max[dim] + EPS, false)); \
+			cand_list.emplace_back(obj.box.min[dim] - EPS, true), \
+				cand_list.emplace_back(obj.box.max[dim] + EPS, false); \
 		sort(cand_list.begin(), cand_list.end(), \
 				[](const pair<real_t, bool>& a, const pair<real_t, bool>& b) \
 					{return a.first < b.first;} \

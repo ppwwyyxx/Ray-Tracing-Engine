@@ -25,7 +25,7 @@ const Surface
 	Surface::BLACK_REFL(0, 20, 1, Color::BLACK, DEFAULT_SPECULAR),
 	Surface::WHITE(0, 20, 1, Color::WHITE * 0.8, 0),
 	Surface::BLACK(0, 20, 1, Color::BLACK, 0),
-	Surface::BLUE(0.6, 50, 0.5, Color::BLUE, 0.2),
+	Surface::BLUE(0.8, 50, 0.5, Color::BLUE, 0.2),
 	Surface::CYAN(0, 20, 0.2, (Color)Color::CYAN * 0.6, 0),
 	Surface::GOOD(0, 40, 0.5, Color(0.75, 0.35, 0.5), 0),
 	Surface::GOOD_REFL(0, 40, 0.5, Color(0.75, 0.35, 0.5), DEFAULT_SPECULAR),

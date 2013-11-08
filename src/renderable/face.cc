@@ -38,10 +38,8 @@ real_t Triangle::get_intersect(const Ray& ray, real_t& gx, real_t& gy) const {
 
 shared_ptr<Trace> Face::get_trace(const Ray& ray, real_t dist) const {
 	shared_ptr<Trace> ret = shared_ptr<FaceTrace>(new FaceTrace(*this, ray));
-	if (ret->intersect()) {
-		if (dist == -1 or ret->intersection_dist() < dist)
-			return ret;
-	}
+	if (ret->intersect(dist))
+		return ret;
 	return nullptr;
 }
 
@@ -78,9 +76,9 @@ shared_ptr<Surface> FaceTrace::transform_get_property() const {
 	return face.get_texture()->get_property(x, y);
 }
 
-bool FaceTrace::intersect() const {
+bool FaceTrace::intersect(real_t max_dist) const {
 	inter_dist = face.tri.get_intersect(ray, gx, gy);
-	if (inter_dist <= 0) return false;
+	if (inter_dist <= 0 or (inter_dist > max_dist and max_dist >= 0)) return false;
 	return true;
 }
 

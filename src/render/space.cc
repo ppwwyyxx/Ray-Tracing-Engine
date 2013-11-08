@@ -51,7 +51,7 @@ void Space::build_tree() {
 			});
 
 	if (objs.size())
-		infinite_obj.emplace_back(rdptr(new KDTree(objs, AABB(bound_min, bound_max))));
+		infinite_obj.emplace_back(make_shared<KDTree>(objs, AABB(bound_min, bound_max)));
 	objs = move(infinite_obj);
 }
 

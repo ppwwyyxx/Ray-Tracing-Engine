@@ -8,7 +8,7 @@ using namespace std;
 
 shared_ptr<Trace> Sphere::get_trace(const Ray& ray, real_t dist) const {
 	auto ret = make_shared<SphereTrace>(*this, ray);
-	if (ret->intersect()) {
+	if (ret->intersect(dist)) {
 		if (dist == -1 or ret->intersection_dist() < dist)
 			return ret;
 	}
@@ -23,7 +23,7 @@ AABB Sphere::get_aabb() const {
 }
 
 
-bool SphereTrace::intersect() const {
+bool SphereTrace::intersect(real_t) const {
 	if (!toward && !inside)	// ray leaves sphere
 		return false;
 

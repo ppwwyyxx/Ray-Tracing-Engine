@@ -103,7 +103,7 @@ void MyRender::antialias() {
 			Color diff = newcol - col;
 			s += ::sqr(diff.r) + ::sqr(diff.g) + ::sqr(diff.b);
 			}
-		if (s > 5) cand.push_back(Coor(i, j));
+		if (s > 5) cand.emplace_back(i, j);
 	}
 	Mat dst = img;
 	for (auto &k : cand) {
