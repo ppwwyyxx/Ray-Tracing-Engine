@@ -3,6 +3,7 @@
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include <sys/types.h>
 #include <dirent.h>
+#include <memory>
 #include "viewer.hh"
 #include "render/phong.hh"
 #include "render/MCPT.hh"
@@ -19,9 +20,9 @@ const string watermelon_fname = "../resource/watermelon.jpg";
 // Complicated Scene
 void all(bool g) {
 	int w = 800, h = 500;
-	Space* sp;
-	if (g) sp = new MCPT();
-	else sp = new Phong();
+	unique_ptr<Space> sp;
+	if (g) sp = unique_ptr<MCPT>();
+	else sp = unique_ptr<Phong>();
 	sp->add_light(Light(PureSphere(Vec(+10, 10, 60), 4), Color::WHITE, g ? 100 : 69));
 	sp->add_light(Light(PureSphere(Vec(-10, -10, 60), 4), Color::WHITE, g ? 30 : 30));
 
@@ -73,7 +74,7 @@ void all(bool g) {
 		CVViewer viewer(v);
 		viewer.view();
 	}
-	delete sp;
+//	delete sp;
 }
 
 // test soft shadow
@@ -196,7 +197,8 @@ void ball() {
 
 	auto t2 = make_shared<HomoTexture>(Surface::BLUE);
 //	auto t2 = make_shared<ImgTexture>(watermelon_fname, 10, 0.6);
-	auto tpic = make_shared<ImgTexture>(texture_fname, 100, 1);
+	//auto tpic = make_shared<ImgTexture>(texture_fname, 100, 1);
+	auto tpic = make_shared<GridTexture>(GridTexture::BLACK_WHITE);
 	s.add_obj(make_shared<Plane>(InfPlane::XYPLANE, tpic));//make_shared<Plane>(Plane())?
 	s.add_obj(make_shared<Sphere>(PureSphere::TestSphere, t2));
 

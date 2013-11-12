@@ -58,7 +58,6 @@ void Space::build_tree() {
 shared_ptr<Trace> Space::find_first(const Ray& ray, bool include_light) const {
 	real_t min = numeric_limits<real_t>::max();
 	shared_ptr<Trace> ret;
-
 	for (auto & obj : objs) {
 		auto tmp = obj->get_trace(ray, min == numeric_limits<real_t>::max() ? -1 : min);
 		if (tmp) {
@@ -66,8 +65,7 @@ shared_ptr<Trace> Space::find_first(const Ray& ray, bool include_light) const {
 			if (update_min(min, d)) ret = move(tmp);
 		}
 	}
-
-	if (include_light) {		// also look for light
+	if (include_light) 		// also look for light
 		for (auto &l : lights) {
 			auto tmp = l->get_trace(ray, min == numeric_limits<real_t>::max() ? -1 : min);
 			if (tmp) {
@@ -75,7 +73,6 @@ shared_ptr<Trace> Space::find_first(const Ray& ray, bool include_light) const {
 				if (update_min(min, d)) ret = tmp;
 			}
 		}
-	}
 	return ret;
 }
 

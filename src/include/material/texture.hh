@@ -64,7 +64,7 @@ class ImgTexture : public Texture {
 	public:
 		ImgTexture(const std::string& fname, real_t _zoom, real_t _illu = 1):
 			// _zoom > 1
-			img(fname), zfactor(_zoom), illu(_illu) {}
+			img(fname), zfactor(_zoom), illu(_illu) { }
 
 		shared_ptr<Surface> get_property(real_t x, real_t y) const override {
 			int int_x = round(zfactor * x) - img.size.h / 2, int_y = (zfactor * y) - img.size.w / 2;
