@@ -21,8 +21,8 @@ const string watermelon_fname = "../resource/watermelon.jpg";
 void all(bool g) {
 	int w = 800, h = 500;
 	unique_ptr<Space> sp;
-	if (g) sp = unique_ptr<MCPT>();
-	else sp = unique_ptr<Phong>();
+	if (g) sp = unique_ptr<MCPT>(new MCPT);
+	else sp = unique_ptr<Phong>(new Phong);
 	sp->add_light(Light(PureSphere(Vec(+10, 10, 60), 4), Color::WHITE, g ? 100 : 69));
 	sp->add_light(Light(PureSphere(Vec(-10, -10, 60), 4), Color::WHITE, g ? 30 : 30));
 
