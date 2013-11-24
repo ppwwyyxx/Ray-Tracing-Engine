@@ -19,7 +19,7 @@ class Triangle {
 		Vec norm;
 
 		Triangle(const Vec& a, const Vec& b, const Vec& c):
-			v(a), e1(b - a), e2(c - a),norm(e1.cross(e2)) {}
+			v(a), e1(b - a), e2(c - a), norm(e1.cross(e2)) {}
 
 		Vec get(int i) const {
 			if (!i) return v + e1;

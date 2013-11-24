@@ -19,7 +19,7 @@ const string watermelon_fname = "../resource/watermelon.jpg";
 
 // Complicated Scene
 void all(bool g) {
-	int w = 800, h = 500;
+	int w = 1366, h = 768;
 	unique_ptr<Space> sp;
 	if (g) sp = unique_ptr<MCPT>(new MCPT);
 	else sp = unique_ptr<Phong>(new Phong);

@@ -56,11 +56,13 @@ void Mesh::finish() {		// build tree, calculate smooth norm
 			for (auto & t : face_ids) {
 				int a = t[0], b = t[1], c = t[2];
 				Vec tmp_norm = Triangle(vtxs[a].pos, vtxs[b].pos, vtxs[c].pos).norm;
+				// XXX FIXME norms might be in opposite direction!!
 				norm_sum[a].add(tmp_norm);
 				norm_sum[b].add(tmp_norm);
 				norm_sum[c].add(tmp_norm);
 			}
-			REP(k, nvtx) vtxs[k].norm = norm_sum[k].sum / norm_sum[k].cnt;
+			REP(k, nvtx)
+				vtxs[k].norm = norm_sum[k].sum / norm_sum[k].cnt;
 			delete[] norm_sum;
 		}
 	}
