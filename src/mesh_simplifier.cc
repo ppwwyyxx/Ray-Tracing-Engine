@@ -10,7 +10,7 @@
 #include "mesh_simplifier.hh"
 using namespace std;
 
-void MeshSimplifier::Face::delete_from(Vertex*& u, Vertex*& v) {
+void MeshSimplifier::Face::delete_from(Vertex* u, Vertex* v) {
 	m_assert(contain(v));
 	REP(k, 3)
 		if (vtx[k] != u && vtx[k] != v) {
@@ -21,7 +21,7 @@ void MeshSimplifier::Face::delete_from(Vertex*& u, Vertex*& v) {
 	vtx[0] = vtx[1] = vtx[2] = nullptr;
 }
 
-void MeshSimplifier::Face::change_to(Vertex*& u, Vertex*& v) {
+void MeshSimplifier::Face::change_to(Vertex* u, Vertex* v) {
 	m_assert(count(v) == 0);
 	m_assert(count(u) == 1);
 	REP(k, 3) if (vtx[k] == u) vtx[k] = v;
@@ -113,7 +113,7 @@ int MeshSimplifier::collapse(Vertex* u, Vertex* v) {
 	u->erased = true;
 	int ret = 0;
 
-	list<Face*> to_delete;		// can't modify u inside loop
+	list<Face*> to_delete;		// can't modify a set inside loop
 	for (auto & uface : u->adj_face) {
 		m_assert(uface->contain(u));
 		if (v->adj_face.find(uface) != v->adj_face.end()) {

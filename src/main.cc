@@ -176,7 +176,7 @@ void test_simplify() {
 	Mesh mesh(fname, Vec(0, 0, 2), 5);
 	mesh.smooth = true;
 	mesh.set_texture(make_shared<HomoTexture>(Surface::CYAN));
-	mesh.simplify(0.5);
+	mesh.simplify(0.3);
 	mesh.finish();
 
 	Phong s;

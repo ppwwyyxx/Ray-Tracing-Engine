@@ -25,16 +25,16 @@ class MeshSimplifier {
 			{ norm = (c->pos - a->pos).cross((b->pos - a->pos)).get_normalized(); }
 
 			// delete this face (containing u, v) when collapsing from u to v
-			void delete_from(Vertex*& u, Vertex*& v);
+			void delete_from(Vertex* u, Vertex* v);
 
 			// change vertex u to v when collapsing from u to v
-			void change_to(Vertex*& u, Vertex*& v);
+			void change_to(Vertex* u, Vertex* v);
 
 #ifdef DEBUG
-			bool contain(Vertex* v) const
+			inline bool contain(Vertex* v) const
 			{ return (v == vtx[0]) + (v == vtx[1]) + (v == vtx[2]) == 1; }
 
-			int count(Vertex* v) const
+			inline int count(Vertex* v) const
 			{ return (v == vtx[0]) + (v == vtx[1]) + (v == vtx[2]); }
 #endif
 		};
@@ -62,16 +62,15 @@ class MeshSimplifier {
 		};
 
 		struct Elem {
-		// element type to use in the heap
+			// element type to use in the heap
 			Vertex* v;
 			int cost_timestamp;
-			real_t cost;
 
 			Elem(Vertex* _v) :
-				v(_v), cost_timestamp(v->cost_timestamp), cost(v->cost) {}
+				v(_v), cost_timestamp(v->cost_timestamp) {}
 
 			bool operator < (const Elem& r) const
-			{ return cost > r.cost; }
+			{ return v->cost > r.v->cost; }
 
 			inline bool outofdate() const
 			{ return cost_timestamp < v->cost_timestamp; }
