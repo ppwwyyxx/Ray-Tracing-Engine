@@ -10,7 +10,7 @@
 
 class KDTree : public Renderable {
 	public:
-		class Node;
+		struct Node;
 
 		class RenderWrapper {
 			public:
