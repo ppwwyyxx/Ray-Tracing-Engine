@@ -56,7 +56,7 @@ void Mesh::finish() {		// build tree, calculate smooth norm
 			for (auto & t : face_ids) {
 				int a = t[0], b = t[1], c = t[2];
 				Vec tmp_norm = Triangle(vtxs[a].pos, vtxs[b].pos, vtxs[c].pos).norm;
-				// XXX FIXME norms might be in opposite direction!!
+				// norms might be in opposite direction ? obj gives vertexes in correct order
 				norm_sum[a].add(tmp_norm);
 				norm_sum[b].add(tmp_norm);
 				norm_sum[c].add(tmp_norm);
@@ -77,10 +77,10 @@ shared_ptr<Trace> Mesh::get_trace(const Ray& ray, real_t dist) const {
 		return tree->get_trace(ray, dist);
 
 	shared_ptr<Trace> ret;
-	real_t min = numeric_limits<real_t>::infinity();
+	real_t min = numeric_limits<real_t>::max();
 
 	for (auto & face : faces) {
-		shared_ptr<Trace> tmp = face->get_trace(ray, dist);
+		auto tmp = face->get_trace(ray, dist);
 		if (tmp && update_min(min, tmp->intersection_dist()))
 			ret = tmp;
 	}

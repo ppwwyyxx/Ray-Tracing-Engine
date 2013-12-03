@@ -34,7 +34,7 @@ class Vertex {
 		Vec pos;
 
 		Vec norm = Vec::infinity();		// can be defined by obj
-		Vec2D mapcoor = Vec2D::infinity();
+//		Vec2D mapcoor = Vec2D::infinity();
 
 		Vertex(const Vec& _pos):
 			pos(_pos) {}

@@ -15,9 +15,11 @@ struct KDTree::Node {
 	AABB box;
 	Node* child[2];
 
+	// TODO use enum type to identify leaf or non-leaf, save space for child
+
 	union {
-		AAPlane pl;
-		list<rdptr> objs;
+		AAPlane pl;		// for non-leaf node
+		list<rdptr> objs; // for leaf node
 	};
 
 	Node(const AABB& _box, Node* p1 = nullptr, Node* p2 = nullptr) :
@@ -51,55 +53,51 @@ struct KDTree::Node {
 			return ret;
 		}
 
-		real_t min_dist_1 = -1, min_dist_2 = -1;
+		real_t min_dist = -1;
 		bool inside;
 		real_t pivot = ray.get_dist(inter_dist)[pl.axis];
 		int first_met = (int)(pivot > pl.pos);
 
 		Node* ch0 = child[first_met], *ch1 = child[1 - first_met];
-		if (!ch0 or !ch0->box.intersect(ray, min_dist_1, inside)) ch0 = nullptr;
-		if (ch0 && (max_dist == -1 or min_dist_1 < max_dist)) {
-			auto ret = ch0->get_trace(ray, min_dist_1, max_dist);
+
+		if (!ch0 or !ch0->box.intersect(ray, min_dist, inside)) ch0 = nullptr;
+
+		if (ch0 && (max_dist == -1 or min_dist < max_dist)) {
+			auto ret = ch0->get_trace(ray, min_dist, max_dist);
 			if (ret) {
 				if (ray.debug) {
 					cout << "ray intersect with box " << ch0->box << endl;
 					cout << "interpoint: " << ret->intersection_point() << endl;
 					cout << endl;
 				}
-				if (!ch0->leaf()) return ret;
-				Vec inter_p = ret->intersection_point();
-				if (ch0->box.contain(inter_p)) return ret;
-			} else {
-				if (ray.debug)
+				if (!ch0->leaf())	// then definitely contain, directly return
+					return ret;
+				Vec inter_point = ret->intersection_point();
+				if (ch0->box.contain(inter_point))
+					return ret;
+			} else if (ray.debug)
 					cout << "not intersect with box" << ch0->box << endl;
-			}
 		}
 
-		if (!ch1 or !ch1->box.intersect(ray, min_dist_2, inside)) ch1 = nullptr;
+		if (!ch1 or !ch1->box.intersect(ray, min_dist, inside)) ch1 = nullptr;
 
-		m_assert(!(ch0 && ch1 && min_dist_1 == -1 && min_dist_2 == -1));
-		/*
-		 *if (ch0 && ch1 && min_dist_1 > min_dist_2 + EPS) {
-		 *    print_debug("%lf, %lf\n", min_dist_1, min_dist_2);
-		 *    m_assert(false);
-		 *}
-		 */
-		if (ch1 && (max_dist == -1 or min_dist_2 < max_dist)) {
-			auto ret = ch1->get_trace(ray, min_dist_2, max_dist);
+		if (ch1 && (max_dist == -1 or min_dist < max_dist)) {
+			auto ret = ch1->get_trace(ray, min_dist, max_dist);
 			if (ret) {
 				if (ray.debug) {
 					cout << "ray intersect with box " << ch0->box << endl;
 					cout << "interpoint: " << ret->intersection_point() << endl;
 					cout << endl;
 				}
-				if (!ch1->leaf()) return ret;
-				Vec inter_p = ret->intersection_point();
-				if (ch1->box.contain(inter_p)) return ret;
-			} else {
-				if (ray.debug)
+				if (!ch1->leaf())
+					return ret;
+				Vec inter_point = ret->intersection_point();
+				if (ch1->box.contain(inter_point))
+					return ret;
+			} else if (ray.debug)
 					cout << "not intersect with box" << ch0->box << endl;
-			}
 		}
+
 		if (ray.debug)
 			cout << "reaching end of node->get_trace()" << endl;
 		return nullptr;

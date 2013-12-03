@@ -38,22 +38,22 @@ class Vector {
 		explicit Vector(real_t _x, real_t _y, real_t _z):
 			x(_x), y(_y), z(_z) {}
 
-		Vector(const Vector &p0, const Vector &p1):
+		inline Vector(const Vector &p0, const Vector &p1):
 			x(p1.x - p0.x), y(p1.y -p0.y), z(p1.z - p0.z) {}
 
 		inline Vector abs() const
 		{ return Vector(fabs(x), fabs(y), fabs(z)); }
 
-		real_t sqr() const
+		inline real_t sqr() const
 		{ return x * x + y * y + z * z; }
 
-		real_t mod() const
+		inline real_t mod() const
 		{ return sqrt(sqr()); }
 
 		inline real_t area() const // require *this > 0
 		{ return x * y + y * z + z * x; }
 
-		real_t dot(const Vector &v) const
+		inline real_t dot(const Vector &v) const
 		{ return x * v.x + y * v.y + z * v.z; }
 
 		Vector cross(const Vector &v) const		// this cross v
@@ -68,53 +68,53 @@ class Vector {
 			m_assert(std::isfinite(m));
 		}
 
-		Vector get_normalized() const
+		inline Vector get_normalized() const
 		{ Vector ret(*this); ret.normalize(); return ret; }
 
-		void update_min(const Vector &v)
+		inline void update_min(const Vector &v)
 		{ ::update_min(x, v.x); ::update_min(y, v.y); ::update_min(z, v.z); }
 
-		void update_max(const Vector &v)
+		inline void update_max(const Vector &v)
 		{ ::update_max(x, v.x); ::update_max(y, v.y); ::update_max(z, v.z); }
 
 		// operator
-		Vector operator + (const Vector &v) const
+		inline Vector operator + (const Vector &v) const
 		{ return Vector(x + v.x, y + v.y, z + v.z); }
 
-		Vector& operator += (const Vector &v)
+		inline Vector& operator += (const Vector &v)
 		{ x += v.x; y += v.y; z += v.z; return *this; }
 
-		Vector operator - (const Vector &v) const
+		inline Vector operator - (const Vector &v) const
 		{ return Vector(x - v.x, y - v.y, z - v.z); }
 
-		Vector operator - () const
+		inline Vector operator - () const
 		{ return Vector(-x, -y, -z); }
 
-		Vector& operator -= (const Vector &v)
+		inline Vector& operator -= (const Vector &v)
 		{ x -= v.x; y -= v.y; z -= v.z; return *this; }
 
-		Vector operator * (real_t p) const
+		inline Vector operator * (real_t p) const
 		{ return Vector(x * p, y * p, z * p); }
 
-		Vector& operator *= (real_t p)
+		inline Vector& operator *= (real_t p)
 		{ x *= p; y *= p; z *= p; return *this; }
 
-		Vector operator / (real_t p) const
+		inline Vector operator / (real_t p) const
 		{ return *this * (1.0 / p); }
 
-		bool operator == (const Vector &v) const
+		inline bool operator == (const Vector &v) const
 		{ return fabs(x - v.x) < EPS && fabs(y - v.y) < EPS && fabs(z - v.z) < EPS; }
 
-		bool operator < (const Vector &v) const			// loose judge
+		inline bool operator < (const Vector &v) const			// loose judge
 		{ return x < v.x + EPS && y < v.y + EPS && z < v.z + EPS; }
 
-		bool operator != (const Vector &v) const
+		inline bool operator != (const Vector &v) const
 		{ return fabs(x - v.x) >= EPS or fabs(y - v.y) >= EPS or fabs(z - v.z) >= EPS; }
 
-		const real_t& operator [](int c) const
+		inline const real_t& operator [](int c) const
 		{ return c == 0 ? x : c == 1 ? y : z; }
 
-		real_t& operator [](int c)
+		inline real_t& operator [](int c)
 		{ return c == 0 ? x : c == 1 ? y : z; }
 
 		// geometry
@@ -144,16 +144,16 @@ class Vector {
 		}
 
 		// utility
-		static Vector max()
+		static inline Vector max()
 		{ return Vector(numeric_limits<real_t>::max(), numeric_limits<real_t>::max(), numeric_limits<real_t>::max()); }
 
-		static Vector infinity()
+		static inline Vector infinity()
 		{ return Vector(numeric_limits<real_t>::infinity(), numeric_limits<real_t>::infinity(), numeric_limits<real_t>::infinity()); }
 
-		static Vector zero()
+		static inline Vector zero()
 		{ return Vector(0, 0, 0); }
 
-		static Vector eps()
+		static inline Vector eps()
 		{ return Vector(EPS, EPS, EPS); }
 
 		inline real_t get_max()
@@ -171,10 +171,10 @@ class Vector {
 		inline bool isfinite() const
 		{ return std::isfinite(x) && std::isfinite(y) && std::isfinite(z); }
 
-		friend std::ostream & operator << (std::ostream &os, const Vector& vec)
+		friend inline std::ostream & operator << (std::ostream &os, const Vector& vec)
 		{ return os << vec.x << " " << vec.y << " " << vec.z;}
 
-		friend Vector operator * (real_t x, const Vector& vec)
+		friend inline Vector operator * (real_t x, const Vector& vec)
 		{ return vec * x; }
 };
 
