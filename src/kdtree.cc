@@ -58,44 +58,26 @@ struct KDTree::Node {
 		real_t pivot = ray.get_dist(inter_dist)[pl.axis];
 		int first_met = (int)(pivot > pl.pos);
 
-		Node* ch0 = child[first_met], *ch1 = child[1 - first_met];
+		for (auto index : {first_met, 1 - first_met})  {		// iterate over two children
+			Node* ch = child[index];
+			if (!ch or !ch->box.intersect(ray, min_dist, inside)) ch = nullptr;
 
-		if (!ch0 or !ch0->box.intersect(ray, min_dist, inside)) ch0 = nullptr;
-
-		if (ch0 && (max_dist == -1 or min_dist < max_dist)) {
-			auto ret = ch0->get_trace(ray, min_dist, max_dist);
-			if (ret) {
-				if (ray.debug) {
-					cout << "ray intersect with box " << ch0->box << endl;
-					cout << "interpoint: " << ret->intersection_point() << endl;
-					cout << endl;
-				}
-				if (!ch0->leaf())	// then definitely contain, directly return
-					return ret;
-				Vec inter_point = ret->intersection_point();
-				if (ch0->box.contain(inter_point))
-					return ret;
-			} else if (ray.debug)
-					cout << "not intersect with box" << ch0->box << endl;
-		}
-
-		if (!ch1 or !ch1->box.intersect(ray, min_dist, inside)) ch1 = nullptr;
-
-		if (ch1 && (max_dist == -1 or min_dist < max_dist)) {
-			auto ret = ch1->get_trace(ray, min_dist, max_dist);
-			if (ret) {
-				if (ray.debug) {
-					cout << "ray intersect with box " << ch0->box << endl;
-					cout << "interpoint: " << ret->intersection_point() << endl;
-					cout << endl;
-				}
-				if (!ch1->leaf())
-					return ret;
-				Vec inter_point = ret->intersection_point();
-				if (ch1->box.contain(inter_point))
-					return ret;
-			} else if (ray.debug)
-					cout << "not intersect with box" << ch0->box << endl;
+			if (ch && (max_dist == -1 or min_dist < max_dist)) {
+				auto ret = ch->get_trace(ray, min_dist, max_dist);
+				if (ret) {
+					if (ray.debug) {
+						cout << "ray intersect with box " << ch->box << endl;
+						cout << "interpoint: " << ret->intersection_point() << endl;
+						cout << endl;
+					}
+					if (!ch->leaf())	// then definitely contain, directly return
+						return ret;
+					Vec inter_point = ret->intersection_point();
+					if (ch->box.contain(inter_point))
+						return ret;
+				} else if (ray.debug)
+					cout << "not intersect with box" << ch->box << endl;
+			}
 		}
 
 		if (ray.debug)
@@ -142,6 +124,7 @@ AAPlane KDTree::cut(const list<RenderWrapper>& objs, int depth) const {
 }
 
 KDTree::Node* KDTree::build(const list<RenderWrapper>& objs, const AABB& box, int depth) {
+	// TODO split tree uses too much copy!
 	if (objs.size() == 0) return nullptr;
 	if (depth > KDTREE_MAX_DEPTH) return nullptr;
 
@@ -158,22 +141,24 @@ KDTree::Node* KDTree::build(const list<RenderWrapper>& objs, const AABB& box, in
 	real_t min_cost = numeric_limits<real_t>::max();
 
 
-	/*	// algo 1 (naive kdtree)
-	 *    best_pl = cut(objs, depth);
-	 *    try {
-	 *        par = box.cut(best_pl);
-	 *    } catch (...) {
-	 *        ADDOBJ;
-	 *        return ret;		// pl is outside box, cannot go further
-	 *    }
-	 *    ret->pl = best_pl;
-	 *
-	 *    vector<RenderWrapper> objl, objr;
-	 *    for (auto & obj : objs) {
-	 *        if (obj.box.max[best_pl.axis] >= best_pl.pos - EPS) objr.push_back(obj);
-	 *        if (obj.box.min[best_pl.axis] <= best_pl.pos + EPS) objl.push_back(obj);
-	 *    }
-	 */ // end of algo 1
+/*
+ *    // algo 1 (naive kdtree)
+ *    best_pl = cut(objs, depth);
+ *    try {
+ *        par = box.cut(best_pl);
+ *    } catch (...) {
+ *        ADDOBJ;
+ *        return ret;		// pl is outside box, cannot go further
+ *    }
+ *    ret->pl = best_pl;
+ *
+ *    vector<RenderWrapper> objl, objr;
+ *    for (auto & obj : objs) {
+ *        if (obj.box.max[best_pl.axis] >= best_pl.pos - EPS) objr.push_back(obj);
+ *        if (obj.box.min[best_pl.axis] <= best_pl.pos + EPS) objl.push_back(obj);
+ *    }
+ *    // end of algo 1
+ */
 
 	// algo 2 (SAH kdtree)
 	// "On building fast kd-trees for ray tracing, and on doing that in O (N log N)"
@@ -197,12 +182,11 @@ KDTree::Node* KDTree::build(const list<RenderWrapper>& objs, const AABB& box, in
 	if (parallel) {
 		REP(dim, 3)
 			task[dim] = async(launch::async,
-						[&objs, dim]() {
-							vector<pair<real_t, bool>> cand_list;
-							GEN_CAND_LIST;
-							return cand_list;
-						}
-					);
+					[&objs, dim]() {
+						vector<pair<real_t, bool>> cand_list;
+						GEN_CAND_LIST;
+						return cand_list;
+					});
 	}
 
 	REP(dim, 3) {
@@ -254,18 +238,18 @@ KDTree::Node* KDTree::build(const list<RenderWrapper>& objs, const AABB& box, in
 	if (depth < 1) { // parallel when depth is small
 		future<Node*> lch_future = async(launch::async,
 				[&]() {
-					return build(move(objl), par.first, depth + 1);
+					return build(objl, par.first, depth + 1);
 				});
 		future<Node*> rch_future = async(launch::async,
 				[&]() {
-					return build(move(objr), par.second, depth + 1);
+					return build(objr, par.second, depth + 1);
 				});
 
 		ret->child[0] = lch_future.get();
 		ret->child[1] = rch_future.get();
 	} else {
-		ret->child[0] = build(move(objl), par.first, depth + 1);
-		ret->child[1] = build(move(objr), par.second, depth + 1);
+		ret->child[0] = build(objl, par.first, depth + 1);
+		ret->child[1] = build(objr, par.second, depth + 1);
 	}
 
 	// might fail to build children
