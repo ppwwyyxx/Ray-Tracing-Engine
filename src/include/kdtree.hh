@@ -34,8 +34,8 @@ class KDTree : public Renderable {
 		{ return AABB(bound_min, bound_max); }
 
 	private:
-		Node* build(const std::list<RenderWrapper>& objs, const AABB& box, int depth);
+		Node* build(const std::list<RenderWrapper*>& objs, const AABB& box, int depth);
 
-		AAPlane cut(const std::list<RenderWrapper>& objs, int depth) const;
+		AAPlane cut(const std::list<RenderWrapper*>& objs, int depth) const;
 
 };

@@ -58,7 +58,7 @@ struct KDTree::Node {
 		real_t pivot = ray.get_dist(inter_dist)[pl.axis];
 		int first_met = (int)(pivot > pl.pos);
 
-		for (auto index : {first_met, 1 - first_met})  {		// iterate over two children
+		for (int index : {first_met, 1 - first_met})  {		// iterate over two children
 			Node* ch = child[index];
 			if (!ch or !ch->box.intersect(ray, min_dist, inside)) ch = nullptr;
 
@@ -88,15 +88,17 @@ struct KDTree::Node {
 };
 
 KDTree::KDTree(const list<rdptr>& objs, const AABB& space) {
-	list<RenderWrapper> objlist;
+	list<RenderWrapper*> objlist;
 	for (auto & obj : objs) {
 		m_assert(!obj->infinity());
 		AABB aabb = obj->get_aabb();
-		objlist.emplace_back(obj, aabb);
+		objlist.emplace_back(new RenderWrapper(obj, aabb));
 		bound_min.update_min(aabb.min), bound_max.update_max(aabb.max);
 	}
 	Timer timer;
-	root = build(move(objlist), space, 0);
+	root = build(objlist, space, 0);
+	for (auto objptr : objlist)
+		delete objptr;
 	printf("Build tree spends %lf seconds\n", timer.get_time());
 }
 
@@ -110,12 +112,12 @@ shared_ptr<Trace> KDTree::get_trace(const Ray& ray, real_t max_dist) const {
 	return root->get_trace(ray, min_dist, max_dist);
 }
 
-AAPlane KDTree::cut(const list<RenderWrapper>& objs, int depth) const {
+AAPlane KDTree::cut(const list<RenderWrapper*>& objs, int depth) const {
 	AAPlane ret(depth % 3, 0);
 
 	vector<real_t> min_list;
-	for (auto &obj : objs)
-		min_list.push_back(obj.box.min[ret.axis]);
+	for (auto objptr : objs)
+		min_list.push_back(objptr->box.min[ret.axis]);
 	nth_element(min_list.begin(), min_list.begin() + min_list.size() / 2, min_list.end());
 	// partial sort
 
@@ -123,19 +125,18 @@ AAPlane KDTree::cut(const list<RenderWrapper>& objs, int depth) const {
 	return ret;
 }
 
-KDTree::Node* KDTree::build(const list<RenderWrapper>& objs, const AABB& box, int depth) {
-	// TODO split tree uses too much copy!
+KDTree::Node* KDTree::build(const list<RenderWrapper*>& objs, const AABB& box, int depth) {
 	if (objs.size() == 0) return nullptr;
 	if (depth > KDTREE_MAX_DEPTH) return nullptr;
 
-#define ADDOBJ for (auto& obj : objs) ret->add_obj(obj.obj)
+#define ADDOBJ for (auto objptr : objs) ret->add_obj(objptr->obj)
 	Node* ret = new Node(box);
 
-	if (objs.size() <= KDTREE_TERMINATE_OBJ_CNT) {
+	int nobj = objs.size();
+	if (nobj <= KDTREE_TERMINATE_OBJ_CNT) {
 		ADDOBJ;
 		return ret;
 	}
-	int nobj = objs.size();
 	pair<AABB, AABB> par;
 	AAPlane best_pl;
 	real_t min_cost = numeric_limits<real_t>::max();
@@ -153,9 +154,9 @@ KDTree::Node* KDTree::build(const list<RenderWrapper>& objs, const AABB& box, in
  *    ret->pl = best_pl;
  *
  *    vector<RenderWrapper> objl, objr;
- *    for (auto & obj : objs) {
- *        if (obj.box.max[best_pl.axis] >= best_pl.pos - EPS) objr.push_back(obj);
- *        if (obj.box.min[best_pl.axis] <= best_pl.pos + EPS) objl.push_back(obj);
+ *    for (auto obj : objs) {
+ *        if (obj->box.max[best_pl.axis] >= best_pl.pos - EPS) objr.push_back(obj);
+ *        if (obj->box.min[best_pl.axis] <= best_pl.pos + EPS) objl.push_back(obj);
  *    }
  *    // end of algo 1
  */
@@ -167,13 +168,10 @@ KDTree::Node* KDTree::build(const list<RenderWrapper>& objs, const AABB& box, in
 
 #define GEN_CAND_LIST \
 	do { \
-		for (auto & obj: objs) \
-		cand_list.emplace_back(obj.box.min[dim] - EPS, true), \
-		cand_list.emplace_back(obj.box.max[dim] + EPS, false); \
-		sort(cand_list.begin(), cand_list.end(), \
-				[](const pair<real_t, bool>& a, const pair<real_t, bool>& b) \
-				{return a.first < b.first;} \
-			); \
+		for (auto objptr: objs) \
+		cand_list.emplace_back(objptr->box.min[dim] - EPS, true), \
+		cand_list.emplace_back(objptr->box.max[dim] + EPS, false); \
+		sort(cand_list.begin(), cand_list.end()); \
 	} while (0)
 
 	future<vector<pair<real_t, bool>>> task[3];
@@ -228,10 +226,10 @@ KDTree::Node* KDTree::build(const list<RenderWrapper>& objs, const AABB& box, in
 	// fount the best cutting plane
 	ret->pl = best_pl;
 	par = box.cut(best_pl);
-	list<RenderWrapper> objl, objr;
-	for (auto & obj : objs) {
-		if (obj.box.max[best_pl.axis] >= best_pl.pos) objr.push_back(obj);
-		if (obj.box.min[best_pl.axis] <= best_pl.pos) objl.push_back(obj);
+	list<RenderWrapper*> objl, objr;
+	for (auto obj : objs) {
+		if (obj->box.max[best_pl.axis] >= best_pl.pos) objr.push_back(obj);
+		if (obj->box.min[best_pl.axis] <= best_pl.pos) objl.push_back(obj);
 	}
 	// end of algo 2
 
