@@ -1,6 +1,6 @@
 ## Introduction
 
-This is a 3D Rendering Engine written in C++11.
+This is an extensible 3D Rendering Engine written in C++11.
 For the details of this project, please see ``report.pdf``
 
 ## Features
@@ -9,7 +9,6 @@ For the details of this project, please see ``report.pdf``
 * rendering of plane, sphere and mesh
 * read mesh from a simple obj file
 * fast SAH-Based KDtree in mesh as well as the whole scene
-* soft shadow in Phong model
 * depth of field
 * custom texture
 * mesh smoothing
@@ -51,17 +50,15 @@ GUI is only an objviewer with some simple control.
 ![gui](https://github.com/ppwwyyxx/Ray-Tracing-Engine/raw/master/demo/small/gui.jpg)
 
 ## Examples
-A simple ball with transmission:
-
-![ball](https://github.com/ppwwyyxx/Ray-Tracing-Engine/raw/master/demo/small/transmission.jpg)
-
+<!--
+   -A simple ball with transmission:
+   -
+   -![ball](https://github.com/ppwwyyxx/Ray-Tracing-Engine/raw/master/demo/small/transmission.jpg)
+   -
+   -->
 Obj and ground texture:
 
 ![pict](https://github.com/ppwwyyxx/Ray-Tracing-Engine/raw/master/demo/small/pic_texture.jpg)
-
-Soft shadow:
-
-![soft](https://github.com/ppwwyyxx/Ray-Tracing-Engine/raw/master/demo/small/soft.jpg)
 
 Depth of field (There is also a video in `demo/small/`):
 
