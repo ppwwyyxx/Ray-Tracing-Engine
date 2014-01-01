@@ -191,13 +191,12 @@ void CVViewer::view() {
 			switch (ret) {
 				case KEY_EXIT:
 				case KEY_Q:
-					case KEY_ESC:
+				case KEY_ESC:
 					return;
-					break;
 				case KEY_S:
 					r.save();
 					rerender = false;
-					print_debug("saved\n");
+					cout << "Screenshot Saved." << endl;
 					break;
 				case KEY_P:
 					cout << "viewpoint: " << v.view_point << endl;
@@ -254,7 +253,7 @@ void CVViewer::view() {
 					break;
 				default:
 					rerender = false;
-					cout << ret << endl;
+					cerr << "unhandled key event: " << ret << endl;
 					break;
 			}
 

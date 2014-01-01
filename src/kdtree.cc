@@ -1,5 +1,4 @@
 // File: kdtree.cc
-
 // Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 #include <algorithm>
 #include <future>

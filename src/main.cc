@@ -172,16 +172,19 @@ void test_kdtree() {
 // test obj simplify
 void test_simplify() {
 	int w = 500, h = 500;
-	string fname = "../resource/models/fixed.perfect.dragon.100K.0.07.obj";
+//	string fname = "../resource/models/fixed.perfect.dragon.100K.0.07.obj";
+	string fname = "./block.obj";
 	Mesh mesh(fname, Vec(0, 0, 2), 5);
 	mesh.smooth = true;
 	mesh.set_texture(make_shared<HomoTexture>(Surface::CYAN));
-	mesh.simplify(0.05);
+	mesh.simplify(0.3);
 	mesh.finish();
 
 	Phong s;
 	s.add_light(Light(Vec(0, -10, 12), Color::WHITE, 6.0));
 	s.add_light(Light(Vec(0, 10, 8), Color::WHITE, 6.0));
+	s.add_light(Light(Vec(10, 10, -10), Color::WHITE, 6.0));
+	s.add_light(Light(Vec(-10, -10, -10), Color::WHITE, 6.0));
 	s.add_obj(make_shared<Mesh>(mesh));
 	s.finish();
 	View v(s, Vec(0, 0, 12), Vec(0, 0, 2), 15, Geometry(w, h));

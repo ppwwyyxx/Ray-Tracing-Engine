@@ -62,8 +62,7 @@ Vec Face::get_norm(int i) const
 
 Vec Face::get_smooth_norm(real_t gx, real_t gy) const {
 	// e1 : gx, e2: gy
-	Vec ret;
-	ret = ret + get_norm(0) * (1 - gx - gy) + get_norm(1) * gx + get_norm(2) * gy;
+	Vec ret = get_norm(0) * (1 - gx - gy) + get_norm(1) * gx + get_norm(2) * gy;
 	return ret.get_normalized();
 }
 

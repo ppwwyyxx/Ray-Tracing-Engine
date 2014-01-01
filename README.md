@@ -1,6 +1,6 @@
 ## Introduction
 
-This is an extensible 3D Rendering Engine written in C++11.
+This is an 3D Rendering Engine written in C++11.
 For the details of this project, please see ``report.pdf``
 
 ## Features
@@ -50,12 +50,6 @@ GUI is only an objviewer with some simple control.
 ![gui](https://github.com/ppwwyyxx/Ray-Tracing-Engine/raw/master/demo/small/gui.jpg)
 
 ## Examples
-<!--
-   -A simple ball with transmission:
-   -
-   -![ball](https://github.com/ppwwyyxx/Ray-Tracing-Engine/raw/master/demo/small/transmission.jpg)
-   -
-   -->
 Obj and ground texture:
 
 ![pict](https://github.com/ppwwyyxx/Ray-Tracing-Engine/raw/master/demo/small/pic_texture.jpg)

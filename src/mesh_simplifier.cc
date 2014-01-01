@@ -10,6 +10,8 @@
 #include "mesh_simplifier.hh"
 using namespace std;
 
+// A simple, fast, and effective polygon reduction algorithm
+// Melax, Stan, 1998
 void MeshSimplifier::Face::delete_from(Vertex* u, Vertex* v) {
 	m_assert(contain(v));
 	REP(k, 3)

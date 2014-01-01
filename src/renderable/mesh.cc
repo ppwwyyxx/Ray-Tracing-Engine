@@ -30,10 +30,9 @@ void Mesh::transform_vtxs() {
 	for (auto &k : vtxs) sum = sum + k.pos;
 	sum = pivot - sum / vtxs.size();
 
-	for_each(begin(vtxs), end(vtxs),
-		[&](Vertex &v) {
-			v.pos = pivot + (v.pos + sum - pivot) * zfactor;
-	});
+	for (Vertex& v : vtxs)
+		v.pos = pivot + (v.pos + sum - pivot) * zfactor;
+
 	bound_min = pivot + (bound_min + sum - pivot) * zfactor;
 	bound_max = pivot + (bound_max + sum - pivot) * zfactor;
 }
