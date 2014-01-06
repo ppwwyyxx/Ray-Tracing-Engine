@@ -12,6 +12,7 @@ using namespace std;
 
 // A simple, fast, and effective polygon reduction algorithm
 // Melax, Stan, 1998
+
 void MeshSimplifier::Face::delete_from(Vertex* u, Vertex* v) {
 	m_assert(contain(v));
 	REP(k, 3)
@@ -73,7 +74,7 @@ real_t MeshSimplifier::cost(Vertex* u, Vertex* v) const {
 	copy_if(u->adj_face.begin(), u->adj_face.end(),
 			back_inserter(common_faces),
 			[&v](Face* f) -> bool {
-				return v->adj_face.find(f) != v->adj_face.end();
+			return v->adj_face.find(f) != v->adj_face.end();
 			});
 
 	real_t max = 0;
@@ -134,19 +135,19 @@ int MeshSimplifier::collapse(Vertex* u, Vertex* v) {
 		}
 	v->adj_vtx.erase(u);		// this must be put after the above line
 
-/*
- *#pragma omp parallel
- *#pragma omp single
- *    {
- *        for (auto itr = u->adj_vtx.begin(); itr != u->adj_vtx.end(); ++itr)
- *    #pragma omp task firstprivate(itr)
- *            update_cost(*itr);
- *    #pragma omp taskwait
- *    }
- */
+	/*
+	 *#pragma omp parallel
+	 *#pragma omp single
+	 *    {
+	 *        for (auto itr = u->adj_vtx.begin(); itr != u->adj_vtx.end(); ++itr)
+	 *    #pragma omp task firstprivate(itr)
+	 *            update_cost(*itr);
+	 *    #pragma omp taskwait
+	 *    }
+	 */
 	for_each(u->adj_vtx.begin(), u->adj_vtx.end(),
 			[&](Vertex* n) {
-				update_cost(n);
+			update_cost(n);
 			});
 	return ret;
 }
