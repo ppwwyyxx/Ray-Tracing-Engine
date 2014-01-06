@@ -1,18 +1,18 @@
 ## Introduction
 
 This is an 3D Rendering Engine written in C++11.
-For the details of this project, please see ``report.pdf``
+For the details of this project, please see [report.pdf](https://github.com/ppwwyyxx/Ray-Tracing-Engine/raw/master/report.pdf)
 
 ## Features
 
-* [Phong Model](http://en.wikipedia.org/wiki/Phong_reflection_model) and [Path Tracing](http://en.wikipedia.org/wiki/Path_tracing) Model (Monte Carlo Path Tracing)
+* [Phong Model](http://en.wikipedia.org/wiki/Phong_reflection_model) and Monte Carlo [Path Tracing](http://en.wikipedia.org/wiki/Path_tracing) Model
 * rendering of plane, sphere and mesh
 * read mesh from a simple obj file
-* fast SAH-Based KDtree in mesh as well as the whole scene
+* fast SAH-Based KDtree
 * depth of field
 * custom texture
 * mesh smoothing
-* mesh simplification
+* mesh simplification using [polygon reduction](http://dev.gameres.com/program/visual/3d/PolygonReduction.pdf)
 * parallel rendering
 * qt-based gui
 
@@ -42,7 +42,7 @@ The display is based on OpenCV, allowing keyboard control of the viewpoint:
 * > <	 - Rotate viewpoint direction.
 * = -  - Zoom in/out.
 * h j k l - Move viewpoint, keep direction.
-* []  -  Move focal plane (only available when DOF mode is on)
+* [ ]  -  Move focal plane (only available when DOF mode is on)
 
 GUI:
 
