@@ -4,11 +4,12 @@
 
 #pragma once
 
-#include <set>
+#include <vector>
+#include <unordered_set>
 #include <queue>
 #include "renderable/mesh.hh"
 using std::vector;
-using std::set;
+using std::unordered_set;
 using std::priority_queue;
 
 class MeshSimplifier {
@@ -43,8 +44,8 @@ class MeshSimplifier {
 			Vec pos;
 			int id = -1;
 			bool erased = false;
-			set<Vertex*> adj_vtx;
-			set<Face*> adj_face;
+			unordered_set<Vertex*> adj_vtx;
+			unordered_set<Face*> adj_face;
 
 			int cost_timestamp = 0;
 			real_t cost;

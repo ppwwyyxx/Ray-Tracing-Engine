@@ -11,6 +11,7 @@ Color Phong::blend(const Color& amb, const Color& phong, const Color& refl, cons
 	return ret;
 }
 
+// finish initialize
 void Phong::finish() {
 	// make ambient
 	ambient = Color::BLACK;
