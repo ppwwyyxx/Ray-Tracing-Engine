@@ -11,8 +11,7 @@
 
 class RenderBase {
 	public:
-		RenderBase(const Geometry &m_g):
-			geo(m_g){}
+		RenderBase(const Geometry &m_g): geo(m_g){}
 
 		virtual ~RenderBase(){};
 

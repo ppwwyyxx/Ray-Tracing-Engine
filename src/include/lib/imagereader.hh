@@ -18,17 +18,12 @@ class ImageReader {
 		Geometry size;
 		Color* pixel;
 
-		ImageReader(){}
-
-		ImageReader(int _w, int _h)
-		{ init(_w, _h); }
-
 		Color get(int x, int y) const {
 			m_assert(x < size.h && y < size.w);
 			return pixel[x * size.w + y];
 		}
 
-		~ImageReader()
+		virtual ~ImageReader()
 		{ delete[] pixel; }
 };
 

@@ -9,6 +9,10 @@
 
 #include <cmath>
 
+/**
+ *	light is a sphere
+ *	but in phone model, only the center will be used
+ */
 class Light : public Sphere {
 	private:
 		shared_ptr<Surface> surf;

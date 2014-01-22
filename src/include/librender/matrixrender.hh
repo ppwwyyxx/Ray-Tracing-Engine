@@ -16,10 +16,10 @@ class MatrixRender: public RenderBase {
 			RenderBase(m_g)
 		{ mat = new Matrix<Color>(m_g.w, m_g.h); }
 
-		~MatrixRender()
+		~MatrixRender() override
 		{ delete mat; }
 
-		void _write(int x, int y, const Color &c)
+		void _write(int x, int y, const Color &c) override
 		{ (mat->val)[y][x] = c; }
 
 		Color& get(int x, int y)

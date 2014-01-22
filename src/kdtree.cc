@@ -125,10 +125,11 @@ AAPlane KDTree::cut(const list<RenderWrapper*>& objs, int depth) const {
 }
 
 KDTree::Node* KDTree::build(const list<RenderWrapper*>& objs, const AABB& box, int depth) {
-	if (objs.size() == 0) return nullptr;
-	if (depth > KDTREE_MAX_DEPTH) return nullptr;
+	if (objs.size() == 0 or depth > KDTREE_MAX_DEPTH) return nullptr;
 
-#define ADDOBJ for (auto objptr : objs) ret->add_obj(objptr->obj)
+#define ADDOBJ \
+	for (auto objptr : objs) ret->add_obj(objptr->obj)
+
 	Node* ret = new Node(box);
 
 	int nobj = objs.size();
@@ -141,8 +142,8 @@ KDTree::Node* KDTree::build(const list<RenderWrapper*>& objs, const AABB& box, i
 	real_t min_cost = numeric_limits<real_t>::max();
 
 
-/*
- *    // algo 1 (naive kdtree)
+/**
+ *    // algorithm 1 (naive kdtree)
  *    best_pl = cut(objs, depth);
  *    try {
  *        par = box.cut(best_pl);
@@ -160,38 +161,31 @@ KDTree::Node* KDTree::build(const list<RenderWrapper*>& objs, const AABB& box, i
  *    // end of algo 1
  */
 
-	// algo 2 (SAH kdtree)
+	// algorithm 2 (SAH kdtree)
 	// "On building fast kd-trees for ray tracing, and on doing that in O (N log N)"
 	// Wald, Ingo and Havran, Vlastimil
 	// O(n log^2(n)) build
 
-#define GEN_CAND_LIST \
-	do { \
-		for (auto objptr: objs) \
-		cand_list.emplace_back(objptr->box.min[dim] - EPS, true), \
-		cand_list.emplace_back(objptr->box.max[dim] + EPS, false); \
-		sort(cand_list.begin(), cand_list.end()); \
-	} while (0)
+	typedef pair<real_t, bool> PDB;
+	auto gen_cand_list = [&objs](int dim) {
+		vector<PDB> cand_list;
+		for (auto objptr: objs)
+			cand_list.emplace_back(objptr->box.min[dim] - EPS, true),
+			cand_list.emplace_back(objptr->box.max[dim] + EPS, false);
+		sort(cand_list.begin(), cand_list.end());
+		return cand_list;
+	};
 
-	future<vector<pair<real_t, bool>>> task[3];
+	future<vector<PDB>> task[3];
 	const int THREAD_DEPTH_THRES = 1;
 	bool parallel = depth < THREAD_DEPTH_THRES;
-	if (parallel) {
-		REP(dim, 3)
-			task[dim] = async(launch::async,
-					[&objs, dim]() {
-						vector<pair<real_t, bool>> cand_list;
-						GEN_CAND_LIST;
-						return cand_list;
-					});
-	}
+	if (parallel) REP(dim, 3)
+		task[dim] = async(launch::async, bind(gen_cand_list, dim));
 
 	REP(dim, 3) {
-		vector<pair<real_t, bool>> cand_list;		// true: min, false: max
-		if (!parallel)
-			GEN_CAND_LIST;
-		else
-			cand_list = move(task[dim].get());
+		// true: min, false: max
+		vector<PDB> cand_list =
+			parallel ? task[dim].get() : gen_cand_list(dim);
 
 		int lcnt = 0, rcnt = nobj;
 		auto ptr = cand_list.begin();
@@ -230,9 +224,9 @@ KDTree::Node* KDTree::build(const list<RenderWrapper*>& objs, const AABB& box, i
 		if (obj->box.max[best_pl.axis] >= best_pl.pos) objr.push_back(obj);
 		if (obj->box.min[best_pl.axis] <= best_pl.pos) objl.push_back(obj);
 	}
-	// end of algo 2
+	// end of algorithm 2
 
-	if (depth < 1) { // parallel when depth is small
+	if (parallel) { // parallel when depth is small
 		future<Node*> lch_future = async(launch::async,
 				[&]() {
 					return build(objl, par.first, depth + 1);
@@ -254,6 +248,5 @@ KDTree::Node* KDTree::build(const list<RenderWrapper*>& objs, const AABB& box, i
 
 	return ret;
 #undef ADDOBJ
-#undef GEN_CAND_LIST
 }
 

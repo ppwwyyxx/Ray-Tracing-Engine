@@ -38,7 +38,6 @@ flags = [
 '-Wall',
 '-Wextra',
 '-Werror',
-'-Wc++98-compat',
 '-Wno-long-long',
 '-Wno-variadic-macros',
 '-fexceptions',
@@ -58,6 +57,8 @@ flags = [
 '-x',
 'c++',
 '-Iinclude',
+#'-DMAGICKCORE_HDRI_ENABLE=1 -DMAGICKCORE_QUANTUM_DEPTH=16',
+'-I/usr/include/ImageMagick-6'
 ]
 
 # Set this to the absolute path to the folder (NOT the file!) containing the
