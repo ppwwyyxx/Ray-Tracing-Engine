@@ -55,7 +55,8 @@ class MeshSimplifier {
 
 			inline void add_face(Face* f) {
 				adj_face.insert(f);
-				REP(k, 3) if (f->vtx[k] != this) adj_vtx.insert(f->vtx[k]);
+				REP(k, 3) if (f->vtx[k] != this)
+					adj_vtx.insert(f->vtx[k]);
 			}
 
 			// change adj_vtx, u to v

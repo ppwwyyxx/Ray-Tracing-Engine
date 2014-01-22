@@ -104,6 +104,7 @@ KDTree::KDTree(const list<rdptr>& objs, const AABB& space) {
 KDTree::~KDTree() { delete root; }
 
 shared_ptr<Trace> KDTree::get_trace(const Ray& ray, real_t max_dist) const {
+	if (!root) return nullptr;		// empty kd-tree
 	real_t min_dist; bool inside;
 	if (!(root->box.intersect(ray, min_dist, inside)))
 		return nullptr;

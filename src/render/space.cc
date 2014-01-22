@@ -40,19 +40,18 @@ void Space::finish() {		// called from View::View()
 void Space::build_tree() {
 	// the final objs contains a kdtree and all the infinite obj
 	list<rdptr> infinite_obj;
-	copy_if(objs.begin(), objs.end(), back_inserter(infinite_obj),
-			[](const rdptr& p) {
-				return p->infinity();
-			});
+	for (auto itr = begin(objs); itr != end(objs);) {
+		if ((*itr)->infinity()) {
+			infinite_obj.push_back(*itr);
+			objs.erase(itr++);
+		} else
+			++itr;
+	}
 
-	objs.remove_if(
-			[](const rdptr& p) {
-				return p->infinity();
-			});
-
-	if (objs.size())
-		infinite_obj.emplace_back(make_shared<KDTree>(objs, AABB(bound_min, bound_max)));
+	auto finite_tree = make_shared<KDTree>(objs, AABB(bound_min, bound_max));
+	P(finite_tree->get_aabb());
 	objs = move(infinite_obj);
+	if (finite_tree) objs.emplace_back(finite_tree);
 }
 
 shared_ptr<Trace> Space::find_first(const Ray& ray, bool include_light) const {
@@ -70,7 +69,7 @@ shared_ptr<Trace> Space::find_first(const Ray& ray, bool include_light) const {
 			auto tmp = l->get_trace(ray, min == numeric_limits<real_t>::max() ? -1 : min);
 			if (tmp) {
 				real_t d = tmp->intersection_dist();
-				if (update_min(min, d)) ret = tmp;
+				if (update_min(min, d)) ret = move(tmp);
 			}
 		}
 	return ret;

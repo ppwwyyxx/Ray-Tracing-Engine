@@ -71,10 +71,10 @@ MeshSimplifier::MeshSimplifier(Mesh& _mesh, real_t ratio): mesh(_mesh) {
 real_t MeshSimplifier::cost(Vertex* u, Vertex* v) const {
 	list<Face*> common_faces;
 	// common adj triangle of u and v
-	copy_if(u->adj_face.begin(), u->adj_face.end(),
+	copy_if(begin(u->adj_face), end(u->adj_face),
 			back_inserter(common_faces),
 			[&v](Face* f) -> bool {
-			return v->adj_face.find(f) != v->adj_face.end();
+				return v->adj_face.count(f) > 0;
 			});
 
 	real_t max = 0;
@@ -116,19 +116,19 @@ int MeshSimplifier::collapse(Vertex* u, Vertex* v) {
 	u->erased = true;
 	int ret = 0;
 
-	list<Face*> to_delete;		// can't modify a set inside loop
-	for (auto & uface : u->adj_face) {
-		m_assert(uface->contain(u));
-		if (v->adj_face.find(uface) != v->adj_face.end()) {
-			uface->delete_from(u, v);
+	for (auto itr = begin(u->adj_face); itr != end(u->adj_face);) {
+		m_assert((*itr)->contain(u));
+		if (v->adj_face.count(*itr)) {
+			(*itr)->delete_from(u, v);
 			ret ++;
-			to_delete.push_back(uface);
-		} else
-			uface->change_to(u, v);
+			u->adj_face.erase(itr++);
+		} else {
+			(*itr)->change_to(u, v);
+			++itr;
+		}
 	}
-	for (auto & f : to_delete) u->adj_face.erase(f);
 
-	for (auto & uvtx : u->adj_vtx)
+	for (auto uvtx : u->adj_vtx)
 		if (!uvtx->erased && uvtx != v) {
 			uvtx->change_to(u, v);
 			v->adj_vtx.insert(uvtx);
@@ -147,7 +147,7 @@ int MeshSimplifier::collapse(Vertex* u, Vertex* v) {
 	 */
 	for_each(u->adj_vtx.begin(), u->adj_vtx.end(),
 			[&](Vertex* n) {
-			update_cost(n);
+				update_cost(n);
 			});
 	return ret;
 }
@@ -157,7 +157,7 @@ void MeshSimplifier::do_simplify() {
 	while (nowcnt > target_num && nowcnt > 4) {
 		/*// without heap
 		 *real_t min = numeric_limits<real_t>::max();
-		 *Vertex* candidate_u = nullptr;
+		 *Vertex* candidate_u;
 		 *for (auto & u : vtxs) {
 		 *    if (u.erased) continue;
 		 *    if (update_min(min, u.cost))

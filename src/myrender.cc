@@ -88,8 +88,8 @@ Color MyRender::get(const Mat& img, int i, int j) {
 
 void MyRender::antialias() {
 	float kernel[9] = {1, 2, 1,
-					 2, 4, 2,
-					 1, 2, 1};
+					   2, 4, 2,
+					   1, 2, 1};
 	double sum = std::accumulate(kernel, kernel + 9, 0);
 	REP(k, 9) kernel[k] /= sum;
 
@@ -102,7 +102,7 @@ void MyRender::antialias() {
 			Color newcol = get(img, i + di, j + dj);
 			Color diff = newcol - col;
 			s += ::sqr(diff.r) + ::sqr(diff.g) + ::sqr(diff.b);
-			}
+		}
 		if (s > 5) cand.emplace_back(i, j);
 	}
 	Mat dst = img;
@@ -138,9 +138,9 @@ void render_and_set(int* line_cnt, View* v, RenderBase* r) {
 			now_num = (*line_cnt);
 			*line_cnt = now_num + 1;
 		}
-		print_progress(now_num * 100 / h);
-
 		if (now_num >= h) return;
+
+		print_progress(now_num * 100 / h);
 		REP(j, w) {
 			Color col = v->render(now_num, j);
 			r->write(j, now_num, col);
@@ -161,21 +161,21 @@ void CVViewer::render_all() {
 	REP(k, nthread) th[k].join();
 	delete[] th;
 
-/*	// use openmp
- *#pragma omp parallel for schedule(dynamic)
- *    REP(i, geo.h) {
- *        if (!omp_get_thread_num())
- *            print_progress(i * 100 / geo.h);
- *        REP(j, geo.w) {
- *            Color col = v.render(i, j);
- *            r.write(j, i, col);
- *        }
- *    }
- */
+	/*	// use openmp
+	 *#pragma omp parallel for schedule(dynamic)
+	 *    REP(i, geo.h) {
+	 *        if (!omp_get_thread_num())
+	 *            print_progress(i * 100 / geo.h);
+	 *        REP(j, geo.w) {
+	 *            Color col = v.render(i, j);
+	 *            r.write(j, i, col);
+	 *        }
+	 *    }
+	 */
 
 
 	printf("Render spends %lf seconds\n", timer.get_time());
-//	r.antialias();
+	//	r.antialias();
 	if (v.use_dof) r.blur();
 	r.gamma_correction();
 }

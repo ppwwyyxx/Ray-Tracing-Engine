@@ -106,10 +106,10 @@ void dof_ball_scene() {
 	Surface surf(0, 20, 0.5, Color::CYAN * 0.9, DEFAULT_SPECULAR);
 
 	auto tpic = make_shared<ImgTexture>(texture_fname, 100, 1);
-	auto tball = make_shared<HomoTexture>(surf);
 
 	s.add_obj(make_shared<Plane>(InfPlane::XYPLANE, tpic));
 
+	auto tball = make_shared<HomoTexture>(surf);
 	REP(i, 10) REP(j, 2) s.add_obj(make_shared<Sphere>(PureSphere(Vec(j * 6, 1, i * 3), 1), tball));
 	s.finish();
 	View v {s, Vec(11, -13.3, 39.75), Vec(5.4, -1, 22.8), 16, Geometry(w, h)};
@@ -163,8 +163,13 @@ void test_kdtree() {
 	s.add_obj(make_shared<Mesh>(mesh));
 	auto t1 = make_shared<GridTexture>(GridTexture::BLACK_WHITE_REFL);
 	s.add_obj(make_shared<Plane>(InfPlane::XYPLANE, t1));
+
+	Surface surf(0, 20, 0.5, Color::CYAN * 0.9, DEFAULT_SPECULAR);
+	auto tball = make_shared<HomoTexture>(surf);
+	REP(i, 10) REP(j, 5) s.add_obj(make_shared<Sphere>(PureSphere(Vec(2 + j * 3, i * 2, 0), 0.6), tball));
+
 	s.finish();
-	View v(s, Vec(0, 0, 12), Vec(0, 0, 2), 15, Geometry(w, h));
+	View v(s, Vec(0, 0, 22), Vec(0, 0, 2), 15, Geometry(w, h));
 	CVViewer viewer(v);
 	viewer.view();
 }
