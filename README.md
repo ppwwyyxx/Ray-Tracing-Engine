@@ -3,6 +3,7 @@
 
 This is an 3D Rendering Engine written in C++11.
 For the details of this project, please see [report.pdf](https://github.com/ppwwyyxx/Ray-Tracing-Engine/raw/master/report.pdf)
+See my [blog post](http://ppwwyyxx.com/2013/More-On-Ray-Tracing/) (Chinese) for other interesting stories..
 
 ## Features
 
