@@ -20,6 +20,7 @@ CXXFLAGS += $(shell Magick++-config --cxxflags)
 LDFLAGS = $(shell pkg-config $(LIBS) --libs)
 LDFLAGS += $(OPTFLAGS)
 LDFLAGS += $(shell Magick++-config --ldflags --libs) $(OTHERFLAGS)
+LDFLAGS += -lprofiler
 
 CC = g++
 SHELL = bash

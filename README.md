@@ -1,4 +1,5 @@
 ## Introduction
+![allpttiny](https://github.com/ppwwyyxx/Ray-Tracing-Engine/raw/master/demo/small/best_tiny.jpg)
 
 This is an 3D Rendering Engine written in C++11.
 For the details of this project, please see [report.pdf](https://github.com/ppwwyyxx/Ray-Tracing-Engine/raw/master/report.pdf)
