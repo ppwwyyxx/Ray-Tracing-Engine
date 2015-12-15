@@ -1,9 +1,8 @@
-## Introduction
 ![allpttiny](https://github.com/ppwwyyxx/Ray-Tracing-Engine/raw/master/demo/small/best_tiny.jpg)
 
-This is an 3D Rendering Engine written in C++11.
+This is an 3D Rendering Engine written in C++.
 For the details of this project, please see [report.pdf](https://github.com/ppwwyyxx/Ray-Tracing-Engine/raw/master/report.pdf).
-See my [blog post](http://ppwwyyxx.com/2013/More-On-Ray-Tracing/) (Chinese) for other interesting stories..
+See my [blog post](http://ppwwyyxx.com/2013/More-On-Ray-Tracing/) (in Chinese) for other interesting stories..
 
 ## Features
 
@@ -14,8 +13,7 @@ See my [blog post](http://ppwwyyxx.com/2013/More-On-Ray-Tracing/) (Chinese) for 
 * depth of field
 * custom texture
 * mesh smoothing
-* mesh simplification using [polygon reduction](http://dev.gameres.com/program/visual/3d/PolygonReduction.pdf)
-* parallel rendering
+* mesh simplification with [polygon reduction](http://dev.gameres.com/program/visual/3d/PolygonReduction.pdf)
 * qt-based gui
 
 ## Usage
@@ -64,7 +62,6 @@ Caustic using path tracing:
 
 ![caustic](https://github.com/ppwwyyxx/Ray-Tracing-Engine/raw/master/demo/small/caustic.jpg)
 
-Large scene using Phong Model(first) and Path Tracing(second):
+A Large scene:
 
-![allph](https://github.com/ppwwyyxx/Ray-Tracing-Engine/raw/master/demo/small/phong.jpg)
 ![allpt](https://github.com/ppwwyyxx/Ray-Tracing-Engine/raw/master/demo/small/best.jpg)
