@@ -47,6 +47,7 @@ The display is based on OpenCV, allowing keyboard control of the viewpoint:
 GUI:
 
 GUI is only an objviewer with some simple control.
+
 ![gui](https://github.com/ppwwyyxx/Ray-Tracing-Engine/raw/master/demo/small/gui.jpg)
 
 ## Examples
