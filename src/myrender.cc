@@ -6,6 +6,7 @@
 #include <functional>
 #include <opencv2/opencv.hpp>
 #include <mutex>
+#include <numeric>
 #include <algorithm>
 
 #include "librender/myrender.hh"
