@@ -33,16 +33,16 @@ $ make gui   (gui)
 
 Command line:
 
-``./ray-tracing <demo/small id>``, show demo/small scene defined in ``main.cc``.
+``./ray-tracing <demo id>``, show demo scene (0~10) defined in ``main.cc``.
 
 The display is based on OpenCV, allowing keyboard control of the viewpoint:
 
 * Left/Right Arrow - Orbit around the center.
 * Up/Down Arrow - Rotate the output picture.
-* > <	 - Rotate viewpoint direction.
+* \> \<	 - Rotate viewpoint direction.
 * = -  - Zoom in/out.
 * h j k l - Move viewpoint, keep direction.
-* \[ \]  -  Move focal plane (only available when DOF mode is on)
+* \\[ \\]  -  Move focal plane (only available in DOF demo)
 
 GUI:
 
